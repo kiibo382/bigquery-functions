@@ -105,14 +105,7 @@ fn walk_node(node_ref: &NodeRef<Node>) -> String {
         }
         let node = child.value();
         if node.is_text() {
-            let node_text = node.as_text().unwrap().to_string();
-            if &node_text != "\n" {
-                text += &node_text;
-            };
-        }
-        if !node.is_element() {
-            text = text.trim().to_string();
-            text += " ";
+            text += &node.as_text().unwrap().to_string();
         }
     }
     return text.trim().to_string();
