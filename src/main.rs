@@ -16,6 +16,7 @@ fn main() {
     let selector = Selector::parse("h2#functions").unwrap();
     let frag = fragment.select(&selector).next();
 
+    let mut function_names = vec![];
     let mut functions = vec![];
     let mut categories = vec![];
     let mut category = "".to_string();
@@ -34,6 +35,10 @@ fn main() {
             if elem.name() == "h3" {
                 let h3_selector = Selector::parse(&format!("h3#{}", elem.id().unwrap())).unwrap();
                 let h3_frag = fragment.select(&h3_selector).next();
+
+                if h3_frag.unwrap().inner_html().contains(&" ") {
+                    continue;
+                }
 
                 let mut texts = vec![];
                 let mut i = 0;
@@ -66,19 +71,23 @@ fn main() {
                 }
 
                 if texts.len() > 1 {
+                    function_names.push(h3_frag.unwrap().inner_html());
                     functions.push(Function::new(
                         h3_frag.unwrap().inner_html(),
                         vec![],
                         category.clone(),
                         texts[1].clone(),
                         texts[0].clone(),
-                    ))
+                    ));
                 }
             }
         }
     }
 
-    // functions to json file
+    let json = serde_json::to_string(&function_names).unwrap();
+    let mut f = File::create("output/function_names.json").unwrap();
+    f.write_all(json.as_bytes()).unwrap();
+
     let json = serde_json::to_string(&functions).unwrap();
     let mut f = File::create("output/functions.json").unwrap();
     f.write_all(json.as_bytes()).unwrap();
