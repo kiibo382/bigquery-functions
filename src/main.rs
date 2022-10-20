@@ -1,16 +1,22 @@
 use ego_tree::NodeRef;
 use scraper::{Html, Node, Selector};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
+use similar::{ChangeTag, TextDiff};
 use std::fs::File;
 use std::io::prelude::*;
+use types::Function;
+
+pub mod types;
 
 fn main() {
-    let mut f = File::open("src/resources/index.html").unwrap();
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)
-        .expect("something went wrong reading the file");
+    let resp = reqwest::blocking::get(
+        "https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators",
+    )
+    .expect("Failed to get response");
 
-    let fragment = Html::parse_fragment(&contents);
+    let body = resp.text().expect("Failed to get body");
+
+    let fragment = Html::parse_fragment(&body);
 
     // Obtain the h2 tag of id="functions" and next all the h3 tags after it
     let selector = Selector::parse("h2#functions").unwrap();
@@ -84,17 +90,37 @@ fn main() {
         }
     }
 
-    let json = serde_json::to_string(&function_names).unwrap();
-    let mut f = File::create("output/function_names.json").unwrap();
-    f.write_all(json.as_bytes()).unwrap();
+    write_json("output/function_names.json", &function_names);
+    write_json("output/functions.json", &functions);
+    write_json("output/categories.json", &categories);
+}
 
-    let json = serde_json::to_string(&functions).unwrap();
-    let mut f = File::create("output/functions.json").unwrap();
-    f.write_all(json.as_bytes()).unwrap();
+fn check_diff(old: &str, new: &str) -> bool {
+    TextDiff::from_lines(old, new)
+        .iter_all_changes()
+        .any(|change| match change.tag() {
+            ChangeTag::Delete => true,
+            ChangeTag::Insert => true,
+            ChangeTag::Equal => false,
+        })
+}
 
-    let json = serde_json::to_string(&categories).unwrap();
-    let mut f = File::create("output/categories.json").unwrap();
-    f.write_all(json.as_bytes()).unwrap();
+fn write_json<T>(path: &str, new: T)
+where
+    T: Serialize,
+{
+    let mut contents = String::new();
+    let mut f = File::open(path).unwrap();
+    f.read_to_string(&mut contents)
+        .expect("something went wrong reading the file");
+
+    let json = serde_json::to_string_pretty(&new).unwrap();
+
+    if check_diff(&contents, &json) {
+        println!("differ");
+        let mut f = File::create(path).unwrap();
+        f.write_all(json.as_bytes()).unwrap();
+    }
 }
 
 fn walk_node(node_ref: &NodeRef<Node>) -> String {
@@ -109,51 +135,4 @@ fn walk_node(node_ref: &NodeRef<Node>) -> String {
         }
     }
     return text.trim().to_string();
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Function {
-    name: String,
-    arguments: Vec<Argument>,
-    category: String,
-    // TODO: enum DataType
-    return_type: String,
-    description: String,
-}
-
-impl Function {
-    fn new(
-        name: String,
-        arguments: Vec<Argument>,
-        category: String,
-        return_type: String,
-        description: String,
-    ) -> Self {
-        Self {
-            name,
-            arguments,
-            category,
-            return_type,
-            description,
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-struct Argument {
-    name: Option<String>,
-    // TODO: enum DataType
-    supported_argument_type: String,
-    // TODO: bool
-    distinct: String,
-}
-
-impl Argument {
-    fn new(name: Option<String>, supported_argument_type: String, distinct: String) -> Self {
-        Self {
-            name,
-            supported_argument_type,
-            distinct,
-        }
-    }
 }

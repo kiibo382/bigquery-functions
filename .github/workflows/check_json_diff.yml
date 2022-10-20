@@ -1,0 +1,27 @@
+name: Check JSON diff
+
+on:
+  schedule:
+    - cron: '00 0 * * *'
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Build
+        run: cargo build --verbose
+      - name: Run
+        run: cargo run
