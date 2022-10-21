@@ -11,27 +11,6 @@ env:
   RUSTC_FORCE_INCREMENTAL: 1
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      - uses: Swatinem/rust-cache@v1
-
-      - name: Run cargo check
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
-
   test:
     name: Test Suite
     runs-on: ubuntu-20.04
