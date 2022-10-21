@@ -16,16 +16,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+      - run: rustup toolchain install stable --profile minimal
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - name: Build
         run: cargo build --verbose
@@ -38,22 +33,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          submodules: true
+        uses: actions/checkout@v3
 
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
+      - run: rustup toolchain install stable --profile minimal
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
