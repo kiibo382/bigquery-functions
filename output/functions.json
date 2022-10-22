@@ -1740,7 +1740,7 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "BOOL",
-    "description": "Returns TRUE for a non-empty Geography, where each element in the Geography\nhas an empty boundary. Boundary for each element is defined as in\nST_BOUNDARY.A Point is closed.\nA LineString is closed if the start and end points of the LineString are\nthe same.\nA Polygon is closed only if it is a full polygon.\nA Collection is closed if and only if every element in the collection is\nclosed.An empty GEOGRAPHY is not closed."
+    "description": "Returns TRUE for a non-empty Geography, where each element in the Geography\nhas an empty boundary. The boundary for each element can be defined with\nST_BOUNDARY.A Point is closed.\nA LineString is closed if the start and end points of the LineString are\nthe same.\nA Polygon is closed only if it is a full polygon.\nA Collection is closed if and only if every element in the collection is\nclosed.An empty GEOGRAPHY is not closed."
   },
   {
     "name": "ST_ISCOLLECTION",
@@ -1761,7 +1761,7 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "BOOL",
-    "description": "Returns TRUE if the input GEOGRAPHY is a LineString and if the LineString\nis both ST_IsClosed and simple. A\nLineString is considered simple if it does not pass through the same point\ntwice (with the exception of the start and endpoint, which may overlap to form a\nring).An empty GEOGRAPHY is not a ring."
+    "description": "Returns TRUE if the input GEOGRAPHY is a LineString and if the\nLineString is both ST_ISCLOSED and\nsimple. A LineString is considered simple if it does not pass through the\nsame point twice (with the exception of the start and endpoint, which may\noverlap to form a ring).An empty GEOGRAPHY is not a ring."
   },
   {
     "name": "ST_LENGTH",
