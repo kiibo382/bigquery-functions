@@ -3,8 +3,6 @@ name: Check JSON diff
 on:
   schedule:
     - cron: '00 0 * * *'
-  push:
-    branches: [main]
 permissions:
   contents: write
   pull-requests: write
