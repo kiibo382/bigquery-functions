@@ -39,9 +39,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update Json files
-          title: Update Json files
+          # 日時を含める (UTC)
+          title: Update Json files ${{ github.event.push.head_commit.timestamp }}
           body: Update Json files
-          branch: update-json-files
+          # 日時を含める (UTC)
+          branch: update-json-files-${{ github.event.push.head_commit.timestamp }}
           base: main
           reviewers: |
             ${{ github.actor }}
