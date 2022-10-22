@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: cargo build --verbose
       - name: Run
-        run: CARGO_RUN_OUTPUT=$(cargo run) >> $GITHUB_ENV
+        run: echo CARGO_RUN_OUTPUT=$(cargo run) >> $GITHUB_ENV
       - name: Create commits
         if : contains(env.CARGO_RUN_OUTPUT, 'differ')
         run: |
