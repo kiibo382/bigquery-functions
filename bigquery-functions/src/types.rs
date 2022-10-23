@@ -1,5 +1,5 @@
-use types_macros::enum_category;
 use crate::json_types;
+use types_macros::enum_category;
 
 enum_category!();
 

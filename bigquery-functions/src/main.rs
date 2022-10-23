@@ -4,6 +4,7 @@ use serde::Serialize;
 use similar::{ChangeTag, TextDiff};
 use std::fs::File;
 use std::io::prelude::*;
+use std::path::Path;
 
 mod json_types;
 
@@ -89,9 +90,10 @@ fn main() {
         }
     }
 
-    write_json("../output/function_names.json", &function_names);
-    write_json("../output/functions.json", &functions);
-    write_json("../output/categories.json", &categories);
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    write_json(&path.join("output/function_names.json"), &function_names);
+    write_json(&path.join("output/functions.json"), &functions);
+    write_json(&path.join("output/categories.json"), &categories);
 }
 
 fn check_diff(old: &str, new: &str) -> bool {
@@ -104,12 +106,13 @@ fn check_diff(old: &str, new: &str) -> bool {
         })
 }
 
-fn write_json<T>(path: &str, new: T)
+fn write_json<P, T>(path: P, new: T)
 where
+    P: AsRef<Path>,
     T: Serialize,
 {
     let mut contents = String::new();
-    let mut f = File::open(path).unwrap();
+    let mut f = File::open(path.as_ref()).unwrap();
     f.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
 
@@ -117,7 +120,7 @@ where
 
     if check_diff(&contents, &json) {
         println!("differ");
-        let mut f = File::create(path).unwrap();
+        let mut f = File::create(path.as_ref()).unwrap();
         f.write_all(json.as_bytes()).unwrap();
     }
 }

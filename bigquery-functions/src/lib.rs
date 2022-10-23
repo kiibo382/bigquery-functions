@@ -1,12 +1,14 @@
+use std::path::Path;
 use std::str::FromStr;
 use std::{fs::File, io::Read};
 
-pub mod types;
 mod json_types;
+pub mod types;
 
 /// Parses `output/function_names.json` and returns a vector of function_names.
 pub fn get_bigquery_function_names() -> Vec<String> {
-    let mut f = File::open("output/function_names.json").unwrap();
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let mut f = File::open(path.join("output/function_names.json")).unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
     let function_names: Vec<String> = serde_json::from_str(&contents).unwrap();
@@ -15,7 +17,8 @@ pub fn get_bigquery_function_names() -> Vec<String> {
 
 /// Parses `output/functions.json` and returns a vector of categories.
 pub fn get_bigquery_function_categories() -> Vec<String> {
-    let mut f = File::open("output/categories.json").unwrap();
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let mut f = File::open(path.join("output/categories.json")).unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
     let categories: Vec<String> = serde_json::from_str(&contents).unwrap();
@@ -24,7 +27,8 @@ pub fn get_bigquery_function_categories() -> Vec<String> {
 
 /// Parses `output/functions.json` and returns a vector of functions.
 pub fn get_bigquery_functions() -> Vec<types::Function> {
-    let mut f = File::open("output/functions.json").unwrap();
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let mut f = File::open(path.join("output/functions.json")).unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
     let functions: Vec<json_types::Function> = serde_json::from_str(&contents).unwrap();
