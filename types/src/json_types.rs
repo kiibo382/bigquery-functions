@@ -2,12 +2,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Function {
-    name: String,
-    arguments: Vec<Argument>,
-    category: String,
+    pub name: String,
+    pub arguments: Vec<Argument>,
+    pub category: String,
     // TODO: enum DataType
-    return_type: String,
-    description: String,
+    pub return_type: String,
+    pub description: String,
 }
 
 impl Function {
@@ -30,19 +30,16 @@ impl Function {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Argument {
-    name: Option<String>,
+    pub name: Option<String>,
     // TODO: enum DataType
-    supported_argument_type: String,
-    // TODO: bool
-    distinct: String,
+    pub supported_argument_type: String,
 }
 
 impl Argument {
-    pub fn new(name: Option<String>, supported_argument_type: String, distinct: String) -> Self {
+    pub fn new(name: Option<String>, supported_argument_type: String) -> Self {
         Self {
             name,
             supported_argument_type,
-            distinct,
         }
     }
 }

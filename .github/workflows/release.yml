@@ -1,0 +1,136 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags: [ 'v[0-9]+.[0-9]+.[0-9]*' ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTC_FORCE_INCREMENTAL: 1
+  RUST_BACKTRACE: full
+  RUSTFLAGS: -D warnings
+
+jobs:
+  dist:
+    name: dist (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+            code-target: win32-x64
+          - os: windows-2022
+            target: aarch64-pc-windows-msvc
+            code-target: win32-arm64
+          - os: ubuntu-20.04
+            target: x86_64-unknown-linux-gnu
+            code-target: linux-x64
+          - os: ubuntu-20.04
+            target: aarch64-unknown-linux-gnu
+            code-target: linux-arm64
+          - os: macos-11
+            target: x86_64-apple-darwin
+            code-target: darwin-x64
+          - os: macos-11
+            target: aarch64-apple-darwin
+            code-target: darwin-arm64
+
+    env:
+      RA_TARGET: ${{ matrix.target }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - run: rustup toolchain install stable --profile minimal
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Update apt repositories
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get update
+
+      - name: Install target toolchain
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get install gcc-aarch64-linux-gnu
+
+      - name: Build Binary
+        run: cargo build --release --target ${{ matrix.target }}
+      
+      - name: Build archive
+        shell: bash
+        run: |
+          mkdir dist
+          if [ "${{ matrix.os }}" = "wwindows-2022" ]; then
+            cp "target/${{ matrix.target }}/release/bigquery-functions.exe" "dist/"
+          else
+            cp "target/${{ matrix.target }}/release/bigquery-functions" "dist/"
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: dist-${{ matrix.target }}
+          path: ./dist
+
+  # publish:
+  #   name: publish
+  #   runs-on: ubuntu-20.04
+  #   needs: ["dist"]
+  #   steps:
+  #     - name: Install Nodejs
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 16.x
+
+  #     - run: echo "TAG=$(date --iso -u)" >> $GITHUB_ENV
+  #       # ワークフローの実行をトリガーしたブランチまたはタグ
+  #       if: github.ref == 'refs/heads/release'
+  #     - run: echo "TAG=nightly" >> $GITHUB_ENV
+  #       if: github.ref != 'refs/heads/release'
+  #     - run: 'echo "TAG: $TAG"'
+
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - run: echo "HEAD_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+  #     - run: 'echo "HEAD_SHA: $HEAD_SHA"'
+
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-aarch64-apple-darwin
+  #         path: dist
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-x86_64-apple-darwin
+  #         path: dist
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-x86_64-unknown-linux-gnu
+  #         path: dist
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-aarch64-unknown-linux-gnu
+  #         path: dist
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-x86_64-pc-windows-msvc
+  #         path: dist
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: dist-aarch64-pc-windows-msvc
+  #         path: dist
+  #     - run: ls -al ./dist
+
+  #     - name: Publish Release
+  #       uses: ./.github/actions/github-release
+  #       with:
+  #         files: "dist/*"
+  #         name: ${{ env.TAG }}
+  #         token: ${{ secrets.GITHUB_TOKEN }}

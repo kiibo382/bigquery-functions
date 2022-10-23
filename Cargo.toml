@@ -1,14 +1,7 @@
-[package]
-name = "bigquery-functions"
-version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-serde_json = "1.0"
-scraper = "0.13.0"
-ego-tree = "0.6.2"
-serde = { version = "1.0", features = ["derive"] }
-reqwest = { version = "0.11", features = ["blocking", "json"] }
-similar = { version = "2.1.0", features = ["inline"] }
+[workspace]
+members = [
+    "api",
+    "parse-html",
+    "types-macro",
+    "types"
+]
