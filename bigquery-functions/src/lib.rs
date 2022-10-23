@@ -1,6 +1,9 @@
 use std::str::FromStr;
 use std::{fs::File, io::Read};
 
+pub mod types;
+mod json_types;
+
 /// Parses `output/function_names.json` and returns a vector of function_names.
 pub fn get_bigquery_function_names() -> Vec<String> {
     let mut f = File::open("output/function_names.json").unwrap();
@@ -24,7 +27,7 @@ pub fn get_bigquery_functions() -> Vec<types::Function> {
     let mut f = File::open("output/functions.json").unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
-    let functions: Vec<types::json_types::Function> = serde_json::from_str(&contents).unwrap();
+    let functions: Vec<json_types::Function> = serde_json::from_str(&contents).unwrap();
 
     let converted_functions = functions
         .into_iter()
@@ -35,13 +38,11 @@ pub fn get_bigquery_functions() -> Vec<types::Function> {
                     .arguments
                     .into_iter()
                     .map(|argument| {
-                        types::Argument::new(
-                            argument.name,
-                            argument.supported_argument_type,
-                        )
+                        types::Argument::new(argument.name, argument.supported_argument_type)
                     })
                     .collect(),
-                types::Category::from_str(&function.category).unwrap(),
+                types::Category::from_str(&function.category)
+                    .unwrap_or(types::Category::NoCategory),
                 function.return_type,
                 function.description,
             )

@@ -4,7 +4,8 @@ use serde::Serialize;
 use similar::{ChangeTag, TextDiff};
 use std::fs::File;
 use std::io::prelude::*;
-use types::json_types::Function;
+
+mod json_types;
 
 fn main() {
     let resp = reqwest::blocking::get(
@@ -76,7 +77,7 @@ fn main() {
 
                 if texts.len() > 1 {
                     function_names.push(h3_frag.unwrap().inner_html());
-                    functions.push(Function::new(
+                    functions.push(json_types::Function::new(
                         h3_frag.unwrap().inner_html(),
                         vec![],
                         category.clone(),

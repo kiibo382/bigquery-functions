@@ -1,6 +1,5 @@
-use types_macro::enum_category;
-
-pub mod json_types;
+use types_macros::enum_category;
+use crate::json_types;
 
 enum_category!();
 
@@ -32,7 +31,6 @@ impl Function {
 
 pub struct Argument {
     pub name: Option<String>,
-    // TODO: enum DataType
     pub supported_argument_type: String,
 }
 

@@ -5,7 +5,6 @@ pub struct Function {
     pub name: String,
     pub arguments: Vec<Argument>,
     pub category: String,
-    // TODO: enum DataType
     pub return_type: String,
     pub description: String,
 }
@@ -31,7 +30,6 @@ impl Function {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Argument {
     pub name: Option<String>,
-    // TODO: enum DataType
     pub supported_argument_type: String,
 }
 

@@ -1,7 +1,5 @@
 [workspace]
 members = [
-    "api",
-    "parse-html",
-    "types-macro",
-    "types"
+    "bigquery-functions",
+    "types-macros"
 ]

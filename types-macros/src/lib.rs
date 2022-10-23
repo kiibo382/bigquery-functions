@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use std::fs::File;
 use std::io::prelude::*;
 
-// generate enum Category from output/categories.json
+/// generate enum Category from `output/categories.json`
 #[proc_macro]
 pub fn enum_category(_item: TokenStream) -> TokenStream {
     let mut f = File::open("output/categories.json").unwrap();
@@ -17,9 +17,9 @@ pub fn enum_category(_item: TokenStream) -> TokenStream {
             category.split(' ').collect::<Vec<&str>>()[0].replace('+', "")
         ));
     }
+    enum_category.push_str("    NoCategory,\n");
     enum_category.push_str("}");
 
-    // FromStr
     enum_category.push_str(
         "
 impl std::str::FromStr for Category {

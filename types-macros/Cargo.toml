@@ -1,14 +1,15 @@
 [package]
-name = "types"
+name = "types-macros"
 version = "0.1.0"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
-description = "Parse Html"
+description = "proc macros to define types"
 license = "MIT"
+
+[lib]
+proc-macro = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-types-macro = { path = "../types-macro" }
