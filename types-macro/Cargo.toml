@@ -2,6 +2,9 @@
 name = "types-macro"
 version = "0.1.0"
 edition = "2021"
+authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
+description = "Parse Html"
+license = "MIT"
 
 [lib]
 proc-macro = true
