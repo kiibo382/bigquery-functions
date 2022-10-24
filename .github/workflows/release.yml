@@ -5,7 +5,7 @@ permissions:
 
 on:
   push:
-    tags: [ 'v[0-9]+.[0-9]+.[0-9]*' ]
+    tags: ["v[0-9]+.[0-9]+.[0-9]*"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build Binary
         run: cargo build --release --target ${{ matrix.target }}
-      
+
       - name: Build archive
         shell: bash
         run: |
@@ -79,58 +79,56 @@ jobs:
           name: dist-${{ matrix.target }}
           path: ./dist
 
-  # publish:
-  #   name: publish
-  #   runs-on: ubuntu-20.04
-  #   needs: ["dist"]
-  #   steps:
-  #     - name: Install Nodejs
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 16.x
+  publish:
+    name: Publish
+    needs: [dist]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+        with:
+          submodules: false
 
-  #     - run: echo "TAG=$(date --iso -u)" >> $GITHUB_ENV
-  #       # ワークフローの実行をトリガーしたブランチまたはタグ
-  #       if: github.ref == 'refs/heads/release'
-  #     - run: echo "TAG=nightly" >> $GITHUB_ENV
-  #       if: github.ref != 'refs/heads/release'
-  #     - run: 'echo "TAG: $TAG"'
+      - uses: actions/download-artifact@v2
 
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+      - name: Calculate tag name
+        id: tagname
+        run: |
+          name=dev
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            name=${GITHUB_REF:10}
+          fi
+          echo TAG=$name >> $GITHUB_ENV
 
-  #     - run: echo "HEAD_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
-  #     - run: 'echo "HEAD_SHA: $HEAD_SHA"'
-
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-aarch64-apple-darwin
-  #         path: dist
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-x86_64-apple-darwin
-  #         path: dist
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-x86_64-unknown-linux-gnu
-  #         path: dist
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-aarch64-unknown-linux-gnu
-  #         path: dist
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-x86_64-pc-windows-msvc
-  #         path: dist
-  #     - uses: actions/download-artifact@v1
-  #       with:
-  #         name: dist-aarch64-pc-windows-msvc
-  #         path: dist
-  #     - run: ls -al ./dist
-
-  #     - name: Publish Release
-  #       uses: ./.github/actions/github-release
-  #       with:
-  #         files: "dist/*"
-  #         name: ${{ env.TAG }}
-  #         token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build archive
+        shell: bash
+        run: |
+          set -ex
+          rm -rf tmp
+          mkdir tmp
+          mkdir dist
+          for dir in bins-* ; do
+              platform=${dir#"bins-"}
+              unset exe
+              if [[ $platform =~ "windows" ]]; then
+                  exe=".exe"
+              fi
+              pkgname=$PROJECT_NAME-$TAG-$platform
+              mkdir tmp/$pkgname
+              # cp LICENSE README.md tmp/$pkgname
+              mv bins-$platform/$BIN_NAME$exe tmp/$pkgname
+              chmod +x tmp/$pkgname/$BIN_NAME$exe
+              if [ "$exe" = "" ]; then
+                  tar cJf dist/$pkgname.tar.xz -C tmp $pkgname
+              else
+                  (cd tmp && 7z a -r ../dist/$pkgname.zip $pkgname)
+              fi
+          done
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/*
+          file_glob: true
+          tag: ${{ env.TAG }}
+          overwrite: true
