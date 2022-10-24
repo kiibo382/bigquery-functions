@@ -1,8 +1,10 @@
 use crate::json_types;
 use bigquery_functions_types_macros::enum_category;
+use serde::{Serialize, Deserialize};
 
 enum_category!();
 
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Function {
     pub name: String,
     pub arguments: Vec<Argument>,
@@ -29,6 +31,7 @@ impl Function {
     }
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Argument {
     pub name: Option<String>,
     pub supported_argument_type: String,
