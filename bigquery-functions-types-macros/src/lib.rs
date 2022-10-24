@@ -12,8 +12,8 @@ pub fn enum_category(_item: TokenStream) -> TokenStream {
     f.read_to_string(&mut contents).unwrap();
     let categories: Vec<String> = serde_json::from_str(&contents).unwrap();
 
-    let mut enum_category = String::from("pub enum Category {\n");
-    for category in categories.clone() {
+    let mut enum_category = String::from("#[derive(Debug)]\npub enum Category {\n");
+    for category in &categories {
         enum_category.push_str(&format!(
             "    {},\n",
             category.split(' ').collect::<Vec<&str>>()[0].replace('+', "")
@@ -31,7 +31,7 @@ impl std::str::FromStr for Category {
         match s {
 ",
     );
-    for category in categories {
+    for category in &categories {
         enum_category.push_str(&format!(
             "            \"{}\" => Ok(Category::{}),\n",
             category,
@@ -41,6 +41,30 @@ impl std::str::FromStr for Category {
     enum_category.push_str(
         "
             _ => Err(()),
+        }
+    }
+}
+",
+    );
+
+    // impl Display for Category
+    enum_category.push_str(
+        "
+impl std::fmt::Display for Category {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+",
+    );
+    for category in &categories {
+        enum_category.push_str(&format!(
+            "            Category::{} => write!(f, \"{}\"),\n",
+            category.split(' ').collect::<Vec<&str>>()[0].replace('+', ""),
+            category
+        ));
+    }
+    enum_category.push_str(
+        "
+            Category::NoCategory => write!(f, \"NoCategory\"),
         }
     }
 }
