@@ -6,7 +6,7 @@ use std::path::Path;
 /// generate enum Category from `output/categories.json`
 #[proc_macro]
 pub fn enum_category(_item: TokenStream) -> TokenStream {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let path = Path::new(env!("CARGO_MANIFEST_DIR"));
     let mut f = File::open(path.join("output/categories.json")).unwrap();
     let mut contents = String::new();
     f.read_to_string(&mut contents).unwrap();
