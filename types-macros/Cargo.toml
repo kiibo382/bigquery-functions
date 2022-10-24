@@ -3,8 +3,9 @@ name = "types-macros"
 version = "0.1.0"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
-description = "proc macros to define types"
+description = "proc macros to define BigQuery function types"
 license = "MIT"
+repository = "https://github.com/kiibo382/bigquery-functions/"
 
 [lib]
 proc-macro = true
