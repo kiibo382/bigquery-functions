@@ -1,5 +1,5 @@
 use crate::json_types;
-use types_macros::enum_category;
+use bigquery_functions_types_macros::enum_category;
 
 enum_category!();
 

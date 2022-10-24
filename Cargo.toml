@@ -1,5 +1,5 @@
 [workspace]
 members = [
     "bigquery-functions",
-    "types-macros"
+    "bigquery-functions-types-macros"
 ]

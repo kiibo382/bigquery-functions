@@ -1,5 +1,5 @@
 [package]
-name = "types-macros"
+name = "bigquery-functions-types-macros"
 version = "0.1.0"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
