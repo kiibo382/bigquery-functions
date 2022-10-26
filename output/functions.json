@@ -515,14 +515,14 @@
     "arguments": [],
     "category": "Navigation functions",
     "return_type": "value_expression and percentile must have one of the following types:\nNUMERIC\nBIGNUMERIC\nFLOAT64\npercentile must be a literal in the range [0, 1].",
-    "description": "Computes the specified percentile value for the value_expression, with linear\ninterpolation.This function ignores NULL values if RESPECT NULLS is absent.  If RESPECT\nNULLS is present:Interpolation between two NULL values returns NULL.\nInterpolation between a NULL value and a non-NULL value returns the\nnon-NULL value.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Computes the specified percentile value for the value_expression, with linear\ninterpolation.This function ignores NULL\nvalues if\nRESPECT NULLS is absent.  If RESPECT NULLS is present:Interpolation between two NULL values returns NULL.\nInterpolation between a NULL value and a non-NULL value returns the\nnon-NULL value.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "PERCENTILE_DISC",
     "arguments": [],
     "category": "Navigation functions",
     "return_type": "value_expression can be any orderable type.\npercentile must be a literal in the range [0, 1], with one of the\nfollowing types:\nNUMERIC\nBIGNUMERIC\nFLOAT64",
-    "description": "Computes the specified percentile value for a discrete value_expression. The\nreturned value is the first sorted value of value_expression with cumulative\ndistribution greater than or equal to the given percentile value.This function ignores NULL values unless RESPECT NULLS is present.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Computes the specified percentile value for a discrete value_expression. The\nreturned value is the first sorted value of value_expression with cumulative\ndistribution greater than or equal to the given percentile value.This function ignores NULL\nvalues unless\nRESPECT NULLS is present.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "FARM_FINGERPRINT",
