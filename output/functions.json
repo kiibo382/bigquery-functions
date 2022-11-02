@@ -1046,7 +1046,7 @@
     "name": "ARRAY_TO_STRING",
     "arguments": [],
     "category": "Array functions",
-    "return_type": "WITH items AS\n  (SELECT ['coffee', 'tea', 'milk' ] as list\n  UNION ALL\n  SELECT ['cake', 'pie', NULL] as list)\n\nSELECT ARRAY_TO_STRING(list, '--') AS text\nFROM items;\n\n+--------------------------------+\n| text                           |\n+--------------------------------+\n| coffee--tea--milk              |\n| cake--pie                      |\n+--------------------------------+WITH items AS\n  (SELECT ['coffee', 'tea', 'milk' ] as list\n  UNION ALL\n  SELECT ['cake', 'pie', NULL] as list)\n\nSELECT ARRAY_TO_STRING(list, '--', 'MISSING') AS text\nFROM items;\n\n+--------------------------------+\n| text                           |\n+--------------------------------+\n| coffee--tea--milk              |\n| cake--pie--MISSING             |\n+--------------------------------+",
+    "return_type": "STRING",
     "description": "Returns a concatenation of the elements in array_expression\nas a STRING. The value for array_expression\ncan either be an array of STRING or\nBYTES data types.If the null_text parameter is used, the function replaces any NULL values in\nthe array with the value of null_text.If the null_text parameter is not used, the function omits the NULL value\nand its preceding delimiter."
   },
   {
@@ -1060,14 +1060,14 @@
     "name": "GENERATE_DATE_ARRAY",
     "arguments": [],
     "category": "Array functions",
-    "return_type": "An ARRAY containing 0 or more DATE values.",
-    "description": "Returns an array of dates. The start_date and end_date\nparameters determine the inclusive start and end of the array.The GENERATE_DATE_ARRAY function accepts the following data types as inputs:start_date must be a DATE\nend_date must be a DATE\nINT64_expr must be an INT64\ndate_part must be either DAY, WEEK, MONTH, QUARTER, or YEAR.The INT64_expr parameter determines the increment used to generate dates. The\ndefault value for this parameter is 1 day.This function returns an error if INT64_expr is set to 0."
+    "return_type": "ARRAY containing 0 or more DATE values.",
+    "description": "Returns an array of dates. The start_date and end_date\nparameters determine the inclusive start and end of the array.The GENERATE_DATE_ARRAY function accepts the following data types as inputs:start_date must be a DATE.\nend_date must be a DATE.\nINT64_expr must be an INT64.\ndate_part must be either DAY, WEEK, MONTH, QUARTER, or YEAR.The INT64_expr parameter determines the increment used to generate dates. The\ndefault value for this parameter is 1 day.This function returns an error if INT64_expr is set to 0."
   },
   {
     "name": "GENERATE_TIMESTAMP_ARRAY",
     "arguments": [],
     "category": "Array functions",
-    "return_type": "An ARRAY containing 0 or more\nTIMESTAMP values.",
+    "return_type": "An ARRAY containing 0 or more TIMESTAMP values.",
     "description": "Returns an ARRAY of TIMESTAMPS separated by a given interval. The\nstart_timestamp and end_timestamp parameters determine the inclusive\nlower and upper bounds of the ARRAY.The GENERATE_TIMESTAMP_ARRAY function accepts the following data types as\ninputs:start_timestamp: TIMESTAMP\nend_timestamp: TIMESTAMP\nstep_expression: INT64\nAllowed date_part values are:\nMICROSECOND, MILLISECOND, SECOND, MINUTE, HOUR, or DAY.The step_expression parameter determines the increment used to generate\ntimestamps."
   },
   {
