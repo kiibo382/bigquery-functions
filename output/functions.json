@@ -1981,6 +1981,20 @@
     "description": "Returns a serialized keyset containing a new key based on key_type. The\nreturned keyset is a serialized BYTES\nrepresentation of\ngoogle.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys. You can use\nthe keyset with the AEAD.ENCRYPT, AEAD.DECRYPT_BYTES, and\nAEAD.DECRYPT_STRING functions for encryption and decryption, as well as with\nthe KEYS group of key- and keyset-related functions.key_type is a STRING literal representation of the type of key to create.\nkey_type cannot be NULL. key_type can be:AEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
   },
   {
+    "name": "KEYS.NEW_WRAPPED_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Creates a new keyset and encrypts it with a\nCloud KMS key.\nReturns the wrapped keyset as a BYTES\nrepresentation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.This function takes the following arguments:kms_resource_name: A STRING literal representation of the\nCloud KMS key.  kms_resource_name cannot be NULL. The\nCloud KMS key must reside in the same Cloud region where this\nfunction is executed. A Cloud KMS key looks like this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nkey_type: A STRING literal representation of the keyset type.\nkey_type cannot be NULL but can be one of the following values:\n\nAEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
+  },
+  {
+    "name": "KEYS.REWRAP_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Re-encrypts a wrapped keyset with a new\nCloud KMS key. Returns the wrapped keyset as a\nBYTES representation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.When this function is used, a wrapped keyset is decrypted by\nsource_kms_resource_name and then re-encrypted by target_kms_resource_name.\nDuring this process, the decrypted keyset is never visible to customers.This function takes the following arguments:source_kms_resource_name: A STRING literal representation of the\nCloud KMS key you want to replace. This key must reside in the same\nCloud region where this function is executed. A Cloud KMS key looks\nlike this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\ntarget_kms_resource_name: A STRING literal representation of the\nnew Cloud KMS key that you want to use.\nwrapped_keyset: A BYTES literal representation of the\nkeyset that you want to re-encrypt."
+  },
+  {
     "name": "KEYS.ADD_KEY_FROM_RAW_BYTES",
     "arguments": [],
     "category": "AEAD encryption functions",
@@ -2034,7 +2048,7 @@
     "arguments": [],
     "category": "AEAD encryption functions",
     "return_type": "STRUCT",
-    "description": "Can be used in place of the keyset argument to the AEAD\nand deterministic encryption \nfunctions to pass a keyset that is encrypted with a Cloud KMS key. This\nlets you use AEAD functions without including plaintext keys in a query.kms_resource_name is a STRING value that contains the resource path to the\nCloud KMS key used to decrypt first_level_keyset. The full string\nmust begin with gcp-kms:// and be in the following format:\ngcp-kms://projects/{id}/locations/{location}/keyRings/{id}/cryptoKeys/{id}.\nThe Cloud KMS key must reside in the same Cloud region as the query.first_level_keyset is a BYTES value containing the ciphertext produced by\nencrypting a serialized Tink keyset with the specified KMS key.Both kms_resource_name and first_level_keyset must be constant values."
+    "description": "Can be used in place of the keyset argument to the AEAD\nand deterministic\nencryption functions to pass a Tink keyset that is encrypted\nwith a Cloud KMS key. This function lets you use\nother AEAD functions without including plaintext keys in a query.This function takes the following arguments:kms_resource_name: A STRING literal that contains the resource path to\nthe Cloud KMS key that's used to decrypt first_level_keyset.\nThis key must reside in the same Cloud region where this function is executed.\nA Cloud KMS key looks like this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nfirst_level_keyset: A BYTES literal that represents a keyset\nor wrapped keyset."
   },
   {
     "name": "KEYS.KEYSET_FROM_JSON",
@@ -2056,6 +2070,13 @@
     "category": "AEAD encryption functions",
     "return_type": "BYTES",
     "description": "Adds a new key to keyset based on key_type. This new key becomes the primary\ncryptographic key of the new keyset. Returns the new keyset serialized as\nBYTES.The old primary cryptographic key from the input keyset remains an additional\nkey in the returned keyset.The new key_type must match the key type of existing keys in the keyset."
+  },
+  {
+    "name": "KEYS.ROTATE_WRAPPED_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Takes an existing wrapped keyset and returns a rotated and\nrewrapped keyset. The returned wrapped keyset is a BYTES\nrepresentation of google.crypto.tink.Keyset.When this function is used, the wrapped keyset is decrypted,\nthe new key is added, and then the keyset is re-encrypted. The primary\ncryptographic key from the input wrapped_keyset remains as an\nadditional key in the returned keyset. During this rotation process,\nthe decrypted keyset is never visible to customers.This function takes the following arguments:kms_resource_name: A STRING literal representation of the\nCloud KMS key that was used to wrap the\nwrapped keyset. The Cloud KMS key must reside in the same Cloud\nregion where this function is executed. A Cloud KMS key looks like\nthis:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nwrapped_keyset: A BYTES literal representation of the\nexisting keyset that you want to work with.\nkey_type: A STRING literal representation of the keyset type. This must\nmatch the key type of existing keys in wrapped_keyset."
   },
   {
     "name": "KEYS.KEYSET_LENGTH",
