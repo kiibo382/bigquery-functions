@@ -31,19 +31,19 @@ jobs:
           git config user.email '${{ github.actor }}@users.noreply.github.com'
           git add -A
           git commit -m "Update Json files"
-      - name: Set current datetime as env variable
-        env:
-          TZ: 'Asia/Tokyo'
-        run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+      # - name: Set current datetime as env variable
+      #   env:
+      #     TZ: 'Asia/Tokyo'
+      #   run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
       - name: Create Pull Request
         if : contains(env.CARGO_RUN_OUTPUT, 'differ')
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update Json files
-          title: Update Json files ${{ env.CURRENT_DATETIME }}
+          title: Update Json files
           body: Update Json files
-          branch: update-json-files-${{ env.CURRENT_DATETIME }}
+          branch: update-json-files
           base: main
           reviewers: |
             ${{ github.actor }}
