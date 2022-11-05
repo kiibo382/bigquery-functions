@@ -36,6 +36,7 @@
   "NTILE",
   "ROW_NUMBER",
   "BIT_COUNT",
+  "CAST",
   "PARSE_BIGNUMERIC",
   "PARSE_NUMERIC",
   "ABS",
