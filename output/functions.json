@@ -80,14 +80,14 @@
     "name": "MAX",
     "arguments": [],
     "category": "Aggregate functions",
-    "return_type": "Any orderable data type.",
+    "return_type": "Any orderable data type except for ARRAY.",
     "description": "Returns the maximum value of non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.\nReturns NaN if the input contains a NaN.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
   },
   {
     "name": "MIN",
     "arguments": [],
     "category": "Aggregate functions",
-    "return_type": "Any orderable data type.",
+    "return_type": "Any orderable data type except for ARRAY.",
     "description": "Returns the minimum value of non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.\nReturns NaN if the input contains a NaN.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
   },
   {
@@ -333,7 +333,7 @@
     "arguments": [],
     "category": "Mathematical functions",
     "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Similar to LOG, but computes logarithm to base 10.X\n      LOG10(X)\n  100.0\n      2.0\n    -inf\n      NaN\n    +inf\n      NaN\n    X <= 0\n      Error"
+    "description": "Similar to LOG, but computes logarithm to base 10.X\n      LOG10(X)\n  100.0\n      2.0\n    -inf\n      NaN\n    +inf\n      +inf\n    X <= 0\n      Error"
   },
   {
     "name": "GREATEST",
