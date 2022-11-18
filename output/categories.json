@@ -22,5 +22,6 @@
   "Utility functions",
   "Net functions",
   "Debugging functions",
-  "AEAD encryption functions"
+  "AEAD encryption functions",
+  "Built-in table functions"
 ]

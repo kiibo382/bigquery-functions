@@ -263,7 +263,7 @@
     "arguments": [],
     "category": "Conversion functions",
     "return_type": "The following query results in \"true\" if x is 1, \"false\" for any other\nnon-NULL value, and NULL if x is NULL.CAST(x=1 AS STRING)",
-    "description": "Cast syntax is used in a query to indicate that the result type of an\nexpression should be converted to some other type.When using CAST, a query can fail if BigQuery is unable to perform\nthe cast. If you want to protect your queries from these types of errors, you\ncan use SAFE_CAST.Casts between supported types that do not successfully map from the original\nvalue to the target domain produce runtime errors. For example, casting\nBYTES to STRING where the byte sequence is not valid UTF-8 results in a\nruntime error.Some casts can include a format clause, which provides\ninstructions for how to conduct the\ncast. For example, you could\ninstruct a cast to convert a sequence of bytes to a BASE64-encoded string\ninstead of a UTF-8-encoded string.The structure of the format clause is unique to each type of cast and more\ninformation is available in the section for that cast."
+    "description": "Cast syntax is used in a query to indicate that the result type of an\nexpression should be converted to some other type.When using CAST, a query can fail if Google Standard SQL is unable to perform\nthe cast. If you want to protect your queries from these types of errors, you\ncan use SAFE_CAST.Casts between supported types that do not successfully map from the original\nvalue to the target domain produce runtime errors. For example, casting\nBYTES to STRING where the byte sequence is not valid UTF-8 results in a\nruntime error.Some casts can include a format clause, which provides\ninstructions for how to conduct the\ncast. For example, you could\ninstruct a cast to convert a sequence of bytes to a BASE64-encoded string\ninstead of a UTF-8-encoded string.The structure of the format clause is unique to each type of cast and more\ninformation is available in the section for that cast."
   },
   {
     "name": "PARSE_BIGNUMERIC",
@@ -606,14 +606,14 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "BYTES",
-    "description": "Takes an array of extended ASCII\ncode points\n(ARRAY of INT64) and returns BYTES.To convert from BYTES to an array of code points, see\nTO_CODE_POINTS."
+    "description": "Takes an array of extended ASCII\ncode points\nas ARRAY<INT64> and returns BYTES.To convert from BYTES to an array of code points, see\nTO_CODE_POINTS."
   },
   {
     "name": "CODE_POINTS_TO_STRING",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING",
-    "description": "Takes an array of Unicode code points\n(ARRAY of INT64) and returns a STRING.To convert from a string to an array of code points, see\nTO_CODE_POINTS."
+    "description": "Takes an array of Unicode code points\nas ARRAY<INT64> and returns a STRING.To convert from a string to an array of code points, see\nTO_CODE_POINTS."
   },
   {
     "name": "COLLATE",
@@ -648,7 +648,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING",
-    "description": "FORMAT formats a data type expression as a string.format_string_expression: Can contain zero or more\nformat specifiers. Each format specifier is introduced\nby the % symbol, and must map to one or more of the remaining arguments.\nIn general, this is a one-to-one mapping, except when the * specifier is\npresent. For example, %.*i maps to two arguments—a length argument\nand a signed integer argument.  If the number of arguments related to the\nformat specifiers is not the same as the number of arguments, an error occurs.\ndata_type_expression: The value to format as a string. This can be any\nBigQuery data type."
+    "description": "FORMAT formats a data type expression as a string.format_string_expression: Can contain zero or more\nformat specifiers. Each format specifier is introduced\nby the % symbol, and must map to one or more of the remaining arguments.\nIn general, this is a one-to-one mapping, except when the * specifier is\npresent. For example, %.*i maps to two arguments—a length argument\nand a signed integer argument.  If the number of arguments related to the\nformat specifiers is not the same as the number of arguments, an error occurs.\ndata_type_expression: The value to format as a string. This can be any\nGoogle Standard SQL data type."
   },
   {
     "name": "FROM_BASE32",
@@ -683,7 +683,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Returns the lowest 1-based index of search_value in source_value. 0 is\nreturned when no match is found. source_value and search_value must be the\nsame type, either STRING or BYTES.If position is specified, the search starts at this position in\nsource_value, otherwise it starts at the beginning of source_value. If\nposition is negative, the function searches backwards from the end of\nsource_value, with -1 indicating the last character. position cannot be 0.If occurrence is specified, the search returns the position of a specific\ninstance of search_value in source_value, otherwise it returns the index of\nthe first occurrence. If occurrence is greater than the number of matches\nfound, 0 is returned. For occurrence > 1, the function searches for\noverlapping occurrences, in other words, the function searches for additional\noccurrences beginning with the second character in the previous occurrence.\noccurrence cannot be 0 or negative.This function supports specifying collation."
+    "description": "Returns the lowest 1-based position of search_value in source_value.\nsource_value and search_value must be the same type, either\nSTRING or BYTES.If position is specified, the search starts at this position in\nsource_value, otherwise it starts at 1, which is the beginning of\nsource_value. If position is negative, the function searches backwards\nfrom the end of source_value, with -1 indicating the last character.\nposition is of type INT64 and cannot be 0.If occurrence is specified, the search returns the position of a specific\ninstance of search_value in source_value. If not specified, occurrence\ndefaults to 1 and returns the position of the first occurrence.\nFor occurrence > 1, the function includes overlapping occurrences.\noccurrence is of type INT64 and must be positive.This function supports specifying collation.Returns 0 if:No match is found.\nIf occurrence is greater than the number of matches found.\nIf position is greater than the length of source_value.Returns NULL if:Any input argument is NULL.Returns an error if:position is 0.\noccurrence is 0 or negative."
   },
   {
     "name": "LEFT",
@@ -739,35 +739,35 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "BOOL",
-    "description": "Returns TRUE if value is a partial match for the regular expression,\nregexp.If the regexp argument is invalid, the function returns an error.You can search for a full match by using ^ (beginning of text) and $ (end of\ntext). Due to regular expression operator precedence, it is good practice to use\nparentheses around everything between ^ and $.Note:BigQuery provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
+    "description": "Returns TRUE if value is a partial match for the regular expression,\nregexp.If the regexp argument is invalid, the function returns an error.You can search for a full match by using ^ (beginning of text) and $ (end of\ntext). Due to regular expression operator precedence, it is good practice to use\nparentheses around everything between ^ and $.Note:Google Standard SQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
     "name": "REGEXP_EXTRACT",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
-    "description": "Returns the substring in value that matches the regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group, the function returns the\nsubstring that is matched by that capturing group. If the expression does not\ncontain a capturing group, the function returns the entire matching substring.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integerNote:BigQuery provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
+    "description": "Returns the substring in value that matches the regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group, the function returns the\nsubstring that is matched by that capturing group. If the expression does not\ncontain a capturing group, the function returns the entire matching substring.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integerNote:Google Standard SQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
     "name": "REGEXP_EXTRACT_ALL",
     "arguments": [],
     "category": "String functions",
-    "return_type": "An ARRAY of either STRINGs or BYTES",
-    "description": "Returns an array of all substrings of value that match the regular expression,\nregexp.The REGEXP_EXTRACT_ALL function only returns non-overlapping matches. For\nexample, using this function to extract ana from banana returns only one\nsubstring, not two.Note:BigQuery provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
+    "return_type": "An ARRAY<STRING> or ARRAY<BYTES>",
+    "description": "Returns an array of all substrings of value that match the regular expression,\nregexp.The REGEXP_EXTRACT_ALL function only returns non-overlapping matches. For\nexample, using this function to extract ana from banana returns only one\nsubstring, not two.Note:Google Standard SQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
     "name": "REGEXP_INSTR",
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Returns the lowest 1-based index of a regular expression, regexp, in\nsource_value. Returns 0 when no match is found or the regular expression\nis empty. Returns an error if the regular expression is invalid or has more than\none capturing group. source_value and regexp must be the same type, either\nSTRING or BYTES.If position is specified, the search starts at this position in\nsource_value, otherwise it starts at the beginning of source_value.\nposition cannot be 0 or negative.If occurrence is specified, the search returns the position of a specific\ninstance of regexp in source_value, otherwise it returns the index of\nthe first occurrence. If occurrence is greater than the number of matches\nfound, 0 is returned. For occurrence > 1, the function searches for\noverlapping occurrences, in other words, the function searches for additional\noccurrences beginning with the second character in the previous occurrence.\noccurrence cannot be 0 or negative.You can optionally use occurrence_position to specify where a position\nin relation to an occurrence starts. Your choices are:\n+  0: Returns the beginning position of the occurrence.\n+  1: Returns the first position following the end of the occurrence. If the\n   end of the occurrence is also the end of the input, one off the\n   end of the occurrence is returned. For example, length of a string + 1."
+    "description": "Returns the lowest 1-based position of a regular expression, regexp, in\nsource_value. source_value and regexp must be the same type, either\nSTRING or BYTES.If position is specified, the search starts at this position in\nsource_value, otherwise it starts at 1, which is the beginning of\nsource_value. position is of type INT64 and must be positive.If occurrence is specified, the search returns the position of a specific\ninstance of regexp in source_value. If not specified, occurrence defaults\nto 1 and returns the position of the first occurrence.  For occurrence > 1,\nthe function searches for the next, non-overlapping occurrence.\noccurrence is of type INT64 and must be positive.You can optionally use occurrence_position to specify where a position\nin relation to an occurrence starts. Your choices are:0: Returns the start position of occurrence.\n1: Returns the end position of occurrence + 1. If the\nend of the occurrence is at the end of source_value,\nLENGTH(source_value) + 1 is returned.Returns 0 if:No match is found.\nIf occurrence is greater than the number of matches found.\nIf position is greater than the length of source_value.\nThe regular expression is empty.Returns NULL if:position is NULL.\noccurrence is NULL.Returns an error if:position is 0 or negative.\noccurrence is 0 or negative.\noccurrence_position is neither 0 nor 1.\nThe regular expression is invalid.\nThe regular expression has more than one capturing group."
   },
   {
     "name": "REGEXP_REPLACE",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
-    "description": "Returns a STRING where all substrings of value that\nmatch regular expression regexp are replaced with replacement.You can use backslashed-escaped digits (\\1 to \\9) within the replacement\nargument to insert text matching the corresponding parenthesized group in the\nregexp pattern. Use \\0 to refer to the entire matching text.To add a backslash in your regular expression, you must first escape it. For\nexample, SELECT REGEXP_REPLACE('abc', 'b(.)', 'X\\\\1'); returns aXc. You can\nalso use raw strings to remove one layer of\nescaping, for example SELECT REGEXP_REPLACE('abc', 'b(.)', r'X\\1');.The REGEXP_REPLACE function only replaces non-overlapping matches. For\nexample, replacing ana within banana results in only one replacement, not\ntwo.If the regexp argument is not a valid regular expression, this function\nreturns an error.Note:BigQuery provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
+    "description": "Returns a STRING where all substrings of value that\nmatch regular expression regexp are replaced with replacement.You can use backslashed-escaped digits (\\1 to \\9) within the replacement\nargument to insert text matching the corresponding parenthesized group in the\nregexp pattern. Use \\0 to refer to the entire matching text.To add a backslash in your regular expression, you must first escape it. For\nexample, SELECT REGEXP_REPLACE('abc', 'b(.)', 'X\\\\1'); returns aXc. You can\nalso use raw strings to remove one layer of\nescaping, for example SELECT REGEXP_REPLACE('abc', 'b(.)', r'X\\1');.The REGEXP_REPLACE function only replaces non-overlapping matches. For\nexample, replacing ana within banana results in only one replacement, not\ntwo.If the regexp argument is not a valid regular expression, this function\nreturns an error.Note:Google Standard SQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
     "name": "REGEXP_SUBSTR",
@@ -836,7 +836,7 @@
     "name": "SPLIT",
     "arguments": [],
     "category": "String functions",
-    "return_type": "ARRAY of type STRING or\nARRAY of type BYTES",
+    "return_type": "ARRAY<STRING> or ARRAY<BYTES>",
     "description": "Splits value using the delimiter argument.For STRING, the default delimiter is the comma ,.For BYTES, you must specify a delimiter.Splitting on an empty delimiter produces an array of UTF-8 characters for\nSTRING values, and an array of BYTES for BYTES values.Splitting an empty STRING returns an\nARRAY with a single empty\nSTRING.This function supports specifying collation."
   },
   {
@@ -851,7 +851,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Takes two STRING or BYTES values. Returns the 1-based index of the first\noccurrence of value2 inside value1. Returns 0 if value2 is not found.This function supports specifying collation."
+    "description": "Takes two STRING or BYTES values. Returns the 1-based position of the first\noccurrence of value2 inside value1. Returns 0 if value2 is not found.This function supports specifying collation."
   },
   {
     "name": "SUBSTR",
@@ -878,7 +878,7 @@
     "name": "TO_CODE_POINTS",
     "arguments": [],
     "category": "String functions",
-    "return_type": "ARRAY of INT64",
+    "return_type": "ARRAY<INT64>",
     "description": "Takes a value and returns an array of\nINT64.If value is a STRING, each element in the returned array represents a\ncode point. Each code point falls\nwithin the range of [0, 0xD7FF] and [0xE000, 0x10FFFF].\nIf value is BYTES, each element in the array is an extended ASCII\ncharacter value in the range of [0, 255].To convert from an array of code points to a STRING or BYTES, see\nCODE_POINTS_TO_STRING or\nCODE_POINTS_TO_BYTES."
   },
   {
@@ -984,14 +984,14 @@
     "arguments": [],
     "category": "JSON functions",
     "return_type": "A JSON value",
-    "description": "Takes a SQL value and returns a JSON value. The value\nmust be a supported BigQuery data type. You can review the\nBigQuery data types that this function supports and their\nJSON encodings here.This function supports an optional mandatory-named argument called\nstringify_wide_numbers.If this argument is TRUE, numeric values outside\nof the FLOAT64 type domain are encoded as strings.\nIf this argument is not used or is FALSE, numeric values outside\nof the FLOAT64 type domain are not encoded\nas strings, but are stored as JSON numbers. If a numerical value cannot be\nstored in JSON without loss of precision, an error is thrown.The following numerical data types are affected by the\nstringify_wide_numbers argument:INT64\nNUMERIC\nBIGNUMERICIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
+    "description": "Takes a SQL value and returns a JSON value. The value\nmust be a supported Google Standard SQL data type. You can review the\nGoogle Standard SQL data types that this function supports and their\nJSON encodings here.This function supports an optional mandatory-named argument called\nstringify_wide_numbers.If this argument is TRUE, numeric values outside\nof the FLOAT64 type domain are encoded as strings.\nIf this argument is not used or is FALSE, numeric values outside\nof the FLOAT64 type domain are not encoded\nas strings, but are stored as JSON numbers. If a numerical value cannot be\nstored in JSON without loss of precision, an error is thrown.The following numerical data types are affected by the\nstringify_wide_numbers argument:INT64\nNUMERIC\nBIGNUMERICIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
   },
   {
     "name": "TO_JSON_STRING",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "A JSON-formatted STRING",
-    "description": "Takes a SQL value and returns a JSON-formatted string\nrepresentation of the value. The value must be a supported BigQuery\ndata type. You can review the BigQuery data types that this function\nsupports and their JSON encodings here.This function supports an optional boolean parameter called pretty_print.\nIf pretty_print is true, the returned value is formatted for easy\nreadability."
+    "description": "Takes a SQL value and returns a JSON-formatted string\nrepresentation of the value. The value must be a supported Google Standard SQL\ndata type. You can review the Google Standard SQL data types that this function\nsupports and their JSON encodings here.This function supports an optional boolean parameter called pretty_print.\nIf pretty_print is true, the returned value is formatted for easy\nreadability."
   },
   {
     "name": "STRING",
@@ -1032,7 +1032,7 @@
     "name": "ARRAY",
     "arguments": [],
     "category": "Array functions",
-    "return_type": "Subqueries are unordered, so the elements of the output ARRAY are not\nguaranteed to preserve any order in the source table for the subquery. However,\nif the subquery includes an ORDER BY clause, the ARRAY function will return\nan ARRAY that honors that clause.\nIf the subquery returns more than one column, the ARRAY function returns an\nerror.\nIf the subquery returns an ARRAY typed column or ARRAY typed rows, the\nARRAY function returns an error: BigQuery does not support\nARRAYs with elements of type\nARRAY.\nIf the subquery returns zero rows, the ARRAY function returns an empty\nARRAY. It never returns a NULL ARRAY.",
+    "return_type": "Subqueries are unordered, so the elements of the output ARRAY are not\nguaranteed to preserve any order in the source table for the subquery. However,\nif the subquery includes an ORDER BY clause, the ARRAY function will return\nan ARRAY that honors that clause.\nIf the subquery returns more than one column, the ARRAY function returns an\nerror.\nIf the subquery returns an ARRAY typed column or ARRAY typed rows, the\nARRAY function returns an error that Google Standard SQL does not support\nARRAYs with elements of type\nARRAY.\nIf the subquery returns zero rows, the ARRAY function returns an empty\nARRAY. It never returns a NULL ARRAY.",
     "description": "The ARRAY function returns an ARRAY with one element for each row in a\nsubquery.If subquery produces a\nSQL table,\nthe table must have exactly one column. Each element in the output ARRAY is\nthe value of the single column of a row in the table.If subquery produces a\nvalue table,\nthen each element in the output ARRAY is the entire corresponding row of the\nvalue table."
   },
   {
@@ -1781,21 +1781,21 @@
     "name": "ST_MAKELINE",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "Every edge must span strictly less than 180 degrees.NOTE: Google Standard SQL's snapping process may discard sufficiently short edges\nand snap the two endpoints together. For instance, if two input GEOGRAPHYs\neach contain a point and the two points are separated by a distance less than\nthe snap radius, the points will be snapped together. In such a case the result\nwill be a GEOGRAPHY with exactly one point.",
+    "return_type": "Every edge must span strictly less than 180 degrees.NOTE: The Google Standard SQL snapping process may discard sufficiently short\nedges and snap the two endpoints together. For instance, if two input\nGEOGRAPHYs each contain a point and the two points are separated by a distance\nless than the snap radius, the points will be snapped together. In such a case\nthe result will be a GEOGRAPHY with exactly one point.",
     "description": "Creates a GEOGRAPHY with a single linestring by\nconcatenating the point or line vertices of each of the input\nGEOGRAPHYs in the order they are given.ST_MAKELINE comes in two variants. For the first variant, input must be two\nGEOGRAPHYs. For the second, input must be an ARRAY of type GEOGRAPHY. In\neither variant, each input GEOGRAPHY must consist of one of the following\nvalues:Exactly one point.\nExactly one linestring.For the first variant of ST_MAKELINE, if either input GEOGRAPHY is NULL,\nST_MAKELINE returns NULL. For the second variant, if input ARRAY or any\nelement in the input ARRAY is NULL, ST_MAKELINE returns NULL."
   },
   {
     "name": "ST_MAKEPOLYGON",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "Together, the input rings must form a valid polygon:The polygon shell must cover each of the polygon holes.\nThere can be only one polygon shell (which has to be the first input ring).\nThis implies that polygon holes cannot be nested.\nPolygon rings may only intersect in a vertex on the boundary of both rings.Every edge must span strictly less than 180 degrees.Each polygon ring divides the sphere into two regions. The first input linesting\nto ST_MAKEPOLYGON forms the polygon shell, and the interior is chosen to be\nthe smaller of the two regions. Each subsequent input linestring specifies a\npolygon hole, so the interior of the polygon is already well-defined. In order\nto define a polygon shell such that the interior of the polygon is the larger of\nthe two regions, see ST_MAKEPOLYGONORIENTED.NOTE: Google Standard SQL's snapping process may discard sufficiently short edges\nand snap the two endpoints together. Hence, when vertices are snapped together,\nit is possible that a polygon hole that is sufficiently small may disappear, or\nthe output GEOGRAPHY may contain only a line or a\npoint.",
+    "return_type": "Together, the input rings must form a valid polygon:The polygon shell must cover each of the polygon holes.\nThere can be only one polygon shell (which has to be the first input ring).\nThis implies that polygon holes cannot be nested.\nPolygon rings may only intersect in a vertex on the boundary of both rings.Every edge must span strictly less than 180 degrees.Each polygon ring divides the sphere into two regions. The first input linesting\nto ST_MAKEPOLYGON forms the polygon shell, and the interior is chosen to be\nthe smaller of the two regions. Each subsequent input linestring specifies a\npolygon hole, so the interior of the polygon is already well-defined. In order\nto define a polygon shell such that the interior of the polygon is the larger of\nthe two regions, see ST_MAKEPOLYGONORIENTED.NOTE: The Google Standard SQL snapping process may discard sufficiently\nshort edges and snap the two endpoints together. Hence, when vertices are\nsnapped together, it is possible that a polygon hole that is sufficiently small\nmay disappear, or the output GEOGRAPHY may contain only a line or a\npoint.",
     "description": "Creates a GEOGRAPHY containing a single polygon\nfrom linestring inputs, where each input linestring is used to construct a\npolygon ring.ST_MAKEPOLYGON comes in two variants. For the first variant, the input\nlinestring is provided by a single GEOGRAPHY containing exactly one\nlinestring. For the second variant, the input consists of a single GEOGRAPHY\nand an array of GEOGRAPHYs, each containing exactly one linestring.The first GEOGRAPHY in either variant is used to construct the polygon shell.\nAdditional GEOGRAPHYs provided in the input ARRAY specify a polygon hole.\nFor every input GEOGRAPHY containing exactly one linestring, the following\nmust be true:The linestring must consist of at least three distinct vertices.\nThe linestring must be closed: that is, the first and last vertex have to be\nthe same. If the first and last vertex differ, the function constructs a\nfinal edge from the first vertex to the last.For the first variant of ST_MAKEPOLYGON, if either input GEOGRAPHY is\nNULL, ST_MAKEPOLYGON returns NULL. For the second variant, if\ninput ARRAY or any element in the ARRAY is NULL, ST_MAKEPOLYGON returns\nNULL.NOTE: ST_MAKEPOLYGON accepts an empty GEOGRAPHY as input. ST_MAKEPOLYGON\ninterprets an empty GEOGRAPHY as having an empty linestring, which will\ncreate a full loop: that is, a polygon that covers the entire Earth."
   },
   {
     "name": "ST_MAKEPOLYGONORIENTED",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "Together, the input rings must form a valid polygon:The polygon shell must cover each of the polygon holes.\nThere must be only one polygon shell, which must to be the first input ring.\nThis implies that polygon holes cannot be nested.\nPolygon rings may only intersect in a vertex on the boundary of both rings.Every edge must span strictly less than 180 degrees.ST_MAKEPOLYGONORIENTED relies on the ordering of the input vertices of each\nlinestring to determine the orientation of the polygon. This applies to the\npolygon shell and any polygon holes. ST_MAKEPOLYGONORIENTED expects all\npolygon holes to have the opposite orientation of the shell. See\nST_MAKEPOLYGON for an alternate polygon constructor, and\nother constraints on building a valid polygon.NOTE: Due to Google Standard SQL's snapping process, edges with a sufficiently\nshort length will be discarded and the two endpoints will be snapped to a single\npoint. Therefore, it is possible that vertices in a linestring may be snapped\ntogether such that one or more edge disappears. Hence, it is possible that a\npolygon hole that is sufficiently small may disappear, or the resulting\nGEOGRAPHY may contain only a line or a point.",
+    "return_type": "Together, the input rings must form a valid polygon:The polygon shell must cover each of the polygon holes.\nThere must be only one polygon shell, which must to be the first input ring.\nThis implies that polygon holes cannot be nested.\nPolygon rings may only intersect in a vertex on the boundary of both rings.Every edge must span strictly less than 180 degrees.ST_MAKEPOLYGONORIENTED relies on the ordering of the input vertices of each\nlinestring to determine the orientation of the polygon. This applies to the\npolygon shell and any polygon holes. ST_MAKEPOLYGONORIENTED expects all\npolygon holes to have the opposite orientation of the shell. See\nST_MAKEPOLYGON for an alternate polygon constructor, and\nother constraints on building a valid polygon.NOTE: Due to the Google Standard SQL snapping process, edges with a sufficiently\nshort length will be discarded and the two endpoints will be snapped to a single\npoint. Therefore, it is possible that vertices in a linestring may be snapped\ntogether such that one or more edge disappears. Hence, it is possible that a\npolygon hole that is sufficiently small may disappear, or the resulting\nGEOGRAPHY may contain only a line or a point.",
     "description": "Like ST_MAKEPOLYGON, but the vertex ordering of each input linestring\ndetermines the orientation of each polygon ring. The orientation of a polygon\nring defines the interior of the polygon as follows: if someone walks along the\nboundary of the polygon in the order of the input vertices, the interior of the\npolygon is on the left. This applies for each polygon ring provided.This variant of the polygon constructor is more flexible since\nST_MAKEPOLYGONORIENTED can construct a polygon such that the interior is on\neither side of the polygon ring. However, proper orientation of polygon rings is\ncritical in order to construct the desired polygon.If the input ARRAY or any element in the ARRAY is NULL,\nST_MAKEPOLYGONORIENTED returns NULL.NOTE: The input argument for ST_MAKEPOLYGONORIENTED may contain an empty\nGEOGRAPHY. ST_MAKEPOLYGONORIENTED interprets an empty GEOGRAPHY as having\nan empty linestring, which will create a full loop: that is, a polygon that\ncovers the entire Earth."
   },
   {
@@ -1977,8 +1977,8 @@
     "name": "ERROR",
     "arguments": [],
     "category": "Debugging functions",
-    "return_type": "BigQuery infers the return type in context.",
-    "description": "Returns an error. The error_message argument is a STRING.BigQuery treats ERROR in the same way as any expression that may\nresult in an error: there is no special guarantee of evaluation order."
+    "return_type": "Google Standard SQL infers the return type in context.",
+    "description": "Returns an error. The error_message argument is a STRING.Google Standard SQL treats ERROR in the same way as any expression that may\nresult in an error: there is no special guarantee of evaluation order."
   },
   {
     "name": "KEYS.NEW_KEYSET",
@@ -2006,7 +2006,7 @@
     "arguments": [],
     "category": "AEAD encryption functions",
     "return_type": "BYTES",
-    "description": "Returns a serialized keyset as BYTES with the\naddition of a key to keyset based on key_type and raw_key_bytes.The primary cryptographic key remains the same as in keyset. The expected\nlength of raw_key_bytes depends on the value of key_type. The following are\nsupported key_types:'AES_CBC_PKCS': Creates a key for AES decryption using cipher block chaining\nand PKCS padding. raw_key_bytes is expected to be a raw key\nBYTES value of length 16, 24, or 32; these\nlengths have sizes of 128, 192, and 256 bits, respectively. BigQuery\nAEAD functions do not support keys of these types for encryption; instead,\nprefer 'AEAD_AES_GCM_256' or 'AES_GCM' keys.\n'AES_GCM': Creates a key for AES decryption or encryption using\nGalois/Counter Mode.\nraw_key_bytes must be a raw key BYTES\nvalue of length 16 or 32; these lengths have sizes of 128 and 256 bits,\nrespectively. When keys of this type are inputs to AEAD.ENCRYPT, the output\nciphertext does not have a Tink-specific prefix indicating which key was\nused as input."
+    "description": "Returns a serialized keyset as BYTES with the\naddition of a key to keyset based on key_type and raw_key_bytes.The primary cryptographic key remains the same as in keyset. The expected\nlength of raw_key_bytes depends on the value of key_type. The following are\nsupported key_types:'AES_CBC_PKCS': Creates a key for AES decryption using cipher block chaining\nand PKCS padding. raw_key_bytes is expected to be a raw key\nBYTES value of length 16, 24, or 32; these\nlengths have sizes of 128, 192, and 256 bits, respectively. Google Standard SQL\nAEAD functions do not support keys of these types for encryption; instead,\nprefer 'AEAD_AES_GCM_256' or 'AES_GCM' keys.\n'AES_GCM': Creates a key for AES decryption or encryption using\nGalois/Counter Mode.\nraw_key_bytes must be a raw key BYTES\nvalue of length 16 or 32; these lengths have sizes of 128 and 256 bits,\nrespectively. When keys of this type are inputs to AEAD.ENCRYPT, the output\nciphertext does not have a Tink-specific prefix indicating which key was\nused as input."
   },
   {
     "name": "AEAD.DECRYPT_BYTES",
@@ -2091,5 +2091,12 @@
     "category": "AEAD encryption functions",
     "return_type": "INT64",
     "description": "Returns the number of keys in the provided keyset."
+  },
+  {
+    "name": "EXTERNAL_OBJECT_TRANSFORM",
+    "arguments": [],
+    "category": "Built-in table functions",
+    "return_type": "TABLE",
+    "description": "This function returns a transformed object table with the original columns plus\none or more additional columns, depending on the transform_types values\nspecified.This function only supports\nobject tables\nas inputs. Subqueries or any other types of tables are not supported.object_table_name is the name of the object table to be transformed, in\nthe format dataset_name.object_table_name.transform_types_array is an array of STRING literals. Currently, the only\nsupported transform_types_array value is SIGNED_URL. Specifying SIGNED_URL\ncreates read-only signed URLs for the objects in the identified object table,\nwhich are returned in a signed_url column. Generated signed URLs are\nvalid for 6 hours."
   }
 ]
