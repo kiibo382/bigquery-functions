@@ -1,6 +1,6 @@
 use crate::json_types;
 use bigquery_functions_types_macros::enum_category;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 enum_category!();
 
