@@ -24,8 +24,8 @@
     "name": "AVG",
     "arguments": [],
     "category": "Aggregate functions",
-    "return_type": "Any numeric input type, such as\nINT64. Note that, for\nfloating point input types, the return result is non-deterministic, which\nmeans you might receive a different result each time you use this function.",
-    "description": "Returns the average of non-NULL input values, or NaN if the input contains a\nNaN.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "return_type": "Any numeric input type and\nINTERVAL.",
+    "description": "Returns the average of non-NULL input values.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a different result each time\nyou use this function.\nIf the input is empty, does not come from the FROM clause, or contains only\nNULLs, returns NULL.\nIf the input contains NaN, returns NaN.\nIf the input contains [+|-]Infinity and the input is a singleton,\nreturns [+|-]Infinity. If the input is not a singleton, returns NaN.\nIf there is numeric overflow, produces an error."
   },
   {
     "name": "BIT_AND",
@@ -360,36 +360,36 @@
     "name": "SAFE_DIVIDE",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64INT64FLOAT64NUMERICBIGNUMERICFLOAT64NUMERICNUMERICNUMERICBIGNUMERICFLOAT64BIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the division operator (X / Y), but returns\nNULL if an error occurs, such as a division by zero error.XYSAFE_DIVIDE(X, Y)20450200200NULL"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the division operator (X / Y), but returns\nNULL if an error occurs, such as a division by zero error.X\n      Y\n      SAFE_DIVIDE(X, Y)\n  20\n      4\n      5\n    0\n      20\n      0\n    20\n      0\n      NULL"
   },
   {
     "name": "SAFE_MULTIPLY",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64INT64INT64NUMERICBIGNUMERICFLOAT64NUMERICNUMERICNUMERICBIGNUMERICFLOAT64BIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the multiplication operator (*), but returns\nNULL if overflow occurs.XYSAFE_MULTIPLY(X, Y)20480"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the multiplication operator (*), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_MULTIPLY(X, Y)\n  20\n      4\n      80"
   },
   {
     "name": "SAFE_NEGATE",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64OUTPUTINT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Equivalent to the unary minus operator (-), but returns\nNULL if overflow occurs.XSAFE_NEGATE(X)+1-1-1+100"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTINT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Equivalent to the unary minus operator (-), but returns\nNULL if overflow occurs.X\n      SAFE_NEGATE(X)\n  +1\n      -1\n    -1\n      +1\n    0\n      0"
   },
   {
     "name": "SAFE_ADD",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64INT64INT64NUMERICBIGNUMERICFLOAT64NUMERICNUMERICNUMERICBIGNUMERICFLOAT64BIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the addition operator (+), but returns\nNULL if overflow occurs.XYSAFE_ADD(X, Y)549"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the addition operator (+), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_ADD(X, Y)\n  5\n      4\n      9"
   },
   {
     "name": "SAFE_SUBTRACT",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64INT64INT64NUMERICBIGNUMERICFLOAT64NUMERICNUMERICNUMERICBIGNUMERICFLOAT64BIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Returns the result of Y subtracted from X.\nEquivalent to the subtraction operator (-), but returns\nNULL if overflow occurs.XYSAFE_SUBTRACT(X, Y)541"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Returns the result of Y subtracted from X.\nEquivalent to the subtraction operator (-), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_SUBTRACT(X, Y)\n  5\n      4\n      1"
   },
   {
     "name": "MOD",
@@ -403,7 +403,7 @@
     "arguments": [],
     "category": "Mathematical functions",
     "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "If only X is present, rounds X to the nearest integer. If N is present,\nrounds X to N decimal places after the decimal point. If N is negative,\nrounds off digits to the left of the decimal point. Rounds halfway cases\naway from zero. Generates an error if overflow occurs.If X is a NUMERIC or BIGNUMERIC type, then you can\nexplicitly set rounding_mode to one of the following:\"ROUND_HALF_AWAY_FROM_ZERO\": (Default) Rounds\nhalfway cases away from zero.\n\"ROUND_HALF_EVEN\": Rounds halfway cases\ntowards the nearest even digit.If you set the rounding_mode and X is not a NUMERIC or BIGNUMERIC type,\nthen the function generates an error.Expression\n      Return Value\n  ROUND(2.0)\n      2.0\n    ROUND(2.3)\n      2.0\n    ROUND(2.8)\n      3.0\n    ROUND(2.5)\n      3.0\n    ROUND(-2.3)\n      -2.0\n    ROUND(-2.8)\n      -3.0\n    ROUND(-2.5)\n      -3.0\n    ROUND(0)\n      0\n    ROUND(+inf)\n      +inf\n    ROUND(-inf)\n      -inf\n    ROUND(NaN)\n      NaN\n    ROUND(123.7, -1)\n      120.0\n    ROUND(1.235, 2)\n      1.24\n    ROUND(NUMERIC \"2.25\", 1, \"ROUND_HALF_EVEN\")\n      2.2\n    ROUND(NUMERIC \"2.35\", 1, \"ROUND_HALF_EVEN\")\n      2.4\n    ROUND(NUMERIC \"2.251\", 1, \"ROUND_HALF_EVEN\")\n      2.3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_EVEN\")\n      -2\n    ROUND(NUMERIC \"2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      -3"
+    "description": "If only X is present, rounds X to the nearest integer. If N is present,\nrounds X to N decimal places after the decimal point. If N is negative,\nrounds off digits to the left of the decimal point. Rounds halfway cases\naway from zero. Generates an error if overflow occurs.If X is a NUMERIC or BIGNUMERIC type, then you can\nexplicitly set rounding_mode ([Preview][preview])\nto one of the following:[\"ROUND_HALF_AWAY_FROM_ZERO\"][round-half-away-from-zero]: (Default) Rounds\nhalfway cases away from zero.\n[\"ROUND_HALF_EVEN\"][round-half-even]: Rounds halfway cases\ntowards the nearest even digit.If you set the rounding_mode and X is not a NUMERIC or BIGNUMERIC type,\nthen the function generates an error.Expression\n      Return Value\n  ROUND(2.0)\n      2.0\n    ROUND(2.3)\n      2.0\n    ROUND(2.8)\n      3.0\n    ROUND(2.5)\n      3.0\n    ROUND(-2.3)\n      -2.0\n    ROUND(-2.8)\n      -3.0\n    ROUND(-2.5)\n      -3.0\n    ROUND(0)\n      0\n    ROUND(+inf)\n      +inf\n    ROUND(-inf)\n      -inf\n    ROUND(NaN)\n      NaN\n    ROUND(123.7, -1)\n      120.0\n    ROUND(1.235, 2)\n      1.24\n    ROUND(NUMERIC \"2.25\", 1, \"ROUND_HALF_EVEN\")\n      2.2\n    ROUND(NUMERIC \"2.35\", 1, \"ROUND_HALF_EVEN\")\n      2.4\n    ROUND(NUMERIC \"2.251\", 1, \"ROUND_HALF_EVEN\")\n      2.3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_EVEN\")\n      -2\n    ROUND(NUMERIC \"2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      -3"
   },
   {
     "name": "TRUNC",
@@ -662,7 +662,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "BYTES",
-    "description": "Converts the base64-encoded input string_expr into\nBYTES format. To convert\nBYTES to a base64-encoded STRING,\nuse TO_BASE64.There are several base64 encodings in common use that vary in exactly which\nalphabet of 65 ASCII characters are used to encode the 64 digits and padding.\nSee RFC 4648 for details. This\nfunction expects the alphabet [A-Za-z0-9+/=]."
+    "description": "Converts the base64-encoded input string_expr into\nBYTES format. To convert\nBYTES to a base64-encoded STRING,\nuse [TO_BASE64][string-link-to-base64].There are several base64 encodings in common use that vary in exactly which\nalphabet of 65 ASCII characters are used to encode the 64 digits and padding.\nSee RFC 4648 for details. This\nfunction expects the alphabet [A-Za-z0-9+/=]."
   },
   {
     "name": "FROM_HEX",
@@ -879,7 +879,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "ARRAY<INT64>",
-    "description": "Takes a value and returns an array of\nINT64.If value is a STRING, each element in the returned array represents a\ncode point. Each code point falls\nwithin the range of [0, 0xD7FF] and [0xE000, 0x10FFFF].\nIf value is BYTES, each element in the array is an extended ASCII\ncharacter value in the range of [0, 255].To convert from an array of code points to a STRING or BYTES, see\nCODE_POINTS_TO_STRING or\nCODE_POINTS_TO_BYTES."
+    "description": "Takes a STRING or BYTES value and returns an array of\nINT64.If value is a STRING, each element in the returned array represents a\ncode point. Each code point falls\nwithin the range of [0, 0xD7FF] and [0xE000, 0x10FFFF].\nIf value is BYTES, each element in the array is an extended ASCII\ncharacter value in the range of [0, 255].To convert from an array of code points to a STRING or BYTES, see\nCODE_POINTS_TO_STRING or\nCODE_POINTS_TO_BYTES."
   },
   {
     "name": "TO_HEX",
@@ -1159,7 +1159,7 @@
     "arguments": [],
     "category": "Date functions",
     "return_type": "DATE",
-    "description": "Converts a string representation of date to a\nDATE object.format_string contains the format elements\nthat define how date_string is formatted. Each element in\ndate_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in date_string.-- This works because elements on both sides match.\nSELECT PARSE_DATE(\"%A %b %e %Y\", \"Thursday Dec 25 2008\")\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_DATE(\"%Y %A %b %e\", \"Thursday Dec 25 2008\")\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_DATE(\"%A %b %e\", \"Thursday Dec 25 2008\")\n\n-- This works because %F can find all matching elements in date_string.\nSELECT PARSE_DATE(\"%F\", \"2000-12-30\")When using PARSE_DATE, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the date string. In\naddition, leading and trailing white spaces in the date string are always\nallowed -- even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones."
+    "description": "Converts a string representation of date to a\nDATE object.format_string contains the format elements\nthat define how date_string is formatted. Each element in\ndate_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in date_string.-- This works because elements on both sides match.\nSELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008')\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_DATE('%Y %A %b %e', 'Thursday Dec 25 2008')\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_DATE('%A %b %e', 'Thursday Dec 25 2008')\n\n-- This works because %F can find all matching elements in date_string.\nSELECT PARSE_DATE('%F', '2000-12-30')When using PARSE_DATE, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the date string. In\naddition, leading and trailing white spaces in the date string are always\nallowed -- even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones."
   },
   {
     "name": "UNIX_DATE",
@@ -1690,8 +1690,8 @@
     "name": "ST_GEOGPOINT",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "Latitudes must be in the range [-90, 90]. Latitudes outside this range\nwill result in an error.\nLongitudes outside the range [-180, 180] are allowed; ST_GEOGPOINT uses\nthe input longitude modulo 360 to obtain a longitude within [-180, 180].",
-    "description": "Creates a GEOGRAPHY with a single point.\nST_GEOGPOINT creates a point from the specified\nFLOAT64 longitude and latitude parameters and\nreturns that point in a GEOGRAPHY value."
+    "return_type": "Longitudes outside the range [-180, 180] are allowed; ST_GEOGPOINT uses\nthe input longitude modulo 360 to obtain a longitude within [-180, 180].\nLatitudes must be in the range [-90, 90]. Latitudes outside this range\nwill result in an error.",
+    "description": "Creates a GEOGRAPHY with a single point. ST_GEOGPOINT creates a point from\nthe specified FLOAT64 longitude (in degrees,\nnegative west of the Prime Meridian, positive east) and latitude (in degrees,\npositive north of the Equator, negative south) parameters and returns that point\nin a GEOGRAPHY value.NOTE: Some systems present latitude first; take care with argument order."
   },
   {
     "name": "ST_GEOGPOINTFROMGEOHASH",
