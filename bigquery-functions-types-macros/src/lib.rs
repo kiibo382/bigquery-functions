@@ -12,7 +12,7 @@ pub fn enum_category(_item: TokenStream) -> TokenStream {
     f.read_to_string(&mut contents).unwrap();
     let categories: Vec<String> = serde_json::from_str(&contents).unwrap();
 
-    let mut enum_category = String::from("#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]\npub enum Category {\n");
+    let mut enum_category = String::from("#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]\npub enum Category {\n");
     for category in &categories {
         enum_category.push_str(&format!(
             "    {},\n",

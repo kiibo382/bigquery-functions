@@ -55,3 +55,11 @@ pub fn get_bigquery_functions() -> Vec<types::Function> {
 
     return converted_functions;
 }
+
+pub fn get_distinct_allowed_categories() -> [types::Category; 3] {
+    [
+        types::Category::Aggregate,
+        types::Category::Approximate,
+        types::Category::HyperLogLog,
+    ]
+}
