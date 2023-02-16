@@ -5,5 +5,8 @@ cp-output:
 make-output-symlink:
 	ln -s ./outpt ./bigquery-functions/output && ln -s ./outpt ./bigquery-functions-types-macros/output
 
-release:
-	cargo 
+publish-types-macros:
+	cd bigquery-functions-types-macros && cargo publish
+
+publish:
+	cd bigquery-functions && cargo publish
