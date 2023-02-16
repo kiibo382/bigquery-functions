@@ -1,6 +1,6 @@
 [package]
 name = "bigquery-functions-types-macros"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
 description = "proc macros to define BigQuery function types"
