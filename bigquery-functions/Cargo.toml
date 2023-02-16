@@ -1,6 +1,6 @@
 [package]
 name = "bigquery-functions"
-version = "0.1.5"
+version = "0.1.7"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
 description = "BigQuery functions"

@@ -8,7 +8,7 @@ If you want to use it with json, see [output](./output).
 Add the following to Cargo.toml.
 ```toml
 [dependencies]
-bigquery-functions = "0.1.5"
+bigquery-functions = "0.1.7"
 ```
 
 Then call the function or type as follows.
