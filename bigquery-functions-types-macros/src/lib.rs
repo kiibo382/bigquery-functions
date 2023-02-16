@@ -3,7 +3,7 @@ use proc_macro::TokenStream;
 /// generate enum Category from `output/categories.json`
 #[proc_macro]
 pub fn enum_category(_item: TokenStream) -> TokenStream {
-    let contents = include_str!("../output/categories.json");
+    let contents = include_str!("output/categories.json");
     let categories: Vec<String> = serde_json::from_str(&contents).unwrap();
 
     let mut enum_category = String::from("#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]\npub enum Category {\n");
