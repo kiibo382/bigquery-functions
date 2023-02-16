@@ -1,15 +1,9 @@
 use proc_macro::TokenStream;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
 
 /// generate enum Category from `output/categories.json`
 #[proc_macro]
 pub fn enum_category(_item: TokenStream) -> TokenStream {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let mut f = File::open(path.join("output/categories.json")).unwrap();
-    let mut contents = String::new();
-    f.read_to_string(&mut contents).unwrap();
+    let contents = include_str!("../output/categories.json");
     let categories: Vec<String> = serde_json::from_str(&contents).unwrap();
 
     let mut enum_category = String::from("#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]\npub enum Category {\n");
