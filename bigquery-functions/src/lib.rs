@@ -52,3 +52,36 @@ pub fn get_distinct_allowed_categories() -> [types::Category; 3] {
         types::Category::HyperLogLog,
     ]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::Category;
+
+    #[test]
+    fn test_get_bigquery_function_names() {
+        let function_names = get_bigquery_function_names();
+        assert_eq!(function_names.len(), 300);
+    }
+
+    #[test]
+    fn test_get_bigquery_function_categories() {
+        let categories = get_bigquery_function_categories();
+        assert_eq!(categories.len(), 25);
+    }
+
+    #[test]
+    fn test_get_bigquery_functions() {
+        let functions = get_bigquery_functions();
+        assert_eq!(functions.len(), 300);
+    }
+
+    #[test]
+    fn test_get_distinct_allowed_categories() {
+        let categories = get_distinct_allowed_categories();
+        assert_eq!(categories.len(), 3);
+        assert!(categories.contains(&Category::Aggregate));
+        assert!(categories.contains(&Category::Approximate));
+        assert!(categories.contains(&Category::HyperLogLog));
+    }
+}

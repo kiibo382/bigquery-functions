@@ -42,9 +42,10 @@ fn main() {
                 let h3_selector = Selector::parse(&format!("h3#{}", elem.id().unwrap())).unwrap();
                 let h3_frag = fragment.select(&h3_selector).next();
 
-                if h3_frag.unwrap().inner_html().contains(&" ") {
-                    continue;
-                }
+                // if h3_frag.unwrap().inner_html().contains(&" ") {
+                //     println!("space: {}", h3_frag.unwrap().inner_html());
+                //     continue;
+                // }
 
                 let mut texts = vec![];
                 let mut i = 0;
@@ -76,10 +77,14 @@ fn main() {
                     }
                 }
 
+                if elem.attr("data-text").unwrap().contains(" ") {
+                    continue;
+                }
+
                 if texts.len() > 1 {
-                    function_names.push(h3_frag.unwrap().inner_html());
+                    function_names.push(elem.attr("data-text").unwrap().to_uppercase());
                     functions.push(json_types::Function::new(
-                        h3_frag.unwrap().inner_html(),
+                        elem.attr("data-text").unwrap().to_uppercase(),
                         vec![],
                         category.clone(),
                         texts[1].clone(),
