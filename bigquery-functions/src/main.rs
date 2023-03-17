@@ -99,6 +99,21 @@ fn main() {
     write_json(&path.join("output/function_names.json"), &function_names);
     write_json(&path.join("output/functions.json"), &functions);
     write_json(&path.join("output/categories.json"), &categories);
+    write_json(
+        &path.join("output/function_names_by_category.json"),
+        functions
+            .into_iter()
+            .fold(std::collections::HashMap::new(), |mut acc, f| {
+                acc.entry(
+                    f.category.split(' ').collect::<Vec<&str>>()[0]
+                        .replace('+', "")
+                        .replace("-", "_"),
+                )
+                .or_insert(vec![])
+                .push(f.name.clone());
+                acc
+            }),
+    );
 }
 
 fn check_diff(old: &str, new: &str) -> bool {
