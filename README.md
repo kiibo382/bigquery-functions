@@ -1,11 +1,12 @@
-# BigQuery Standard SQL Functions
+# List of BigQuery Standard SQL Functions
 
 [This Reference](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators) is parsed to generate type definitions.
 
-If you want to use it with json, see [output](./output).
+See [output](./output) for a list of BiqQuery functions.
 
 ## Usage
-Add the following to Cargo.toml.
+Here's how to process a list of BigQuery functions using Rust.
+Fist, add the following to Cargo.toml.
 ```toml
 [dependencies]
 bigquery-functions = "0.1.7"
