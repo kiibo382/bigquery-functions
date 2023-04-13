@@ -1,12 +1,31 @@
 use ego_tree::NodeRef;
+use indexmap::IndexMap;
 use scraper::{Html, Node, Selector};
-use serde::Serialize;
+use serde::ser::SerializeMap;
+use serde::{Serialize, Serializer};
 use similar::{ChangeTag, TextDiff};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
 mod json_types;
+
+struct IndexMapWrapper {
+    map: IndexMap<std::string::String, Vec<std::string::String>>,
+}
+
+impl Serialize for IndexMapWrapper {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(Some(self.map.len()))?;
+        for (key, value) in self.map.iter() {
+            map.serialize_entry(key, value)?;
+        }
+        map.end()
+    }
+}
 
 fn main() {
     let resp = reqwest::blocking::get(
@@ -101,9 +120,8 @@ fn main() {
     write_json(&path.join("output/categories.json"), &categories);
     write_json(
         &path.join("output/function_names_by_category.json"),
-        functions
-            .into_iter()
-            .fold(std::collections::HashMap::new(), |mut acc, f| {
+        IndexMapWrapper {
+            map: functions.into_iter().fold(IndexMap::new(), |mut acc, f| {
                 acc.entry(
                     f.category.split(' ').collect::<Vec<&str>>()[0]
                         .replace('+', "")
@@ -113,6 +131,7 @@ fn main() {
                 .push(f.name.clone());
                 acc
             }),
+        },
     );
 }
 
