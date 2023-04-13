@@ -182,18 +182,18 @@
     "description": "Returns the approximate top elements of expression, based on the sum of an\nassigned weight. The number parameter specifies the number of elements\nreturned.If the weight input is negative or NaN, this function returns an error.The elements are returned as an array of STRUCTs.\nEach STRUCT contains two fields: value and sum.\nThe value field contains the value of the input expression. The sum field is\nthe same type as weight, and is the approximate sum of the input weight\nassociated with the value field.Returns NULL if there are zero input rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
   },
   {
+    "name": "HLL_COUNT.EXTRACT",
+    "arguments": [],
+    "category": "HyperLogLog++ functions",
+    "return_type": "BYTES",
+    "description": "A scalar function that extracts a cardinality estimate of a single\nHLL++ sketch.If sketch is NULL, this function returns a cardinality estimate of 0."
+  },
+  {
     "name": "HLL_COUNT.INIT",
     "arguments": [],
     "category": "HyperLogLog++ functions",
     "return_type": "INT64\nNUMERIC\nBIGNUMERIC\nSTRING\nBYTES",
     "description": "An aggregate function that takes one or more input values and aggregates them\ninto a HLL++ sketch. Each sketch\nis represented using the BYTES data type. You can then merge sketches using\nHLL_COUNT.MERGE or HLL_COUNT.MERGE_PARTIAL. If no merging is needed,\nyou can extract the final count of distinct values from the sketch using\nHLL_COUNT.EXTRACT.This function supports an optional parameter, precision. This parameter\ndefines the accuracy of the estimate at the cost of additional memory required\nto process the sketches or store them on disk. The range for this value is\n10 to 24. The default value is 15. For more information about precision,\nsee Precision for sketches.If the input is NULL, this function returns NULL.For more information, see HyperLogLog in Practice: Algorithmic Engineering of\na State of The Art Cardinality Estimation Algorithm."
-  },
-  {
-    "name": "HLL_COUNT.MERGE",
-    "arguments": [],
-    "category": "HyperLogLog++ functions",
-    "return_type": "BYTES",
-    "description": "An aggregate function that returns the cardinality of several\nHLL++ set sketches by computing their union.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge.This function ignores NULL values when merging sketches. If the merge happens\nover zero rows or only over NULL values, the function returns 0."
   },
   {
     "name": "HLL_COUNT.MERGE_PARTIAL",
@@ -203,32 +203,11 @@
     "description": "An aggregate function that takes one or more\nHLL++ sketch\ninputs and merges them into a new sketch.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge. For example,\nif MERGE_PARTIAL encounters sketches of precision 14 and 15, the returned new\nsketch will have precision 14.This function returns NULL if there is no input or all inputs are NULL."
   },
   {
-    "name": "HLL_COUNT.EXTRACT",
+    "name": "HLL_COUNT.MERGE",
     "arguments": [],
     "category": "HyperLogLog++ functions",
     "return_type": "BYTES",
-    "description": "A scalar function that extracts a cardinality estimate of a single\nHLL++ sketch.If sketch is NULL, this function returns a cardinality estimate of 0."
-  },
-  {
-    "name": "RANK",
-    "arguments": [],
-    "category": "Numbering functions",
-    "return_type": "INT64",
-    "description": "Returns the ordinal (1-based) rank of each row within the ordered partition.\nAll peer rows receive the same rank value. The next row or set of peer rows\nreceives a rank value which increments by the number of peers with the previous\nrank value, instead of DENSE_RANK, which always increments by 1.To learn more about the OVER clause and how to use it, see\nWindow function calls."
-  },
-  {
-    "name": "DENSE_RANK",
-    "arguments": [],
-    "category": "Numbering functions",
-    "return_type": "INT64",
-    "description": "Returns the ordinal (1-based) rank of each row within the window partition.\nAll peer rows receive the same rank value, and the subsequent rank value is\nincremented by one.To learn more about the OVER clause and how to use it, see\nWindow function calls."
-  },
-  {
-    "name": "PERCENT_RANK",
-    "arguments": [],
-    "category": "Numbering functions",
-    "return_type": "FLOAT64",
-    "description": "Return the percentile rank of a row defined as (RK-1)/(NR-1), where RK is\nthe RANK of the row and NR is the number of rows in the partition.\nReturns 0 if NR=1.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "An aggregate function that returns the cardinality of several\nHLL++ set sketches by computing their union.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge.This function ignores NULL values when merging sketches. If the merge happens\nover zero rows or only over NULL values, the function returns 0."
   },
   {
     "name": "CUME_DIST",
@@ -238,11 +217,32 @@
     "description": "Return the relative rank of a row defined as NP/NR. NP is defined to be the\nnumber of rows that either precede or are peers with the current row. NR is the\nnumber of rows in the partition.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
+    "name": "DENSE_RANK",
+    "arguments": [],
+    "category": "Numbering functions",
+    "return_type": "INT64",
+    "description": "Returns the ordinal (1-based) rank of each row within the window partition.\nAll peer rows receive the same rank value, and the subsequent rank value is\nincremented by one.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+  },
+  {
     "name": "NTILE",
     "arguments": [],
     "category": "Numbering functions",
     "return_type": "INT64",
     "description": "This function divides the rows into constant_integer_expression\nbuckets based on row ordering and returns the 1-based bucket number that is\nassigned to each row. The number of rows in the buckets can differ by at most 1.\nThe remainder values (the remainder of number of rows divided by buckets) are\ndistributed one for each bucket, starting with bucket 1. If\nconstant_integer_expression evaluates to NULL, 0 or negative, an\nerror is provided.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+  },
+  {
+    "name": "PERCENT_RANK",
+    "arguments": [],
+    "category": "Numbering functions",
+    "return_type": "FLOAT64",
+    "description": "Return the percentile rank of a row defined as (RK-1)/(NR-1), where RK is\nthe RANK of the row and NR is the number of rows in the partition.\nReturns 0 if NR=1.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+  },
+  {
+    "name": "RANK",
+    "arguments": [],
+    "category": "Numbering functions",
+    "return_type": "INT64",
+    "description": "Returns the ordinal (1-based) rank of each row within the ordered partition.\nAll peer rows receive the same rank value. The next row or set of peer rows\nreceives a rank value which increments by the number of peers with the previous\nrank value, instead of DENSE_RANK, which always increments by 1.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "ROW_NUMBER",
@@ -270,14 +270,14 @@
     "arguments": [],
     "category": "Conversion functions",
     "return_type": "BIGNUMERIC",
-    "description": "Converts a STRING to a BIGNUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the BIGNUMERIC type, or an\nerror occurs. If the number of digits after the decimal point exceeds 38, then\nthe resulting BIGNUMERIC value rounds\nhalf away from zero to have 38 digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.45\") AS parsed\n\n+--------+\n| parsed |\n+--------+\n| 123.45 |\n+--------+\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.456E37\") AS parsed\n\n+-----------------------------------------+\n| parsed                                  |\n+-----------------------------------------+\n| 123400000000000000000000000000000000000 |\n+-----------------------------------------+\n\n-- This example shows the rounding when digits after the decimal point exceeds 38.\nSELECT PARSE_BIGNUMERIC(\"1.123456789012345678901234567890123456789\") as parsed\n\n+------------------------------------------+\n| parsed                                   |\n+------------------------------------------+\n| 1.12345678901234567890123456789012345679 |\n+------------------------------------------+This funcion is similar to using the CAST AS BIGNUMERIC\nfunction except that the PARSE_BIGNUMERIC function only accepts string inputs\nand allows the following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After the\n        e, digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
+    "description": "Converts a STRING to a BIGNUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the BIGNUMERIC type, or an\nerror occurs. If the number of digits after the decimal point exceeds 38, then\nthe resulting BIGNUMERIC value rounds\nhalf away from zero to have 38 digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.456E37\") AS parsed\n\n/*-----------------------------------------*\n | parsed                                  |\n +-----------------------------------------+\n | 123400000000000000000000000000000000000 |\n *-----------------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 38.\nSELECT PARSE_BIGNUMERIC(\"1.123456789012345678901234567890123456789\") as parsed\n\n/*------------------------------------------*\n | parsed                                   |\n +------------------------------------------+\n | 1.12345678901234567890123456789012345679 |\n *------------------------------------------*/This funcion is similar to using the CAST AS BIGNUMERIC\nfunction except that the PARSE_BIGNUMERIC function only accepts string inputs\nand allows the following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After the\n        e, digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
   },
   {
     "name": "PARSE_NUMERIC",
     "arguments": [],
     "category": "Conversion functions",
     "return_type": "NUMERIC",
-    "description": "Converts a STRING to a NUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the NUMERIC type, or an error\noccurs. If the number of digits after the decimal point exceeds nine, then the\nresulting NUMERIC value rounds\nhalf away from zero to have nine digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_NUMERIC(\"123.45\") AS parsed\n\n+--------+\n| parsed |\n+--------+\n| 123.45 |\n+--------+\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_NUMERIC(\"12.34E27\") as parsed\n\n+-------------------------------+\n| parsed                        |\n+-------------------------------+\n| 12340000000000000000000000000 |\n+-------------------------------+\n\n-- This example shows the rounding when digits after the decimal point exceeds 9.\nSELECT PARSE_NUMERIC(\"1.0123456789\") as parsed\n\n+-------------+\n| parsed      |\n+-------------+\n| 1.012345679 |\n+-------------+This function is similar to using the CAST AS NUMERIC function\nexcept that the PARSE_NUMERIC function only accepts string inputs and allows\nthe following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After\n        the e,\n        digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
+    "description": "Converts a STRING to a NUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the NUMERIC type, or an error\noccurs. If the number of digits after the decimal point exceeds nine, then the\nresulting NUMERIC value rounds\nhalf away from zero to have nine digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_NUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_NUMERIC(\"12.34E27\") as parsed\n\n/*-------------------------------*\n | parsed                        |\n +-------------------------------+\n | 12340000000000000000000000000 |\n *-------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 9.\nSELECT PARSE_NUMERIC(\"1.0123456789\") as parsed\n\n/*-------------*\n | parsed      |\n +-------------+\n | 1.012345679 |\n *-------------*/This function is similar to using the CAST AS NUMERIC function\nexcept that the PARSE_NUMERIC function only accepts string inputs and allows\nthe following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After\n        the e,\n        digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
   },
   {
     "name": "ABS",
@@ -287,130 +287,11 @@
     "description": "Computes absolute value. Returns an error if the argument is an integer and the\noutput value cannot be represented as the same type; this happens only for the\nlargest negative input value, which has no positive representation.X\n      ABS(X)\n    25\n      25\n    -25\n      25\n    +inf\n      +inf\n    -inf\n      +inf"
   },
   {
-    "name": "SIGN",
+    "name": "CBRT",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTINT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Returns -1, 0, or +1 for negative, zero and positive arguments\nrespectively. For floating point arguments, this function does not distinguish\nbetween positive and negative zero.X\n      SIGN(X)\n    25\n      +1\n    0\n      0\n    -25\n      -1\n    NaN\n      NaN"
-  },
-  {
-    "name": "SQRT",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Computes the square root of X. Generates an error if X is less than 0.X\n      SQRT(X)\n    25.0\n      5.0\n    +inf\n      +inf\n    X < 0\n      Error"
-  },
-  {
-    "name": "POW",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Returns the value of X raised to the power of Y. If the result underflows and is\nnot representable, then the function returns a  value of zero.X\n      Y\n      POW(X, Y)\n  2.0\n      3.0\n      8.0\n    1.0\n      Any value including NaN\n      1.0\n    Any value including NaN\n      0\n      1.0\n    -1.0\n      +inf\n      1.0\n    -1.0\n      -inf\n      1.0\n    ABS(X) < 1\n      -inf\n      +inf\n    ABS(X) > 1\n      -inf\n      0.0\n    ABS(X) < 1\n      +inf\n      0.0\n    ABS(X) > 1\n      +inf\n      +inf\n    -inf\n      Y < 0\n      0.0\n    -inf\n      Y > 0\n      -inf if Y is an odd integer, +inf otherwise\n    +inf\n      Y < 0\n      0\n    +inf\n      Y > 0\n      +inf\n    Finite value < 0\n      Non-integer\n      Error\n    0\n      Finite value < 0\n      Error"
-  },
-  {
-    "name": "EXP",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Computes e to the power of X, also called the natural exponential function. If\nthe result underflows, this function returns a zero. Generates an error if the\nresult overflows.X\n      EXP(X)\n    0.0\n      1.0\n    +inf\n      +inf\n    -inf\n      0.0"
-  },
-  {
-    "name": "LN",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Computes the natural logarithm of X. Generates an error if X is less than or\nequal to zero.X\n      LN(X)\n    1.0\n      0.0\n    +inf\n      +inf\n    X < 0\n      Error"
-  },
-  {
-    "name": "LOG",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "If only X is present, LOG is a synonym of LN. If Y is also present,\nLOG computes the logarithm of X to base Y.X\n      Y\n      LOG(X, Y)\n  100.0\n      10.0\n      2.0\n    -inf\n      Any value\n      NaN\n    Any value\n      +inf\n      NaN\n    +inf\n      0.0 < Y < 1.0\n      -inf\n    +inf\n      Y > 1.0\n      +inf\n    X <= 0\n      Any value\n      Error\n    Any value\n      Y <= 0\n      Error\n    Any value\n      1.0\n      Error"
-  },
-  {
-    "name": "LOG10",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Similar to LOG, but computes logarithm to base 10.X\n      LOG10(X)\n  100.0\n      2.0\n    -inf\n      NaN\n    +inf\n      +inf\n    X <= 0\n      Error"
-  },
-  {
-    "name": "GREATEST",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "Data type of the input values.",
-    "description": "Returns the greatest value among X1,...,XN. If any argument is NULL, returns\nNULL. Otherwise, in the case of floating-point arguments, if any argument is\nNaN, returns NaN. In all other cases, returns the value among X1,...,XN\nthat has the greatest value according to the ordering used by the ORDER BY\nclause. The arguments X1, ..., XN must be coercible to a common supertype, and\nthe supertype must support ordering.X1,...,XN\n      GREATEST(X1,...,XN)\n    3,5,1\n      5This function supports specifying collation."
-  },
-  {
-    "name": "LEAST",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "Data type of the input values.",
-    "description": "Returns the least value among X1,...,XN. If any argument is NULL, returns\nNULL. Otherwise, in the case of floating-point arguments, if any argument is\nNaN, returns NaN. In all other cases, returns the value among X1,...,XN\nthat has the least value according to the ordering used by the ORDER BY\nclause. The arguments X1, ..., XN must be coercible to a common supertype, and\nthe supertype must support ordering.X1,...,XN\n      LEAST(X1,...,XN)\n    3,5,1\n      1This function supports specifying collation."
-  },
-  {
-    "name": "DIV",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERIC\nINT64INT64NUMERICBIGNUMERIC\n\nNUMERICNUMERICNUMERICBIGNUMERIC\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERIC",
-    "description": "Returns the result of integer division of X by Y. Division by zero returns\nan error. Division by -1 may overflow.X\n      Y\n      DIV(X, Y)\n  20\n      4\n      5\n    12\n      -7\n      -1\n    20\n      3\n      6\n    0\n      20\n      0\n    20\n      0\n      Error"
-  },
-  {
-    "name": "SAFE_DIVIDE",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the division operator (X / Y), but returns\nNULL if an error occurs, such as a division by zero error.X\n      Y\n      SAFE_DIVIDE(X, Y)\n  20\n      4\n      5\n    0\n      20\n      0\n    20\n      0\n      NULL"
-  },
-  {
-    "name": "SAFE_MULTIPLY",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the multiplication operator (*), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_MULTIPLY(X, Y)\n  20\n      4\n      80"
-  },
-  {
-    "name": "SAFE_NEGATE",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTINT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Equivalent to the unary minus operator (-), but returns\nNULL if overflow occurs.X\n      SAFE_NEGATE(X)\n  +1\n      -1\n    -1\n      +1\n    0\n      0"
-  },
-  {
-    "name": "SAFE_ADD",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Equivalent to the addition operator (+), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_ADD(X, Y)\n  5\n      4\n      9"
-  },
-  {
-    "name": "SAFE_SUBTRACT",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
-    "description": "Returns the result of Y subtracted from X.\nEquivalent to the subtraction operator (-), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_SUBTRACT(X, Y)\n  5\n      4\n      1"
-  },
-  {
-    "name": "MOD",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERIC\nINT64INT64NUMERICBIGNUMERIC\n\nNUMERICNUMERICNUMERICBIGNUMERIC\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERIC",
-    "description": "Modulo function: returns the remainder of the division of X by Y. Returned\nvalue has the same sign as X. An error is generated if Y is 0.X\n      Y\n      MOD(X, Y)\n  25\n      12\n      1\n    25\n      0\n      Error"
-  },
-  {
-    "name": "ROUND",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "If only X is present, rounds X to the nearest integer. If N is present,\nrounds X to N decimal places after the decimal point. If N is negative,\nrounds off digits to the left of the decimal point. Rounds halfway cases\naway from zero. Generates an error if overflow occurs.If X is a NUMERIC or BIGNUMERIC type, then you can\nexplicitly set rounding_mode (Preview)\nto one of the following:\"ROUND_HALF_AWAY_FROM_ZERO\": (Default) Rounds\nhalfway cases away from zero.\n\"ROUND_HALF_EVEN\": Rounds halfway cases\ntowards the nearest even digit.If you set the rounding_mode and X is not a NUMERIC or BIGNUMERIC type,\nthen the function generates an error.Expression\n      Return Value\n  ROUND(2.0)\n      2.0\n    ROUND(2.3)\n      2.0\n    ROUND(2.8)\n      3.0\n    ROUND(2.5)\n      3.0\n    ROUND(-2.3)\n      -2.0\n    ROUND(-2.8)\n      -3.0\n    ROUND(-2.5)\n      -3.0\n    ROUND(0)\n      0\n    ROUND(+inf)\n      +inf\n    ROUND(-inf)\n      -inf\n    ROUND(NaN)\n      NaN\n    ROUND(123.7, -1)\n      120.0\n    ROUND(1.235, 2)\n      1.24\n    ROUND(NUMERIC \"2.25\", 1, \"ROUND_HALF_EVEN\")\n      2.2\n    ROUND(NUMERIC \"2.35\", 1, \"ROUND_HALF_EVEN\")\n      2.4\n    ROUND(NUMERIC \"2.251\", 1, \"ROUND_HALF_EVEN\")\n      2.3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_EVEN\")\n      -2\n    ROUND(NUMERIC \"2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      -3"
-  },
-  {
-    "name": "TRUNC",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "If only X is present, TRUNC rounds X to the nearest integer whose absolute\nvalue is not greater than the absolute value of X. If N is also present, TRUNC\nbehaves like ROUND(X, N), but always rounds towards zero and never overflows.X\n      TRUNC(X)\n  2.0\n      2.0\n    2.3\n      2.0\n    2.8\n      2.0\n    2.5\n      2.0\n    -2.3\n      -2.0\n    -2.8\n      -2.0\n    -2.5\n      -2.0\n    0\n      0\n    +inf\n      +inf\n    -inf\n      -inf\n    NaN\n      NaN"
+    "return_type": "FLOAT64",
+    "description": "Computes the cube root of X. X can be any data type\nthat coerces to FLOAT64.\nSupports the SAFE. prefix.X\n      CBRT(X)\n    +inf\n      inf\n    -inf\n      -inf\n    NaN\n      NaN\n    0\n      0\n    NULL\n      NULL"
   },
   {
     "name": "CEIL",
@@ -418,13 +299,6 @@
     "category": "Mathematical functions",
     "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
     "description": "Returns the smallest integral value that is not less than X.X\n      CEIL(X)\n  2.0\n      2.0\n    2.3\n      3.0\n    2.8\n      3.0\n    2.5\n      3.0\n    -2.3\n      -2.0\n    -2.8\n      -2.0\n    -2.5\n      -2.0\n    0\n      0\n    +inf\n      +inf\n    -inf\n      -inf\n    NaN\n      NaN"
-  },
-  {
-    "name": "FLOOR",
-    "arguments": [],
-    "category": "Mathematical functions",
-    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
-    "description": "Returns the largest integral value that is not greater than X.X\n      FLOOR(X)\n  2.0\n      2.0\n    2.3\n      2.0\n    2.8\n      2.0\n    2.5\n      2.0\n    -2.3\n      -3.0\n    -2.8\n      -3.0\n    -2.5\n      -3.0\n    0\n      0\n    +inf\n      +inf\n    -inf\n      -inf\n    NaN\n      NaN"
   },
   {
     "name": "COT",
@@ -455,6 +329,125 @@
     "description": "Computes the hyperbolic cosecant of the input angle, which is in radians.\nX can be any data type\nthat coerces to FLOAT64.\nSupports the SAFE. prefix.X\n      CSCH(X)\n    +inf\n      0\n    -inf\n      0\n    NaN\n      NaN\n    0\n      Error\n    NULL\n      NULL"
   },
   {
+    "name": "DIV",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERIC\nINT64INT64NUMERICBIGNUMERIC\n\nNUMERICNUMERICNUMERICBIGNUMERIC\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERIC",
+    "description": "Returns the result of integer division of X by Y. Division by zero returns\nan error. Division by -1 may overflow.X\n      Y\n      DIV(X, Y)\n  20\n      4\n      5\n    12\n      -7\n      -1\n    20\n      3\n      6\n    0\n      20\n      0\n    20\n      0\n      Error"
+  },
+  {
+    "name": "EXP",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Computes e to the power of X, also called the natural exponential function. If\nthe result underflows, this function returns a zero. Generates an error if the\nresult overflows.X\n      EXP(X)\n    0.0\n      1.0\n    +inf\n      +inf\n    -inf\n      0.0"
+  },
+  {
+    "name": "FLOOR",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Returns the largest integral value that is not greater than X.X\n      FLOOR(X)\n  2.0\n      2.0\n    2.3\n      2.0\n    2.8\n      2.0\n    2.5\n      2.0\n    -2.3\n      -3.0\n    -2.8\n      -3.0\n    -2.5\n      -3.0\n    0\n      0\n    +inf\n      +inf\n    -inf\n      -inf\n    NaN\n      NaN"
+  },
+  {
+    "name": "GREATEST",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "Data type of the input values.",
+    "description": "Returns the greatest value among X1,...,XN. If any argument is NULL, returns\nNULL. Otherwise, in the case of floating-point arguments, if any argument is\nNaN, returns NaN. In all other cases, returns the value among X1,...,XN\nthat has the greatest value according to the ordering used by the ORDER BY\nclause. The arguments X1, ..., XN must be coercible to a common supertype, and\nthe supertype must support ordering.X1,...,XN\n      GREATEST(X1,...,XN)\n    3,5,1\n      5This function supports specifying collation."
+  },
+  {
+    "name": "LEAST",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "Data type of the input values.",
+    "description": "Returns the least value among X1,...,XN. If any argument is NULL, returns\nNULL. Otherwise, in the case of floating-point arguments, if any argument is\nNaN, returns NaN. In all other cases, returns the value among X1,...,XN\nthat has the least value according to the ordering used by the ORDER BY\nclause. The arguments X1, ..., XN must be coercible to a common supertype, and\nthe supertype must support ordering.X1,...,XN\n      LEAST(X1,...,XN)\n    3,5,1\n      1This function supports specifying collation."
+  },
+  {
+    "name": "LN",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Computes the natural logarithm of X. Generates an error if X is less than or\nequal to zero.X\n      LN(X)\n    1.0\n      0.0\n    +inf\n      +inf\n    X < 0\n      Error"
+  },
+  {
+    "name": "LOG",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "If only X is present, LOG is a synonym of LN. If Y is also present,\nLOG computes the logarithm of X to base Y.X\n      Y\n      LOG(X, Y)\n  100.0\n      10.0\n      2.0\n    -inf\n      Any value\n      NaN\n    Any value\n      +inf\n      NaN\n    +inf\n      0.0 < Y < 1.0\n      -inf\n    +inf\n      Y > 1.0\n      +inf\n    X <= 0\n      Any value\n      Error\n    Any value\n      Y <= 0\n      Error\n    Any value\n      1.0\n      Error"
+  },
+  {
+    "name": "LOG10",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Similar to LOG, but computes logarithm to base 10.X\n      LOG10(X)\n  100.0\n      2.0\n    -inf\n      NaN\n    +inf\n      +inf\n    X <= 0\n      Error"
+  },
+  {
+    "name": "MOD",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERIC\nINT64INT64NUMERICBIGNUMERIC\n\nNUMERICNUMERICNUMERICBIGNUMERIC\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERIC",
+    "description": "Modulo function: returns the remainder of the division of X by Y. Returned\nvalue has the same sign as X. An error is generated if Y is 0.X\n      Y\n      MOD(X, Y)\n  25\n      12\n      1\n    25\n      0\n      Error"
+  },
+  {
+    "name": "POW",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "The return data type is determined by the argument types with the following\ntable.INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Returns the value of X raised to the power of Y. If the result underflows and is\nnot representable, then the function returns a  value of zero.X\n      Y\n      POW(X, Y)\n  2.0\n      3.0\n      8.0\n    1.0\n      Any value including NaN\n      1.0\n    Any value including NaN\n      0\n      1.0\n    -1.0\n      +inf\n      1.0\n    -1.0\n      -inf\n      1.0\n    ABS(X) < 1\n      -inf\n      +inf\n    ABS(X) > 1\n      -inf\n      0.0\n    ABS(X) < 1\n      +inf\n      0.0\n    ABS(X) > 1\n      +inf\n      +inf\n    -inf\n      Y < 0\n      0.0\n    -inf\n      Y > 0\n      -inf if Y is an odd integer, +inf otherwise\n    +inf\n      Y < 0\n      0\n    +inf\n      Y > 0\n      +inf\n    Finite value < 0\n      Non-integer\n      Error\n    0\n      Finite value < 0\n      Error"
+  },
+  {
+    "name": "RANGE_BUCKET",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "point: A generic value.\nboundaries_array: A generic array of values.Note:The data type for point and the element type of boundaries_array\nmust be equivalent. The data type must be comparable.",
+    "description": "RANGE_BUCKET scans through a sorted array and returns the 0-based position\nof the point's upper bound. This can be useful if you need to group your data to\nbuild partitions, histograms, business-defined rules, and more.RANGE_BUCKET follows these rules:If the point exists in the array, returns the index of the next larger value.\nRANGE_BUCKET(20, [0, 10, 20, 30, 40]) -- 3 is return value\nRANGE_BUCKET(20, [0, 10, 20, 20, 40, 40]) -- 4 is return value\nIf the point does not exist in the array, but it falls between two values,\nreturns the index of the larger value.\nRANGE_BUCKET(25, [0, 10, 20, 30, 40]) -- 3 is return value\nIf the point is smaller than the first value in the array, returns 0.\nRANGE_BUCKET(-10, [5, 10, 20, 30, 40]) -- 0 is return value\nIf the point is greater than or equal to the last value in the array,\nreturns the length of the array.\nRANGE_BUCKET(80, [0, 10, 20, 30, 40]) -- 5 is return value\nIf the array is empty, returns 0.\nRANGE_BUCKET(80, []) -- 0 is return value\nIf the point is NULL or NaN, returns NULL.\nRANGE_BUCKET(NULL, [0, 10, 20, 30, 40]) -- NULL is return value\nThe data type for the point and array must be compatible.\nRANGE_BUCKET('a', ['a', 'b', 'c', 'd']) -- 1 is return value\nRANGE_BUCKET(1.2, [1, 1.2, 1.4, 1.6]) -- 2 is return value\nRANGE_BUCKET(1.2, [1, 2, 4, 6]) -- execution failureExecution failure occurs when:The array has a NaN or NULL value in it.\nRANGE_BUCKET(80, [NULL, 10, 20, 30, 40]) -- execution failure\nThe array is not sorted in ascending order.\nRANGE_BUCKET(30, [10, 30, 20, 40, 50]) -- execution failure"
+  },
+  {
+    "name": "ROUND",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "If only X is present, rounds X to the nearest integer. If N is present,\nrounds X to N decimal places after the decimal point. If N is negative,\nrounds off digits to the left of the decimal point. Rounds halfway cases\naway from zero. Generates an error if overflow occurs.If X is a NUMERIC or BIGNUMERIC type, then you can\nexplicitly set rounding_mode (Preview)\nto one of the following:\"ROUND_HALF_AWAY_FROM_ZERO\": (Default) Rounds\nhalfway cases away from zero.\n\"ROUND_HALF_EVEN\": Rounds halfway cases\ntowards the nearest even digit.If you set the rounding_mode and X is not a NUMERIC or BIGNUMERIC type,\nthen the function generates an error.Expression\n      Return Value\n  ROUND(2.0)\n      2.0\n    ROUND(2.3)\n      2.0\n    ROUND(2.8)\n      3.0\n    ROUND(2.5)\n      3.0\n    ROUND(-2.3)\n      -2.0\n    ROUND(-2.8)\n      -3.0\n    ROUND(-2.5)\n      -3.0\n    ROUND(0)\n      0\n    ROUND(+inf)\n      +inf\n    ROUND(-inf)\n      -inf\n    ROUND(NaN)\n      NaN\n    ROUND(123.7, -1)\n      120.0\n    ROUND(1.235, 2)\n      1.24\n    ROUND(NUMERIC \"2.25\", 1, \"ROUND_HALF_EVEN\")\n      2.2\n    ROUND(NUMERIC \"2.35\", 1, \"ROUND_HALF_EVEN\")\n      2.4\n    ROUND(NUMERIC \"2.251\", 1, \"ROUND_HALF_EVEN\")\n      2.3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_EVEN\")\n      -2\n    ROUND(NUMERIC \"2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      3\n    ROUND(NUMERIC \"-2.5\", 0, \"ROUND_HALF_AWAY_FROM_ZERO\")\n      -3"
+  },
+  {
+    "name": "SAFE_ADD",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the addition operator (+), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_ADD(X, Y)\n  5\n      4\n      9"
+  },
+  {
+    "name": "SAFE_DIVIDE",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64FLOAT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the division operator (X / Y), but returns\nNULL if an error occurs, such as a division by zero error.X\n      Y\n      SAFE_DIVIDE(X, Y)\n  20\n      4\n      5\n    0\n      20\n      0\n    20\n      0\n      NULL"
+  },
+  {
+    "name": "SAFE_MULTIPLY",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Equivalent to the multiplication operator (*), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_MULTIPLY(X, Y)\n  20\n      4\n      80"
+  },
+  {
+    "name": "SAFE_NEGATE",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTINT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Equivalent to the unary minus operator (-), but returns\nNULL if overflow occurs.X\n      SAFE_NEGATE(X)\n  +1\n      -1\n    -1\n      +1\n    0\n      0"
+  },
+  {
+    "name": "SAFE_SUBTRACT",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nINT64INT64NUMERICBIGNUMERICFLOAT64\n\nNUMERICNUMERICNUMERICBIGNUMERICFLOAT64\nBIGNUMERICBIGNUMERICBIGNUMERICBIGNUMERICFLOAT64\n\nFLOAT64FLOAT64FLOAT64FLOAT64FLOAT64",
+    "description": "Returns the result of Y subtracted from X.\nEquivalent to the subtraction operator (-), but returns\nNULL if overflow occurs.X\n      Y\n      SAFE_SUBTRACT(X, Y)\n  5\n      4\n      1"
+  },
+  {
     "name": "SEC",
     "arguments": [],
     "category": "Mathematical functions",
@@ -469,18 +462,25 @@
     "description": "Computes the hyperbolic secant for the angle of X, where X is specified\nin radians. X can be any data type\nthat coerces to FLOAT64.\nNever produces an error.X\n      SECH(X)\n    +inf\n      0\n    -inf\n      0\n    NaN\n      NaN\n    NULL\n      NULL"
   },
   {
-    "name": "CBRT",
+    "name": "SIGN",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "FLOAT64",
-    "description": "Computes the cube root of X. X can be any data type\nthat coerces to FLOAT64.\nSupports the SAFE. prefix.X\n      CBRT(X)\n    +inf\n      inf\n    -inf\n      -inf\n    NaN\n      NaN\n    0\n      0\n    NULL\n      NULL"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTINT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Returns -1, 0, or +1 for negative, zero and positive arguments\nrespectively. For floating point arguments, this function does not distinguish\nbetween positive and negative zero.X\n      SIGN(X)\n    25\n      +1\n    0\n      0\n    -25\n      -1\n    NaN\n      NaN"
   },
   {
-    "name": "RANGE_BUCKET",
+    "name": "SQRT",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "point: A generic value.\nboundaries_array: A generic array of values.Note:The data type for point and the element type of boundaries_array\nmust be equivalent. The data type must be comparable.",
-    "description": "RANGE_BUCKET scans through a sorted array and returns the 0-based position\nof the point's upper bound. This can be useful if you need to group your data to\nbuild partitions, histograms, business-defined rules, and more.RANGE_BUCKET follows these rules:If the point exists in the array, returns the index of the next larger value.\nRANGE_BUCKET(20, [0, 10, 20, 30, 40]) -- 3 is return value\nRANGE_BUCKET(20, [0, 10, 20, 20, 40, 40]) -- 4 is return value\nIf the point does not exist in the array, but it falls between two values,\nreturns the index of the larger value.\nRANGE_BUCKET(25, [0, 10, 20, 30, 40]) -- 3 is return value\nIf the point is smaller than the first value in the array, returns 0.\nRANGE_BUCKET(-10, [5, 10, 20, 30, 40]) -- 0 is return value\nIf the point is greater than or equal to the last value in the array,\nreturns the length of the array.\nRANGE_BUCKET(80, [0, 10, 20, 30, 40]) -- 5 is return value\nIf the array is empty, returns 0.\nRANGE_BUCKET(80, []) -- 0 is return value\nIf the point is NULL or NaN, returns NULL.\nRANGE_BUCKET(NULL, [0, 10, 20, 30, 40]) -- NULL is return value\nThe data type for the point and array must be compatible.\nRANGE_BUCKET('a', ['a', 'b', 'c', 'd']) -- 1 is return value\nRANGE_BUCKET(1.2, [1, 1.2, 1.4, 1.6]) -- 2 is return value\nRANGE_BUCKET(1.2, [1, 2, 4, 6]) -- execution failureExecution failure occurs when:The array has a NaN or NULL value in it.\nRANGE_BUCKET(80, [NULL, 10, 20, 30, 40]) -- execution failure\nThe array is not sorted in ascending order.\nRANGE_BUCKET(30, [10, 30, 20, 40, 50]) -- execution failure"
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64",
+    "description": "Computes the square root of X. Generates an error if X is less than 0.X\n      SQRT(X)\n    25.0\n      5.0\n    +inf\n      +inf\n    X < 0\n      Error"
+  },
+  {
+    "name": "TRUNC",
+    "arguments": [],
+    "category": "Mathematical functions",
+    "return_type": "INPUTINT64NUMERICBIGNUMERICFLOAT64\nOUTPUTFLOAT64NUMERICBIGNUMERICFLOAT64Navigation functionsGoogleSQL for BigQuery supports navigation functions.\nNavigation functions are a subset window functions. To create a\nwindow function call and learn about the syntax for window functions,\nsee Window function_calls.Navigation functions generally compute some\nvalue_expression over a different row in the window frame from the\ncurrent row. The OVER clause syntax varies across navigation functions.For all navigation functions, the result data type is the same type as\nvalue_expression.",
+    "description": "If only X is present, TRUNC rounds X to the nearest integer whose absolute\nvalue is not greater than the absolute value of X. If N is also present, TRUNC\nbehaves like ROUND(X, N), but always rounds towards zero and never overflows.X\n      TRUNC(X)\n  2.0\n      2.0\n    2.3\n      2.0\n    2.8\n      2.0\n    2.5\n      2.0\n    -2.3\n      -2.0\n    -2.8\n      -2.0\n    -2.5\n      -2.0\n    0\n      0\n    +inf\n      +inf\n    -inf\n      -inf\n    NaN\n      NaN"
   },
   {
     "name": "FIRST_VALUE",
@@ -490,18 +490,18 @@
     "description": "Returns the value of the value_expression for the first row in the current\nwindow frame.This function includes NULL values in the calculation unless IGNORE NULLS is\npresent. If IGNORE NULLS is present, the function excludes NULL values from\nthe calculation.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
+    "name": "LAG",
+    "arguments": [],
+    "category": "Navigation functions",
+    "return_type": "value_expression can be any data type that can be returned from an\nexpression.\noffset must be a non-negative integer literal or parameter.\ndefault_expression must be compatible with the value expression type.",
+    "description": "Returns the value of the value_expression on a preceding row. Changing the\noffset value changes which preceding row is returned; the default value is\n1, indicating the previous row in the window frame. An error occurs if\noffset is NULL or a negative value.The optional default_expression is used if there isn't a row in the window\nframe at the specified offset. This expression must be a constant expression and\nits type must be implicitly coercible to the type of value_expression. If left\nunspecified, default_expression defaults to NULL.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+  },
+  {
     "name": "LAST_VALUE",
     "arguments": [],
     "category": "Navigation functions",
     "return_type": "value_expression can be any data type that an expression can return.",
     "description": "Returns the value of the value_expression for the last row in the current\nwindow frame.This function includes NULL values in the calculation unless IGNORE NULLS is\npresent. If IGNORE NULLS is present, the function excludes NULL values from\nthe calculation.To learn more about the OVER clause and how to use it, see\nWindow function calls."
-  },
-  {
-    "name": "NTH_VALUE",
-    "arguments": [],
-    "category": "Navigation functions",
-    "return_type": "value_expression can be any data type that can be returned from an\nexpression.\nconstant_integer_expression can be any constant expression that returns an\ninteger.",
-    "description": "Returns the value of value_expression at the Nth row of the current window\nframe, where Nth is defined by constant_integer_expression. Returns NULL if\nthere is no such row.This function includes NULL values in the calculation unless IGNORE NULLS is\npresent. If IGNORE NULLS is present, the function excludes NULL values from\nthe calculation.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "LEAD",
@@ -511,11 +511,11 @@
     "description": "Returns the value of the value_expression on a subsequent row. Changing the\noffset value changes which subsequent row is returned; the default value is\n1, indicating the next row in the window frame. An error occurs if offset is\nNULL or a negative value.The optional default_expression is used if there isn't a row in the window\nframe at the specified offset. This expression must be a constant expression and\nits type must be implicitly coercible to the type of value_expression. If left\nunspecified, default_expression defaults to NULL.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
-    "name": "LAG",
+    "name": "NTH_VALUE",
     "arguments": [],
     "category": "Navigation functions",
-    "return_type": "value_expression can be any data type that can be returned from an\nexpression.\noffset must be a non-negative integer literal or parameter.\ndefault_expression must be compatible with the value expression type.",
-    "description": "Returns the value of the value_expression on a preceding row. Changing the\noffset value changes which preceding row is returned; the default value is\n1, indicating the previous row in the window frame. An error occurs if\noffset is NULL or a negative value.The optional default_expression is used if there isn't a row in the window\nframe at the specified offset. This expression must be a constant expression and\nits type must be implicitly coercible to the type of value_expression. If left\nunspecified, default_expression defaults to NULL.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "return_type": "value_expression can be any data type that can be returned from an\nexpression.\nconstant_integer_expression can be any constant expression that returns an\ninteger.",
+    "description": "Returns the value of value_expression at the Nth row of the current window\nframe, where Nth is defined by constant_integer_expression. Returns NULL if\nthere is no such row.This function includes NULL values in the calculation unless IGNORE NULLS is\npresent. If IGNORE NULLS is present, the function excludes NULL values from\nthe calculation.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "PERCENTILE_CONT",
@@ -619,7 +619,7 @@
     "name": "COLLATE",
     "arguments": [],
     "category": "String functions",
-    "return_type": "In this example, the weight of a is less than the weight of Z. This\nis because the collate specification, und:ci assigns more weight to Z.WITH Words AS (\n  SELECT\n    COLLATE('a', 'und:ci') AS char1,\n    COLLATE('Z', 'und:ci') AS char2\n)\nSELECT ( Words.char1 < Words.char2 ) AS a_less_than_Z\nFROM Words;\n\n+----------------+\n| a_less_than_Z  |\n+----------------+\n| TRUE           |\n+----------------+In this example, the weight of a is greater than the weight of Z. This\nis because the default collate specification assigns more weight to a.WITH Words AS (\n  SELECT\n    'a' AS char1,\n    'Z' AS char2\n)\nSELECT ( Words.char1 < Words.char2 ) AS a_less_than_Z\nFROM Words;\n\n+----------------+\n| a_less_than_Z  |\n+----------------+\n| FALSE          |\n+----------------+",
+    "return_type": "In this example, the weight of a is less than the weight of Z. This\nis because the collate specification, und:ci assigns more weight to Z.WITH Words AS (\n  SELECT\n    COLLATE('a', 'und:ci') AS char1,\n    COLLATE('Z', 'und:ci') AS char2\n)\nSELECT ( Words.char1 < Words.char2 ) AS a_less_than_Z\nFROM Words;\n\n/*----------------*\n | a_less_than_Z  |\n +----------------+\n | TRUE           |\n *----------------*/In this example, the weight of a is greater than the weight of Z. This\nis because the default collate specification assigns more weight to a.WITH Words AS (\n  SELECT\n    'a' AS char1,\n    'Z' AS char2\n)\nSELECT ( Words.char1 < Words.char2 ) AS a_less_than_Z\nFROM Words;\n\n/*----------------*\n | a_less_than_Z  |\n +----------------+\n | FALSE          |\n *----------------*/",
     "description": "STRING"
   },
   {
@@ -700,18 +700,18 @@
     "description": "Returns the length of the STRING or BYTES value. The returned\nvalue is in characters for STRING arguments and in bytes for the BYTES\nargument."
   },
   {
-    "name": "LPAD",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "STRING or BYTES",
-    "description": "Returns a STRING or BYTES value that consists of original_value prepended\nwith pattern. The return_length is an INT64 that\nspecifies the length of the returned value. If original_value is of type\nBYTES, return_length is the number of bytes. If original_value is\nof type STRING, return_length is the number of characters.The default value of pattern is a blank space.Both original_value and pattern must be the same data type.If return_length is less than or equal to the original_value length, this\nfunction returns the original_value value, truncated to the value of\nreturn_length. For example, LPAD('hello world', 7); returns 'hello w'.If original_value, return_length, or pattern is NULL, this function\nreturns NULL.This function returns an error if:return_length is negative\npattern is empty"
-  },
-  {
     "name": "LOWER",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
     "description": "For STRING arguments, returns the original string with all alphabetic\ncharacters in lowercase. Mapping between lowercase and uppercase is done\naccording to the\nUnicode Character Database\nwithout taking into account language-specific mappings.For BYTES arguments, the argument is treated as ASCII text, with all bytes\ngreater than 127 left intact."
+  },
+  {
+    "name": "LPAD",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "STRING or BYTES",
+    "description": "Returns a STRING or BYTES value that consists of original_value prepended\nwith pattern. The return_length is an INT64 that\nspecifies the length of the returned value. If original_value is of type\nBYTES, return_length is the number of bytes. If original_value is\nof type STRING, return_length is the number of characters.The default value of pattern is a blank space.Both original_value and pattern must be the same data type.If return_length is less than or equal to the original_value length, this\nfunction returns the original_value value, truncated to the value of\nreturn_length. For example, LPAD('hello world', 7); returns 'hello w'.If original_value, return_length, or pattern is NULL, this function\nreturns NULL.This function returns an error if:return_length is negative\npattern is empty"
   },
   {
     "name": "LTRIM",
@@ -721,18 +721,18 @@
     "description": "Identical to TRIM, but only removes leading characters."
   },
   {
-    "name": "NORMALIZE",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "STRING",
-    "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.NORMALIZE supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
-  },
-  {
     "name": "NORMALIZE_AND_CASEFOLD",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING",
     "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.Case folding is used for the caseless\ncomparison of strings. If you need to compare strings and case should not be\nconsidered, use NORMALIZE_AND_CASEFOLD, otherwise use\nNORMALIZE.NORMALIZE_AND_CASEFOLD supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
+  },
+  {
+    "name": "NORMALIZE",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "STRING",
+    "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.NORMALIZE supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
   },
   {
     "name": "REGEXP_CONTAINS",
@@ -742,18 +742,18 @@
     "description": "Returns TRUE if value is a partial match for the regular expression,\nregexp.If the regexp argument is invalid, the function returns an error.You can search for a full match by using ^ (beginning of text) and $ (end of\ntext). Due to regular expression operator precedence, it is good practice to use\nparentheses around everything between ^ and $.Note:GoogleSQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
-    "name": "REGEXP_EXTRACT",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "STRING or BYTES",
-    "description": "Returns the substring in value that matches the\nre2 regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is returned. If there\nare multiple matches for a capturing group, the last match is returned.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integer"
-  },
-  {
     "name": "REGEXP_EXTRACT_ALL",
     "arguments": [],
     "category": "String functions",
     "return_type": "ARRAY<STRING> or ARRAY<BYTES>",
     "description": "Returns an array of all substrings of value that match the\nre2 regular expression, regexp. Returns an empty array\nif there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is added to the results. If there\nare multiple matches for a capturing group, the last match is added to the\nresults.The REGEXP_EXTRACT_ALL function only returns non-overlapping matches. For\nexample, using this function to extract ana from banana returns only one\nsubstring, not two.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group"
+  },
+  {
+    "name": "REGEXP_EXTRACT",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "STRING or BYTES",
+    "description": "Returns the substring in value that matches the\nre2 regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is returned. If there\nare multiple matches for a capturing group, the last match is returned.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integer"
   },
   {
     "name": "REGEXP_INSTR",
@@ -777,18 +777,18 @@
     "description": "Synonym for REGEXP_EXTRACT."
   },
   {
-    "name": "REPLACE",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "STRING or BYTES",
-    "description": "Replaces all occurrences of from_value with to_value in original_value.\nIf from_value is empty, no replacement is made.This function supports specifying collation."
-  },
-  {
     "name": "REPEAT",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
     "description": "Returns a STRING or BYTES value that consists of original_value, repeated.\nThe repetitions parameter specifies the number of times to repeat\noriginal_value. Returns NULL if either original_value or repetitions\nare NULL.This function returns an error if the repetitions value is negative."
+  },
+  {
+    "name": "REPLACE",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "STRING or BYTES",
+    "description": "Replaces all occurrences of from_value with to_value in original_value.\nIf from_value is empty, no replacement is made.This function supports specifying collation."
   },
   {
     "name": "REVERSE",
@@ -917,32 +917,25 @@
     "description": "For STRING arguments, returns the original string with all alphabetic\ncharacters in uppercase. Mapping between uppercase and lowercase is done\naccording to the\nUnicode Character Database\nwithout taking into account language-specific mappings.For BYTES arguments, the argument is treated as ASCII text, with all bytes\ngreater than 127 left intact."
   },
   {
-    "name": "JSON_EXTRACT",
+    "name": "BOOL",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
-    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_EXTRACT(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_EXTRACT(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "BOOL",
+    "description": "Takes a JSON expression, extracts a JSON boolean, and returns that value as a SQL\nBOOL. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a boolean, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
   },
   {
-    "name": "JSON_QUERY",
+    "name": "FLOAT64",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
-    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_QUERY(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_QUERY(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "FLOAT64",
+    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nFLOAT64. If the expression is SQL NULL, the\nfunction returns SQL NULL. If the extracted JSON value is not a number, an\nerror is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'This function supports an optional mandatory-named argument called\nwide_number_mode which defines what happens with a number that cannot be\nrepresented as a FLOAT64 without loss of precision.This argument accepts one of the two case-sensitive values:‘exact’: The function fails if the result cannot be represented as a\nFLOAT64 without loss of precision.\n‘round’: The numeric value stored in JSON will be rounded to\nFLOAT64. If such rounding is not possible, the\nfunction fails. This is the default value if the argument is not specified."
   },
   {
-    "name": "JSON_EXTRACT_SCALAR",
+    "name": "INT64",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "STRING",
-    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
-  },
-  {
-    "name": "JSON_VALUE",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "STRING",
-    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "INT64",
+    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nINT64. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON number has a fractional part or is outside of the\nINT64 domain, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
   },
   {
     "name": "JSON_EXTRACT_ARRAY",
@@ -952,11 +945,11 @@
     "description": "Extracts an array of JSON values, such as arrays or objects, and\nJSON scalar values, such as strings, numbers, and booleans.\nIf a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
   },
   {
-    "name": "JSON_QUERY_ARRAY",
+    "name": "JSON_EXTRACT_SCALAR",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "json_string_expr: ARRAY<JSON-formatted STRING>\njson_expr: ARRAY<JSON>",
-    "description": "Extracts an array of JSON values, such as arrays or objects, and\nJSON scalar values, such as strings, numbers, and booleans.\nIf a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "STRING",
+    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
   },
   {
     "name": "JSON_EXTRACT_STRING_ARRAY",
@@ -964,6 +957,41 @@
     "category": "JSON functions",
     "return_type": "ARRAY<STRING>",
     "description": "Extracts an array of scalar values and returns an array of string-formatted\nscalar values. A scalar value can represent a string, number, or boolean.\nIf a JSON key uses invalid JSONPath characters, you can\nescape those characters using single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types.Caveats:A JSON null in the input array produces a SQL NULL as the output for that\nJSON null. If the output contains a NULL array element, an error is\nproduced because the final output cannot be an array with NULL values.\nIf a JSONPath matches an array that contains scalar objects and a JSON null,\nthen the output of the function must be transformed because the final output\ncannot be an array with NULL values."
+  },
+  {
+    "name": "JSON_EXTRACT",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
+    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_EXTRACT(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_EXTRACT(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_QUERY_ARRAY",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "json_string_expr: ARRAY<JSON-formatted STRING>\njson_expr: ARRAY<JSON>",
+    "description": "Extracts an array of JSON values, such as arrays or objects, and\nJSON scalar values, such as strings, numbers, and booleans.\nIf a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_QUERY",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
+    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_QUERY(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_QUERY(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_TYPE",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "STRING",
+    "description": "Takes a JSON expression and returns the type of the outermost JSON value as a\nSQL STRING. The names of these JSON types can be returned:object\narray\nstring\nnumber\nboolean\nnullIf the expression is SQL NULL, the function returns SQL NULL. If the\nextracted JSON value is not a valid JSON type, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
+  },
+  {
+    "name": "JSON_VALUE",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "STRING",
+    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
   },
   {
     "name": "JSON_VALUE_ARRAY",
@@ -980,11 +1008,11 @@
     "description": "Takes a SQL STRING value and returns a SQL JSON value.\nThe STRING value represents a string-formatted JSON value.This function supports an optional mandatory-named argument called\nwide_number_mode that determines how to handle numbers that cannot be stored\nin a JSON value without the loss of precision. If used,\nwide_number_mode must include one of these values:exact: Only accept numbers that can be stored without loss of precision. If\na number that cannot be stored without loss of precision is encountered,\nthe function throws an error.\nround: If a number that cannot be stored without loss of precision is\nencountered, attempt to round it to a number that can be stored without\nloss of precision. If the number cannot be rounded, the function throws an\nerror.If wide_number_mode is not used, the function implicitly includes\nwide_number_mode=>'exact'. If a number appears in a JSON object or array,\nthe wide_number_mode argument is applied to the number in the object or array.Numbers from the following domains can be stored in JSON without loss of\nprecision:64-bit signed/unsigned integers, such as INT64\nFLOAT64"
   },
   {
-    "name": "TO_JSON",
+    "name": "STRING",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "JSON",
-    "description": "Takes a SQL value and returns a JSON value. The value\nmust be a supported GoogleSQL data type. You can review the\nGoogleSQL data types that this function supports and their\nJSON encodings here.This function supports an optional mandatory-named argument called\nstringify_wide_numbers.If this argument is TRUE, numeric values outside\nof the FLOAT64 type domain are encoded as strings.\nIf this argument is not used or is FALSE, numeric values outside\nof the FLOAT64 type domain are not encoded\nas strings, but are stored as JSON numbers. If a numerical value cannot be\nstored in JSON without loss of precision, an error is thrown.The following numerical data types are affected by the\nstringify_wide_numbers argument:INT64\nNUMERIC\nBIGNUMERICIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
+    "return_type": "STRING",
+    "description": "Takes a JSON expression, extracts a JSON string, and returns that value as a SQL\nSTRING. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a string, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
   },
   {
     "name": "TO_JSON_STRING",
@@ -994,39 +1022,11 @@
     "description": "Takes a SQL value and returns a JSON-formatted string\nrepresentation of the value. The value must be a supported GoogleSQL\ndata type. You can review the GoogleSQL data types that this function\nsupports and their JSON encodings here.This function supports an optional boolean parameter called pretty_print.\nIf pretty_print is true, the returned value is formatted for easy\nreadability."
   },
   {
-    "name": "STRING",
+    "name": "TO_JSON",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "STRING",
-    "description": "Takes a JSON expression, extracts a JSON string, and returns that value as a SQL\nSTRING. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a string, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
-  },
-  {
-    "name": "BOOL",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "BOOL",
-    "description": "Takes a JSON expression, extracts a JSON boolean, and returns that value as a SQL\nBOOL. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a boolean, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
-  },
-  {
-    "name": "INT64",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "INT64",
-    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nINT64. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON number has a fractional part or is outside of the\nINT64 domain, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
-  },
-  {
-    "name": "FLOAT64",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "FLOAT64",
-    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nFLOAT64. If the expression is SQL NULL, the\nfunction returns SQL NULL. If the extracted JSON value is not a number, an\nerror is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'This function supports an optional mandatory-named argument called\nwide_number_mode which defines what happens with a number that cannot be\nrepresented as a FLOAT64 without loss of precision.This argument accepts one of the two case-sensitive values:‘exact’: The function fails if the result cannot be represented as a\nFLOAT64 without loss of precision.\n‘round’: The numeric value stored in JSON will be rounded to\nFLOAT64. If such rounding is not possible, the\nfunction fails. This is the default value if the argument is not specified."
-  },
-  {
-    "name": "JSON_TYPE",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "STRING",
-    "description": "Takes a JSON expression and returns the type of the outermost JSON value as a\nSQL STRING. The names of these JSON types can be returned:object\narray\nstring\nnumber\nboolean\nnullIf the expression is SQL NULL, the function returns SQL NULL. If the\nextracted JSON value is not a valid JSON type, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
+    "return_type": "JSON",
+    "description": "Takes a SQL value and returns a JSON value. The value\nmust be a supported GoogleSQL data type. You can review the\nGoogleSQL data types that this function supports and their\nJSON encodings here.This function supports an optional mandatory-named argument called\nstringify_wide_numbers.If this argument is TRUE, numeric values outside\nof the FLOAT64 type domain are encoded as strings.\nIf this argument is not used or is FALSE, numeric values outside\nof the FLOAT64 type domain are not encoded\nas strings, but are stored as JSON numbers. If a numerical value cannot be\nstored in JSON without loss of precision, an error is thrown.The following numerical data types are affected by the\nstringify_wide_numbers argument:INT64\nNUMERIC\nBIGNUMERICIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
   },
   {
     "name": "ARRAY",
@@ -1048,6 +1048,13 @@
     "category": "Array functions",
     "return_type": "INT64",
     "description": "Returns the size of the array. Returns 0 for an empty array. Returns NULL if\nthe array_expression is NULL."
+  },
+  {
+    "name": "ARRAY_REVERSE",
+    "arguments": [],
+    "category": "Array functions",
+    "return_type": "ARRAY",
+    "description": "Returns the input ARRAY with elements in reverse order."
   },
   {
     "name": "ARRAY_TO_STRING",
@@ -1078,25 +1085,11 @@
     "description": "Returns an ARRAY of TIMESTAMPS separated by a given interval. The\nstart_timestamp and end_timestamp parameters determine the inclusive\nlower and upper bounds of the ARRAY.The GENERATE_TIMESTAMP_ARRAY function accepts the following data types as\ninputs:start_timestamp: TIMESTAMP\nend_timestamp: TIMESTAMP\nstep_expression: INT64\nAllowed date_part values are:\nMICROSECOND, MILLISECOND, SECOND, MINUTE, HOUR, or DAY.The step_expression parameter determines the increment used to generate\ntimestamps."
   },
   {
-    "name": "ARRAY_REVERSE",
-    "arguments": [],
-    "category": "Array functions",
-    "return_type": "ARRAY",
-    "description": "Returns the input ARRAY with elements in reverse order."
-  },
-  {
     "name": "CURRENT_DATE",
     "arguments": [],
     "category": "Date functions",
     "return_type": "DATE",
     "description": "Returns the current date.This function supports the following arguments:time_zone_expression: A STRING expression that represents a\ntime zone. If no time zone is specified, the\ndefault time zone, UTC, is used. If this expression is\nused and it evaluates to NULL, this function returns NULL."
-  },
-  {
-    "name": "EXTRACT",
-    "arguments": [],
-    "category": "Date functions",
-    "return_type": "INT64",
-    "description": "Returns the value corresponding to the specified date part. The part must\nbe one of:DAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53]. Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of the date in the range [0, 53].\nWeeks begin on WEEKDAY. Dates prior to\nthe first WEEKDAY of the year are in week 0. Valid values for WEEKDAY are\nSUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and\nSATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the date_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER: Returns values in the range [1,4].\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs."
   },
   {
     "name": "DATE",
@@ -1113,18 +1106,25 @@
     "description": "Adds a specified time interval to a DATE.DATE_ADD supports the following date_part values:DAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when\nthe date is at (or near) the last day of the month. If the resulting\nmonth has fewer days than the original date's day, then the resulting\ndate is the last date of that month."
   },
   {
-    "name": "DATE_SUB",
-    "arguments": [],
-    "category": "Date functions",
-    "return_type": "DATE",
-    "description": "Subtracts a specified time interval from a DATE.DATE_SUB supports the following date_part values:DAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when\nthe date is at (or near) the last day of the month. If the resulting\nmonth has fewer days than the original date's day, then the resulting\ndate is the last date of that month."
-  },
-  {
     "name": "DATE_DIFF",
     "arguments": [],
     "category": "Date functions",
     "return_type": "INT64",
     "description": "Returns the whole number of specified date_part intervals between two\nDATE objects (date_expression_a - date_expression_b).\nIf the first DATE is earlier than the second one,\nthe output is negative.DATE_DIFF supports the following date_part values:DAY\nWEEK This date part begins on Sunday.\nWEEK(<WEEKDAY>): This date part begins on WEEKDAY. Valid values for\nWEEKDAY are SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY,\nFRIDAY, and SATURDAY.\nISOWEEK: Uses ISO 8601 week\nboundaries. ISO weeks begin on Monday.\nMONTH, except when the first two arguments are TIMESTAMP objects.\nQUARTER\nYEAR\nISOYEAR: Uses the ISO 8601\nweek-numbering year boundary. The ISO year boundary is the Monday of the\nfirst week whose Thursday belongs to the corresponding Gregorian calendar\nyear."
+  },
+  {
+    "name": "DATE_FROM_UNIX_DATE",
+    "arguments": [],
+    "category": "Date functions",
+    "return_type": "DATE",
+    "description": "Interprets int64_expression as the number of days since 1970-01-01."
+  },
+  {
+    "name": "DATE_SUB",
+    "arguments": [],
+    "category": "Date functions",
+    "return_type": "DATE",
+    "description": "Subtracts a specified time interval from a DATE.DATE_SUB supports the following date_part values:DAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when\nthe date is at (or near) the last day of the month. If the resulting\nmonth has fewer days than the original date's day, then the resulting\ndate is the last date of that month."
   },
   {
     "name": "DATE_TRUNC",
@@ -1134,11 +1134,11 @@
     "description": "Truncates a DATE value to the granularity of date_part. The DATE value\nis always rounded to the beginning of date_part, which can be one of the\nfollowing:DAY: The day in the Gregorian calendar year that contains the\nDATE value.\nWEEK: The first day of the week in the week that contains the\nDATE value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nDATE value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the DATE value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nDATE value.\nQUARTER: The first day of the quarter in the quarter that contains the\nDATE value.\nYEAR: The first day of the year in the year that contains the\nDATE value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the DATE value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year."
   },
   {
-    "name": "DATE_FROM_UNIX_DATE",
+    "name": "EXTRACT",
     "arguments": [],
     "category": "Date functions",
-    "return_type": "DATE",
-    "description": "Interprets int64_expression as the number of days since 1970-01-01."
+    "return_type": "INT64",
+    "description": "Returns the value corresponding to the specified date part. The part must\nbe one of:DAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53]. Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of the date in the range [0, 53].\nWeeks begin on WEEKDAY. Dates prior to\nthe first WEEKDAY of the year are in week 0. Valid values for WEEKDAY are\nSUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and\nSATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the date_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER: Returns values in the range [1,4].\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs."
   },
   {
     "name": "FORMAT_DATE",
@@ -1183,25 +1183,11 @@
     "description": "Constructs a DATETIME object using INT64 values\nrepresenting the year, month, day, hour, minute, and second.\nConstructs a DATETIME object using a DATE object and an optional TIME\nobject.\nConstructs a DATETIME object using a TIMESTAMP object. It supports an\noptional parameter to\nspecify a time zone.\nIf no time zone is specified, the default time zone, UTC,\nis used."
   },
   {
-    "name": "EXTRACT",
-    "arguments": [],
-    "category": "Datetime functions",
-    "return_type": "INT64, except in the following cases:If part is DATE, returns a DATE object.\nIf part is TIME, returns a TIME object.",
-    "description": "Returns a value that corresponds to the\nspecified part from a supplied datetime_expression.Allowed part values are:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day of\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53].  Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of datetime_expression in the\nrange [0, 53]. Weeks begin on WEEKDAY.\ndatetimes prior to the first WEEKDAY of the year are in week 0. Valid\nvalues for WEEKDAY are SUNDAY, MONDAY, TUESDAY, WEDNESDAY,\nTHURSDAY, FRIDAY, and SATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the datetime_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs.\nDATE\nTIMEReturned values truncate lower order time periods. For example, when extracting\nseconds, EXTRACT truncates the millisecond and microsecond values."
-  },
-  {
     "name": "DATETIME_ADD",
     "arguments": [],
     "category": "Datetime functions",
     "return_type": "DATETIME",
     "description": "Adds int64_expression units of part to the DATETIME object.DATETIME_ADD supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when the\ndate is at (or near) the last day of the month. If the resulting month has fewer\ndays than the original DATETIME's day, then the result day is the last day of\nthe new month."
-  },
-  {
-    "name": "DATETIME_SUB",
-    "arguments": [],
-    "category": "Datetime functions",
-    "return_type": "DATETIME",
-    "description": "Subtracts int64_expression units of part from the DATETIME.DATETIME_SUB supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when the\ndate is at (or near) the last day of the month. If the resulting month has fewer\ndays than the original DATETIME's day, then the result day is the last day of\nthe new month."
   },
   {
     "name": "DATETIME_DIFF",
@@ -1211,11 +1197,25 @@
     "description": "Returns the whole number of specified part intervals between two\nDATETIME objects (datetime_expression_a - datetime_expression_b).\nIf the first DATETIME is earlier than the second one,\nthe output is negative. Throws an error if the computation overflows the\nresult type, such as if the difference in\nmicroseconds\nbetween the two DATETIME objects would overflow an\nINT64 value.DATETIME_DIFF supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAY\nWEEK: This date part begins on Sunday.\nWEEK(<WEEKDAY>): This date part begins on WEEKDAY. Valid values for\nWEEKDAY are SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY,\nFRIDAY, and SATURDAY.\nISOWEEK: Uses ISO 8601 week\nboundaries. ISO weeks begin on Monday.\nMONTH, except when the first two arguments are TIMESTAMP objects.\nQUARTER\nYEAR\nISOYEAR: Uses the ISO 8601\nweek-numbering year boundary. The ISO year boundary is the Monday of the\nfirst week whose Thursday belongs to the corresponding Gregorian calendar\nyear."
   },
   {
+    "name": "DATETIME_SUB",
+    "arguments": [],
+    "category": "Datetime functions",
+    "return_type": "DATETIME",
+    "description": "Subtracts int64_expression units of part from the DATETIME.DATETIME_SUB supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAY\nWEEK. Equivalent to 7 DAYs.\nMONTH\nQUARTER\nYEARSpecial handling is required for MONTH, QUARTER, and YEAR parts when the\ndate is at (or near) the last day of the month. If the resulting month has fewer\ndays than the original DATETIME's day, then the result day is the last day of\nthe new month."
+  },
+  {
     "name": "DATETIME_TRUNC",
     "arguments": [],
     "category": "Datetime functions",
     "return_type": "DATETIME",
     "description": "Truncates a DATETIME value to the granularity of date_time_part.\nThe DATETIME value is always rounded to the beginning of date_time_part,\nwhich can be one of the following:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour.\nDAY: The day in the Gregorian calendar year that contains the\nDATETIME value.\nWEEK: The first day of the week in the week that contains the\nDATETIME value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nDATETIME value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the DATETIME value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nDATETIME value.\nQUARTER: The first day of the quarter in the quarter that contains the\nDATETIME value.\nYEAR: The first day of the year in the year that contains the\nDATETIME value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the DATETIME value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year."
+  },
+  {
+    "name": "EXTRACT",
+    "arguments": [],
+    "category": "Datetime functions",
+    "return_type": "INT64, except in the following cases:If part is DATE, returns a DATE object.\nIf part is TIME, returns a TIME object.",
+    "description": "Returns a value that corresponds to the\nspecified part from a supplied datetime_expression.Allowed part values are:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day of\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53].  Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of datetime_expression in the\nrange [0, 53]. Weeks begin on WEEKDAY.\ndatetimes prior to the first WEEKDAY of the year are in week 0. Valid\nvalues for WEEKDAY are SUNDAY, MONDAY, TUESDAY, WEDNESDAY,\nTHURSDAY, FRIDAY, and SATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the datetime_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs.\nDATE\nTIMEReturned values truncate lower order time periods. For example, when extracting\nseconds, EXTRACT truncates the millisecond and microsecond values."
   },
   {
     "name": "FORMAT_DATETIME",
@@ -1246,46 +1246,11 @@
     "description": "Returns the current time as a TIME object. Parentheses are optional when\ncalled with no arguments.This function supports an optional time_zone parameter.\nSee Time zone definitions for information\non how to specify a time zone."
   },
   {
-    "name": "TIME",
-    "arguments": [],
-    "category": "Time functions",
-    "return_type": "TIME",
-    "description": "Constructs a TIME object using INT64\nvalues representing the hour, minute, and second.\nConstructs a TIME object using a TIMESTAMP object. It supports an\noptional\nparameter to specify a time zone. If no\ntime zone is specified, the default time zone, UTC, is\nused.\nConstructs a TIME object using a\nDATETIME object."
-  },
-  {
     "name": "EXTRACT",
     "arguments": [],
     "category": "Time functions",
     "return_type": "INT64",
     "description": "Returns a value that corresponds to the specified part from\na supplied time_expression.Allowed part values are:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOURReturned values truncate lower order time periods. For example, when extracting\nseconds, EXTRACT truncates the millisecond and microsecond values."
-  },
-  {
-    "name": "TIME_ADD",
-    "arguments": [],
-    "category": "Time functions",
-    "return_type": "TIME",
-    "description": "Adds int64_expression units of part to the TIME object.TIME_ADD supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOURThis function automatically adjusts when values fall outside of the 00:00:00 to\n24:00:00 boundary. For example, if you add an hour to 23:30:00, the returned\nvalue is 00:30:00."
-  },
-  {
-    "name": "TIME_SUB",
-    "arguments": [],
-    "category": "Time functions",
-    "return_type": "TIME",
-    "description": "Subtracts int64_expression units of part from the TIME object.TIME_SUB supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOURThis function automatically adjusts when values fall outside of the 00:00:00 to\n24:00:00 boundary. For example, if you subtract an hour from 00:30:00, the\nreturned value is 23:30:00."
-  },
-  {
-    "name": "TIME_DIFF",
-    "arguments": [],
-    "category": "Time functions",
-    "return_type": "INT64",
-    "description": "Returns the whole number of specified part intervals between two\nTIME objects (time_expression_a - time_expression_b). If the first\nTIME is earlier than the second one, the output is negative. Throws an error\nif the computation overflows the result type, such as if the difference in\nmicroseconds\nbetween the two TIME objects would overflow an\nINT64 value.TIME_DIFF supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR"
-  },
-  {
-    "name": "TIME_TRUNC",
-    "arguments": [],
-    "category": "Time functions",
-    "return_type": "TIME",
-    "description": "Truncates a TIME value to the granularity of time_part. The TIME value\nis always rounded to the beginning of time_part, which can be one of the\nfollowing:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour."
   },
   {
     "name": "FORMAT_TIME",
@@ -1302,6 +1267,41 @@
     "description": "Converts a string representation of time to a\nTIME object.format_string contains the format elements\nthat define how time_string is formatted. Each element in\ntime_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in time_string.-- This works because elements on both sides match.\nSELECT PARSE_TIME(\"%I:%M:%S\", \"07:30:00\")\n\n-- This doesn't work because the seconds element is in different locations.\nSELECT PARSE_TIME(\"%S:%I:%M\", \"07:30:00\")\n\n-- This doesn't work because one of the seconds elements is missing.\nSELECT PARSE_TIME(\"%I:%M\", \"07:30:00\")\n\n-- This works because %T can find all matching elements in time_string.\nSELECT PARSE_TIME(\"%T\", \"07:30:00\")The format string fully supports most format elements except for %P.When using PARSE_TIME, keep the following in mind:Unspecified fields. Any unspecified field is initialized from\n00:00:00.0. For instance, if seconds is unspecified then it\ndefaults to 00, and so on.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the TIME string. In\naddition, leading and trailing white spaces in the TIME string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation, the last one generally overrides any earlier ones.\nFormat divergence. %p can be used with am, AM, pm, and PM."
   },
   {
+    "name": "TIME",
+    "arguments": [],
+    "category": "Time functions",
+    "return_type": "TIME",
+    "description": "Constructs a TIME object using INT64\nvalues representing the hour, minute, and second.\nConstructs a TIME object using a TIMESTAMP object. It supports an\noptional\nparameter to specify a time zone. If no\ntime zone is specified, the default time zone, UTC, is\nused.\nConstructs a TIME object using a\nDATETIME object."
+  },
+  {
+    "name": "TIME_ADD",
+    "arguments": [],
+    "category": "Time functions",
+    "return_type": "TIME",
+    "description": "Adds int64_expression units of part to the TIME object.TIME_ADD supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOURThis function automatically adjusts when values fall outside of the 00:00:00 to\n24:00:00 boundary. For example, if you add an hour to 23:30:00, the returned\nvalue is 00:30:00."
+  },
+  {
+    "name": "TIME_DIFF",
+    "arguments": [],
+    "category": "Time functions",
+    "return_type": "INT64",
+    "description": "Returns the whole number of specified part intervals between two\nTIME objects (time_expression_a - time_expression_b). If the first\nTIME is earlier than the second one, the output is negative. Throws an error\nif the computation overflows the result type, such as if the difference in\nmicroseconds\nbetween the two TIME objects would overflow an\nINT64 value.TIME_DIFF supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR"
+  },
+  {
+    "name": "TIME_SUB",
+    "arguments": [],
+    "category": "Time functions",
+    "return_type": "TIME",
+    "description": "Subtracts int64_expression units of part from the TIME object.TIME_SUB supports the following values for part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOURThis function automatically adjusts when values fall outside of the 00:00:00 to\n24:00:00 boundary. For example, if you subtract an hour from 00:30:00, the\nreturned value is 23:30:00."
+  },
+  {
+    "name": "TIME_TRUNC",
+    "arguments": [],
+    "category": "Time functions",
+    "return_type": "TIME",
+    "description": "Truncates a TIME value to the granularity of time_part. The TIME value\nis always rounded to the beginning of time_part, which can be one of the\nfollowing:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour."
+  },
+  {
     "name": "CURRENT_TIMESTAMP",
     "arguments": [],
     "category": "Timestamp functions",
@@ -1314,6 +1314,20 @@
     "category": "Timestamp functions",
     "return_type": "INT64, except when:part is DATE, returns a DATE object.\npart is DATETIME, returns a DATETIME object.\npart is TIME, returns a TIME object.",
     "description": "Returns a value that corresponds to the specified part from\na supplied timestamp_expression. This function supports an optional\ntime_zone parameter. See\nTime zone definitions for information\non how to specify a time zone.Allowed part values are:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day of\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53].  Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of timestamp_expression in the\nrange [0, 53]. Weeks begin on WEEKDAY. datetimes prior to the first\nWEEKDAY of the year are in week 0. Valid values for WEEKDAY are SUNDAY,\nMONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and SATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the datetime_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs.\nDATE\nDATETIME\nTIMEReturned values truncate lower order time periods. For example, when extracting\nseconds, EXTRACT truncates the millisecond and microsecond values."
+  },
+  {
+    "name": "FORMAT_TIMESTAMP",
+    "arguments": [],
+    "category": "Timestamp functions",
+    "return_type": "STRING",
+    "description": "Formats a timestamp according to the specified format_string.See Supported Format Elements For TIMESTAMP\nfor a list of format elements that this function supports."
+  },
+  {
+    "name": "PARSE_TIMESTAMP",
+    "arguments": [],
+    "category": "Timestamp functions",
+    "return_type": "TIMESTAMP",
+    "description": "Converts a string representation of a timestamp to a\nTIMESTAMP object.format_string contains the format elements\nthat define how timestamp_string is formatted. Each element in\ntimestamp_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in timestamp_string.-- This works because elements on both sides match.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in timestamp_string.\nSELECT PARSE_TIMESTAMP(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.When using PARSE_TIMESTAMP, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01\n00:00:00.0. This initialization value uses the time zone specified by the\nfunction's time zone argument, if present. If not, the initialization value\nuses the default time zone, UTC.  For instance, if the year\nis unspecified then it defaults to 1970, and so on.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the timestamp string. In\naddition, leading and trailing white spaces in the timestamp string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones, with some exceptions (see the\ndescriptions of %s, %C, and %y).\nFormat divergence. %p can be used with am, AM, pm, and PM."
   },
   {
     "name": "STRING",
@@ -1337,53 +1351,11 @@
     "description": "Adds int64_expression units of date_part to the timestamp, independent of\nany time zone.TIMESTAMP_ADD supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
   },
   {
-    "name": "TIMESTAMP_SUB",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "TIMESTAMP",
-    "description": "Subtracts int64_expression units of date_part from the timestamp,\nindependent of any time zone.TIMESTAMP_SUB supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
-  },
-  {
     "name": "TIMESTAMP_DIFF",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "INT64",
     "description": "Returns the whole number of specified date_part intervals between two\nTIMESTAMP objects (timestamp_expression_a - timestamp_expression_b).\nIf the first TIMESTAMP is earlier than the second one,\nthe output is negative. Throws an error if the computation overflows the\nresult type, such as if the difference in\nmicroseconds\nbetween the two TIMESTAMP objects would overflow an\nINT64 value.TIMESTAMP_DIFF supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
-  },
-  {
-    "name": "TIMESTAMP_TRUNC",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "TIMESTAMP",
-    "description": "Truncates a TIMESTAMP value to the granularity of date_time_part.\nThe TIMESTAMP value is always rounded to the beginning of date_time_part,\nwhich can be one of the following:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour.\nDAY: The day in the Gregorian calendar year that contains the\nTIMESTAMP value.\nWEEK: The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the TIMESTAMP value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nTIMESTAMP value.\nQUARTER: The first day of the quarter in the quarter that contains the\nTIMESTAMP value.\nYEAR: The first day of the year in the year that contains the\nTIMESTAMP value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the TIMESTAMP value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year.TIMESTAMP_TRUNC function supports an optional time_zone parameter. This\nparameter applies to the following date_time_part:MINUTE\nHOUR\nDAY\nWEEK\nWEEK(<WEEKDAY>)\nISOWEEK\nMONTH\nQUARTER\nYEAR\nISOYEARUse this parameter if you want to use a time zone other than the\ndefault time zone, UTC, as part of the\ntruncate operation.When truncating a TIMESTAMP to MINUTE\norHOUR, TIMESTAMP_TRUNC determines the civil time of the\nTIMESTAMP in the specified (or default) time zone\nand subtracts the minutes and seconds (when truncating to HOUR) or the seconds\n(when truncating to MINUTE) from that TIMESTAMP.\nWhile this provides intuitive results in most cases, the result is\nnon-intuitive near daylight savings transitions that are not hour aligned."
-  },
-  {
-    "name": "FORMAT_TIMESTAMP",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "STRING",
-    "description": "Formats a timestamp according to the specified format_string.See Supported Format Elements For TIMESTAMP\nfor a list of format elements that this function supports."
-  },
-  {
-    "name": "PARSE_TIMESTAMP",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "TIMESTAMP",
-    "description": "Converts a string representation of a timestamp to a\nTIMESTAMP object.format_string contains the format elements\nthat define how timestamp_string is formatted. Each element in\ntimestamp_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in timestamp_string.-- This works because elements on both sides match.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in timestamp_string.\nSELECT PARSE_TIMESTAMP(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.When using PARSE_TIMESTAMP, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01\n00:00:00.0. This initialization value uses the time zone specified by the\nfunction's time zone argument, if present. If not, the initialization value\nuses the default time zone, UTC.  For instance, if the year\nis unspecified then it defaults to 1970, and so on.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the timestamp string. In\naddition, leading and trailing white spaces in the timestamp string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones, with some exceptions (see the\ndescriptions of %s, %C, and %y).\nFormat divergence. %p can be used with am, AM, pm, and PM."
-  },
-  {
-    "name": "TIMESTAMP_SECONDS",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "TIMESTAMP",
-    "description": "Interprets int64_expression as the number of seconds since 1970-01-01 00:00:00\nUTC and returns a timestamp."
-  },
-  {
-    "name": "TIMESTAMP_MILLIS",
-    "arguments": [],
-    "category": "Timestamp functions",
-    "return_type": "TIMESTAMP",
-    "description": "Interprets int64_expression as the number of milliseconds since 1970-01-01\n00:00:00 UTC and returns a timestamp."
   },
   {
     "name": "TIMESTAMP_MICROS",
@@ -1393,18 +1365,32 @@
     "description": "Interprets int64_expression as the number of microseconds since 1970-01-01\n00:00:00 UTC and returns a timestamp."
   },
   {
-    "name": "UNIX_SECONDS",
+    "name": "TIMESTAMP_MILLIS",
     "arguments": [],
     "category": "Timestamp functions",
-    "return_type": "INT64",
-    "description": "Returns the number of seconds since 1970-01-01 00:00:00 UTC. Truncates higher\nlevels of precision."
+    "return_type": "TIMESTAMP",
+    "description": "Interprets int64_expression as the number of milliseconds since 1970-01-01\n00:00:00 UTC and returns a timestamp."
   },
   {
-    "name": "UNIX_MILLIS",
+    "name": "TIMESTAMP_SECONDS",
     "arguments": [],
     "category": "Timestamp functions",
-    "return_type": "INT64",
-    "description": "Returns the number of milliseconds since 1970-01-01 00:00:00 UTC. Truncates\nhigher levels of precision."
+    "return_type": "TIMESTAMP",
+    "description": "Interprets int64_expression as the number of seconds since 1970-01-01 00:00:00\nUTC and returns a timestamp."
+  },
+  {
+    "name": "TIMESTAMP_SUB",
+    "arguments": [],
+    "category": "Timestamp functions",
+    "return_type": "TIMESTAMP",
+    "description": "Subtracts int64_expression units of date_part from the timestamp,\nindependent of any time zone.TIMESTAMP_SUB supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
+  },
+  {
+    "name": "TIMESTAMP_TRUNC",
+    "arguments": [],
+    "category": "Timestamp functions",
+    "return_type": "TIMESTAMP",
+    "description": "Truncates a TIMESTAMP value to the granularity of date_time_part.\nThe TIMESTAMP value is always rounded to the beginning of date_time_part,\nwhich can be one of the following:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour.\nDAY: The day in the Gregorian calendar year that contains the\nTIMESTAMP value.\nWEEK: The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the TIMESTAMP value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nTIMESTAMP value.\nQUARTER: The first day of the quarter in the quarter that contains the\nTIMESTAMP value.\nYEAR: The first day of the year in the year that contains the\nTIMESTAMP value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the TIMESTAMP value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year.TIMESTAMP_TRUNC function supports an optional time_zone parameter. This\nparameter applies to the following date_time_part:MINUTE\nHOUR\nDAY\nWEEK\nWEEK(<WEEKDAY>)\nISOWEEK\nMONTH\nQUARTER\nYEAR\nISOYEARUse this parameter if you want to use a time zone other than the\ndefault time zone, UTC, as part of the\ntruncate operation.When truncating a TIMESTAMP to MINUTE\norHOUR, TIMESTAMP_TRUNC determines the civil time of the\nTIMESTAMP in the specified (or default) time zone\nand subtracts the minutes and seconds (when truncating to HOUR) or the seconds\n(when truncating to MINUTE) from that TIMESTAMP.\nWhile this provides intuitive results in most cases, the result is\nnon-intuitive near daylight savings transitions that are not hour aligned."
   },
   {
     "name": "UNIX_MICROS",
@@ -1414,11 +1400,18 @@
     "description": "Returns the number of microseconds since 1970-01-01 00:00:00 UTC. Truncates\nhigher levels of precision."
   },
   {
-    "name": "MAKE_INTERVAL",
+    "name": "UNIX_MILLIS",
     "arguments": [],
-    "category": "Interval functions",
-    "return_type": "INTERVAL",
-    "description": "Constructs an INTERVAL object using INT64 values representing the year,\nmonth, day, hour, minute, and second. All arguments are optional with default\nvalue of 0 and can be used as named arguments."
+    "category": "Timestamp functions",
+    "return_type": "INT64",
+    "description": "Returns the number of milliseconds since 1970-01-01 00:00:00 UTC. Truncates\nhigher levels of precision."
+  },
+  {
+    "name": "UNIX_SECONDS",
+    "arguments": [],
+    "category": "Timestamp functions",
+    "return_type": "INT64",
+    "description": "Returns the number of seconds since 1970-01-01 00:00:00 UTC. Truncates higher\nlevels of precision."
   },
   {
     "name": "EXTRACT",
@@ -1447,6 +1440,13 @@
     "category": "Interval functions",
     "return_type": "INTERVAL",
     "description": "Normalizes the days and time parts of the interval."
+  },
+  {
+    "name": "MAKE_INTERVAL",
+    "arguments": [],
+    "category": "Interval functions",
+    "return_type": "INTERVAL",
+    "description": "Constructs an INTERVAL object using INT64 values representing the year,\nmonth, day, hour, minute, and second. All arguments are optional with default\nvalue of 0 and can be used as named arguments."
   },
   {
     "name": "S2_CELLIDFROMPOINT",
@@ -1529,15 +1529,8 @@
     "name": "ST_BUFFERWITHTOLERANCE",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "The following example shows the results of ST_BUFFERWITHTOLERANCE on a point,\ngiven two different values for tolerance but with the same buffer radius of\n100. A buffered point is an approximated circle. When tolerance_meters=25,\nthe tolerance is a large percentage of the buffer radius, and therefore only\nfive segments are used to approximate a circle around the input point. When\ntolerance_meters=1, the tolerance is a much smaller percentage of the buffer\nradius, and therefore twenty-four edges are used to approximate a circle around\nthe input point.SELECT\n  -- tolerance_meters=25, or 25% of the buffer radius.\n  ST_NumPoints(ST_BUFFERWITHTOLERANCE(ST_GEOGFROMTEXT('POINT(1 2)'), 100, 25)) AS five_sides,\n  -- tolerance_meters=1, or 1% of the buffer radius.\n  st_NumPoints(ST_BUFFERWITHTOLERANCE(ST_GEOGFROMTEXT('POINT(100 2)'), 100, 1)) AS twenty_four_sides;\n\n+------------+-------------------+\n| five_sides | twenty_four_sides |\n+------------+-------------------+\n| 6          | 24                |\n+------------+-------------------+",
+    "return_type": "The following example shows the results of ST_BUFFERWITHTOLERANCE on a point,\ngiven two different values for tolerance but with the same buffer radius of\n100. A buffered point is an approximated circle. When tolerance_meters=25,\nthe tolerance is a large percentage of the buffer radius, and therefore only\nfive segments are used to approximate a circle around the input point. When\ntolerance_meters=1, the tolerance is a much smaller percentage of the buffer\nradius, and therefore twenty-four edges are used to approximate a circle around\nthe input point.SELECT\n  -- tolerance_meters=25, or 25% of the buffer radius.\n  ST_NumPoints(ST_BUFFERWITHTOLERANCE(ST_GEOGFROMTEXT('POINT(1 2)'), 100, 25)) AS five_sides,\n  -- tolerance_meters=1, or 1% of the buffer radius.\n  st_NumPoints(ST_BUFFERWITHTOLERANCE(ST_GEOGFROMTEXT('POINT(100 2)'), 100, 1)) AS twenty_four_sides;\n\n/*------------+-------------------*\n | five_sides | twenty_four_sides |\n +------------+-------------------+\n | 6          | 24                |\n *------------+-------------------*/",
     "description": "Polygon GEOGRAPHY"
-  },
-  {
-    "name": "ST_CENTROID",
-    "arguments": [],
-    "category": "Geography functions",
-    "return_type": "In the unlikely event that the centroid of a GEOGRAPHY cannot be defined by a\nsingle point on the surface of the Earth, a deterministic but otherwise\narbitrary point is returned. This can only happen if the centroid is exactly at\nthe center of the Earth, such as the centroid for a pair of antipodal points,\nand the likelihood of this happening is vanishingly small.",
-    "description": "Returns the centroid of the input GEOGRAPHY as a single point GEOGRAPHY.The centroid of a GEOGRAPHY is the weighted average of the centroids of the\nhighest-dimensional components in the GEOGRAPHY. The centroid for components\nin each dimension is defined as follows:The centroid of points is the arithmetic mean of the input coordinates.\nThe centroid of linestrings is the centroid of all the edges weighted by\nlength. The centroid of each edge is the geodesic midpoint of the edge.\nThe centroid of a polygon is its center of mass.If the input GEOGRAPHY is empty, an empty GEOGRAPHY is returned."
   },
   {
     "name": "ST_CENTROID_AGG",
@@ -1545,6 +1538,13 @@
     "category": "Geography functions",
     "return_type": "Point GEOGRAPHY",
     "description": "Computes the centroid of the set of input GEOGRAPHYs as a single point\nGEOGRAPHY.The centroid over the set of input GEOGRAPHYs is the weighted average of the\ncentroid of each individual GEOGRAPHY. Only the GEOGRAPHYs with the highest\ndimension present in the input contribute to the centroid of the entire set.\nFor example, if the input contains both GEOGRAPHYs  with lines and\nGEOGRAPHYs with only points, ST_CENTROID_AGG returns the weighted average\nof the GEOGRAPHYs with lines, since those have maximal dimension. In this\nexample, ST_CENTROID_AGG ignores GEOGRAPHYs with only points when\ncalculating the aggregate centroid.ST_CENTROID_AGG ignores NULL input GEOGRAPHY values.See ST_CENTROID for the non-aggregate version of\nST_CENTROID_AGG and the definition of centroid for an individual GEOGRAPHY\nvalue."
+  },
+  {
+    "name": "ST_CENTROID",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "In the unlikely event that the centroid of a GEOGRAPHY cannot be defined by a\nsingle point on the surface of the Earth, a deterministic but otherwise\narbitrary point is returned. This can only happen if the centroid is exactly at\nthe center of the Earth, such as the centroid for a pair of antipodal points,\nand the likelihood of this happening is vanishingly small.",
+    "description": "Returns the centroid of the input GEOGRAPHY as a single point GEOGRAPHY.The centroid of a GEOGRAPHY is the weighted average of the centroids of the\nhighest-dimensional components in the GEOGRAPHY. The centroid for components\nin each dimension is defined as follows:The centroid of points is the arithmetic mean of the input coordinates.\nThe centroid of linestrings is the centroid of all the edges weighted by\nlength. The centroid of each edge is the geodesic midpoint of the edge.\nThe centroid of a polygon is its center of mass.If the input GEOGRAPHY is empty, an empty GEOGRAPHY is returned."
   },
   {
     "name": "ST_CLOSESTPOINT",
@@ -1614,7 +1614,7 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "FLOAT64",
-    "description": "Returns the shortest distance in meters between two non-empty\nGEOGRAPHYs.If either of the input GEOGRAPHYs is empty,\nST_DISTANCE returns NULL.The optional use_spheroid parameter determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on the\nsurface of a perfect sphere.The use_spheroid parameter currently only supports\nthe value FALSE. The default value of use_spheroid is FALSE."
+    "description": "Returns the shortest distance in meters between two non-empty\nGEOGRAPHYs.If either of the input GEOGRAPHYs is empty,\nST_DISTANCE returns NULL.The optional use_spheroid parameter determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on the\nsurface of a perfect sphere. If use_spheroid is TRUE, the function measures\ndistance on the surface of the WGS84 spheroid. The default value\nof use_spheroid is FALSE."
   },
   {
     "name": "ST_DUMP",
@@ -1778,6 +1778,13 @@
     "description": "Returns the total length in meters of the lines in the input\nGEOGRAPHY.If geography_expression is a point or a polygon, returns zero. If\ngeography_expression is a collection, returns the length of the lines in the\ncollection; if the collection does not contain lines, returns zero.The optional use_spheroid parameter determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on the\nsurface of a perfect sphere.The use_spheroid parameter currently only supports\nthe value FALSE. The default value of use_spheroid is FALSE."
   },
   {
+    "name": "ST_LINELOCATEPOINT",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "DOUBLE",
+    "description": "Gets a section of a linestring between the start point and a selected point (a\npoint on the linestring closest to the point_geography argument). Returns the\npercentage that this section represents in the linestring.Details:To select a point on the linestring GEOGRAPHY (linestring_geography),\nthis function takes a point GEOGRAPHY (point_geography) and finds the\nclosest point to it on the linestring.\nIf two points on linestring_geography are an equal distance away from\npoint_geography, it is not guaranteed which one will be selected.\nThe return value is an inclusive value between 0 and 1 (0-100%).\nIf the selected point is the start point on the linestring, function returns\n0 (0%).\nIf the selected point is the end point on the linestring, function returns 1\n(100%).NULL and error handling:Returns NULL if any input argument is NULL.\nReturns an error if linestring_geography is not a linestring or if\npoint_geography is not a point. Use the SAFE prefix\nto obtain NULL for invalid input instead of an error."
+  },
+  {
     "name": "ST_MAKELINE",
     "arguments": [],
     "category": "Geography functions",
@@ -1855,18 +1862,18 @@
     "description": "Returns TRUE provided the following two conditions are satisfied:geography_1 intersects geography_2.\nThe interior of geography_1 and the interior of geography_2 are\ndisjoint."
   },
   {
-    "name": "ST_UNION",
-    "arguments": [],
-    "category": "Geography functions",
-    "return_type": "GEOGRAPHY",
-    "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION comes in two variants. For the first variant, input must be two\nGEOGRAPHYs. For the second, the input is an\nARRAY of type GEOGRAPHY.For the first variant of ST_UNION, if an input\nGEOGRAPHY is NULL, ST_UNION returns NULL.\nFor the second variant, if the input ARRAY value\nis NULL, ST_UNION returns NULL.\nFor a non-NULL input ARRAY, the union is computed\nand NULL elements are ignored so that they do not affect the output.See ST_UNION_AGG for the aggregate version of ST_UNION."
-  },
-  {
     "name": "ST_UNION_AGG",
     "arguments": [],
     "category": "Geography functions",
     "return_type": "GEOGRAPHY",
     "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION_AGG ignores NULL input GEOGRAPHY values.See ST_UNION for the non-aggregate version of ST_UNION_AGG."
+  },
+  {
+    "name": "ST_UNION",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "GEOGRAPHY",
+    "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION comes in two variants. For the first variant, input must be two\nGEOGRAPHYs. For the second, the input is an\nARRAY of type GEOGRAPHY.For the first variant of ST_UNION, if an input\nGEOGRAPHY is NULL, ST_UNION returns NULL.\nFor the second variant, if the input ARRAY value\nis NULL, ST_UNION returns NULL.\nFor a non-NULL input ARRAY, the union is computed\nand NULL elements are ignored so that they do not affect the output.See ST_UNION_AGG for the aggregate version of ST_UNION."
   },
   {
     "name": "ST_WITHIN",
@@ -1890,6 +1897,13 @@
     "description": "Returns the latitude in degrees of the single-point input\nGEOGRAPHY.For any input GEOGRAPHY that is not a single point,\nincluding an empty GEOGRAPHY, ST_Y returns an\nerror. Use the SAFE. prefix to return NULL instead."
   },
   {
+    "name": "SEARCH",
+    "arguments": [],
+    "category": "Search functions",
+    "return_type": "search_data: the data to search over, in the form of a STRING literal,\nlist of columns, or table reference. A table reference is evaluated as a\nSTRUCT whose fields are the columns of the table. A column reference must\nbe one of the following types:\n\nARRAY<STRING>\nARRAY<STRUCT>\nJSON\nSTRING\nSTRUCT\nNote:search_data can be any type, but SEARCH will return FALSE for\nall types except those listed here.\nsearch_query: a STRING literal that represents the terms of the search\nquery. If search_query is NULL, an error is returned. If search_query\ncontains no tokens and the text analyzer is LOG_ANALYZER, an error is\nreturned.\njson_scope: This optional mandatory-named argument\ntakes one of the following values to indicate the scope of JSON data to be\nsearched. It has no effect if search_data is not a JSON or does not\ncontain a JSON field.\n\n'JSON_VALUES': Only the JSON values are searched. If json_scope is\nnot provided, this is used by default.\n'JSON_KEYS': Only the JSON keys are searched.\n'JSON_KEYS_AND_VALUES': The JSON keys and values are searched.\nanalyzer: This optional mandatory-named argument takes\none of the following values to indicate the text analyzer to use:\n\n'LOG_ANALYZER': (Default) This text analyzer tokenizes and normalizes\nthe text according to the rules in the following section.\n'NO_OP_ANALYZER': No tokenization or normalization is applied to the\ntext. If the underlying search index uses NO_OP_ANALYZER, then you\nmust set this argument when you search against the table; otherwise, the\nindex is not used.Text analyzer rulesThe search_data and the search_query are run through a text analyzer. The\nanalyzer should match the one used to create the index.The SEARCH function supports two text analyzers: NO_OP_ANALYZER and\nLOG_ANALYZER. Use the NO_OP_ANALYZER when you have pre-processed\ndata that you want to match exactly. No tokenization or\nnormalization is applied to the text. The LOG_ANALYZER modifies text data\nin the following ways:Text is made lowercase. ASCII values greater than 127 are kept as is.\nText is split into individual terms called tokens by the following\ndelimiters:\n\n[ ] < > ( ) { } | ! ; , ' \" * & ? + / : = @ . - $ % \\ _ \\n \\r \\s \\t %21 %26\n%2526 %3B %7C %20 %2B %3D %2520 %5D %5B %3A %0A %2C %28 %29\n\nFor example, Hello|WORLD becomes hello and world.The search_query has the following additional rules for parsing which do not\napply to search_data:Text enclosed in backticks forces an exact match.\n\nFor example, `Hello World` happy days becomes Hello World, happy,\nand days.\nSearch query text enclosed in backticks must match exactly in search_data,\nsubject to the following conditions:\n\nIt appears at the start of search_data or is immediately preceded by a\ndelimiter.\nIt appears at the end of search_data or is immediately followed by a\ndelimiter.\n\nFor example, SEARCH('foo.bar', '`foo.`') returns FALSE because the\ntext enclosed in the backticks foo. is immediately followed by the\ncharacter b in the search data foo.bar, rather than by a delimiter or\nthe end of the string. However, SEARCH('foo..bar', '`foo.`') returns\nTRUE because foo. is immediately followed by the delimiter . in the\nsearch data.\nThe backtick itself can be escaped using a backslash,\nas in \\`foobar\\`.\nThe following are reserved words and must be enclosed\nin backticks:\n\nAND, NOT, OR, IN, and NEAR\nText not enclosed in backticks requires the following\nreserved characters to be escaped by a double backslash\n\\\\:\n\n[ ] < > ( ) { } | ! ' \" * & ? + / : = - \\ ~ ^\nIf the quoted string is preceded by the character r or R, such as\nr\"my\\+string\", then it is treated as a raw string and only a single\nbackslash is required to escape the reserved characters. For more\ninformation about raw strings and escape\nsequences, see String and byte literals.The terms within search_data must contain all query terms, in any order, from\nthe search_query for the function to return TRUE. To perform a cross-field\nsearch, search_data must be a STRUCT, ARRAY, or JSON. Each STRING\nfield of a STRUCT, ARRAY, or JSON is individually searched for the query\nterms. If at least one field includes all search_query tokens, in any order,\nSEARCH returns TRUE. Otherwise it has the following behavior:If at least one field is a NULL STRING, SEARCH returns NULL.\nOtherwise, SEARCH returns FALSE.",
+    "description": "The SEARCH function checks to see whether a BigQuery table or other\nsearch data contains a set of search terms. It returns TRUE if all tokens in\nthe search_query appear in the search_data based on the tokenization\ndescribed in the text analyzer, and FALSE otherwise. If\nsearch_query is NULL or doesn't contain any search terms, an error is\nthrown.SEARCH is designed to work with\nsearch indexes to\noptimize point lookups. Although the SEARCH function works for columns of a\ntable that are not indexed, its performance will be greatly improved with a\nsearch index."
+  },
+  {
     "name": "SESSION_USER",
     "arguments": [],
     "category": "Security functions",
@@ -1904,6 +1918,13 @@
     "description": "Returns a random universally unique identifier (UUID) as a STRING.\nThe returned STRING consists of 32 hexadecimal\ndigits in five groups separated by hyphens in the form 8-4-4-4-12. The\nhexadecimal digits represent 122 random bits and 6 fixed bits, in compliance\nwith RFC 4122 section 4.4.\nThe returned STRING is lowercase."
   },
   {
+    "name": "NET.HOST",
+    "arguments": [],
+    "category": "Net functions",
+    "return_type": "STRING",
+    "description": "Takes a URL as a STRING and returns the host as a STRING. For best results, URL\nvalues should comply with the format as defined by\nRFC 3986. If the URL value does not comply with RFC 3986 formatting,\nthis function makes a best effort to parse the input and return a relevant\nresult. If the function cannot parse the input, it\nreturns NULL.Note: The function does not perform any normalization."
+  },
+  {
     "name": "NET.IP_FROM_STRING",
     "arguments": [],
     "category": "Net functions",
@@ -1911,11 +1932,11 @@
     "description": "Converts an IPv4 or IPv6 address from text (STRING) format to binary (BYTES)\nformat in network byte order.This function supports the following formats for addr_str:IPv4: Dotted-quad format. For example, 10.1.2.3.\nIPv6: Colon-separated format. For example,\n1234:5678:90ab:cdef:1234:5678:90ab:cdef. For more examples, see the\nIP Version 6 Addressing Architecture.This function does not support CIDR notation, such as 10.1.2.3/32.If this function receives a NULL input, it returns NULL. If the input is\nconsidered invalid, an OUT_OF_RANGE error occurs."
   },
   {
-    "name": "NET.SAFE_IP_FROM_STRING",
+    "name": "NET.IP_NET_MASK",
     "arguments": [],
     "category": "Net functions",
     "return_type": "BYTES",
-    "description": "Similar to NET.IP_FROM_STRING, but returns NULL\ninstead of throwing an error if the input is invalid."
+    "description": "Returns a network mask: a byte sequence with length equal to num_output_bytes,\nwhere the first prefix_length bits are set to 1 and the other bits are set to\n0. num_output_bytes and prefix_length are INT64.\nThis function throws an error if num_output_bytes is not 4 (for IPv4) or 16\n(for IPv6). It also throws an error if prefix_length is negative or greater\nthan 8 * num_output_bytes."
   },
   {
     "name": "NET.IP_TO_STRING",
@@ -1923,13 +1944,6 @@
     "category": "Net functions",
     "return_type": "STRING",
     "description": "If the input is 4 bytes, this function returns an IPv4 address as a STRING. If\nthe input is 16 bytes, it returns an IPv6 address as a STRING.If this function receives a NULL input, it returns NULL. If the input has\na length different from 4 or 16, an OUT_OF_RANGE error occurs."
-  },
-  {
-    "name": "NET.IP_NET_MASK",
-    "arguments": [],
-    "category": "Net functions",
-    "return_type": "BYTES",
-    "description": "Returns a network mask: a byte sequence with length equal to num_output_bytes,\nwhere the first prefix_length bits are set to 1 and the other bits are set to\n0. num_output_bytes and prefix_length are INT64.\nThis function throws an error if num_output_bytes is not 4 (for IPv4) or 16\n(for IPv6). It also throws an error if prefix_length is negative or greater\nthan 8 * num_output_bytes."
   },
   {
     "name": "NET.IP_TRUNC",
@@ -1953,13 +1967,6 @@
     "description": "Converts an IPv4 address from binary (BYTES) format in network byte order to\ninteger format. In the integer output, the least significant bit of the IP\naddress is stored in the least significant bit of the integer, regardless of\nhost or client architecture. For example, 1 means 0.0.0.1, and 0x1FF means\n0.0.1.255. The output is in the range [0, 0xFFFFFFFF].If the input length is not 4, this function throws an error.This function does not support IPv6."
   },
   {
-    "name": "NET.HOST",
-    "arguments": [],
-    "category": "Net functions",
-    "return_type": "STRING",
-    "description": "Takes a URL as a STRING and returns the host as a STRING. For best results, URL\nvalues should comply with the format as defined by\nRFC 3986. If the URL value does not comply with RFC 3986 formatting,\nthis function makes a best effort to parse the input and return a relevant\nresult. If the function cannot parse the input, it\nreturns NULL.Note: The function does not perform any normalization."
-  },
-  {
     "name": "NET.PUBLIC_SUFFIX",
     "arguments": [],
     "category": "Net functions",
@@ -1974,39 +1981,18 @@
     "description": "Takes a URL as a STRING and returns the registered or registerable domain (the\npublic suffix plus one preceding label), as a\nSTRING. For best results, URL values should comply with the format as defined by\nRFC 3986. If the URL value does not comply with RFC 3986 formatting,\nthis function makes a best effort to parse the input and return a relevant\nresult.This function returns NULL if any of the following is true:It cannot parse the host from the input;\nThe parsed host contains adjacent dots in the middle (not leading or trailing);\nThe parsed host does not contain any public suffix;\nThe parsed host contains only a public suffix without any preceding label.Before looking up the public suffix, this function temporarily normalizes the\nhost by converting upper case English letters to lowercase and encoding all\nnon-ASCII characters with Punycode. The function then returns\nthe registered or registerable domain as part of the original host instead of\nthe normalized host.Note: The function does not perform\nUnicode normalization.Note: The public suffix data at\npublicsuffix.org also contains\nprivate domains. This function does not treat a private domain as a public\nsuffix. For example, if \"us.com\" is a private domain in the public suffix data,\nNET.REG_DOMAIN(\"foo.us.com\") returns \"us.com\" (the public suffix \"com\" plus\nthe preceding label \"us\") rather than \"foo.us.com\" (the private domain \"us.com\"\nplus the preceding label \"foo\").Note: The public suffix data may change over time.\nConsequently, input that produces a NULL result now may produce a non-NULL value\nin the future."
   },
   {
+    "name": "NET.SAFE_IP_FROM_STRING",
+    "arguments": [],
+    "category": "Net functions",
+    "return_type": "BYTES",
+    "description": "Similar to NET.IP_FROM_STRING, but returns NULL\ninstead of throwing an error if the input is invalid."
+  },
+  {
     "name": "ERROR",
     "arguments": [],
     "category": "Debugging functions",
     "return_type": "GoogleSQL infers the return type in context.",
     "description": "Returns an error. The error_message argument is a STRING.GoogleSQL treats ERROR in the same way as any expression that may\nresult in an error: there is no special guarantee of evaluation order."
-  },
-  {
-    "name": "KEYS.NEW_KEYSET",
-    "arguments": [],
-    "category": "AEAD encryption functions",
-    "return_type": "BYTES",
-    "description": "Returns a serialized keyset containing a new key based on key_type. The\nreturned keyset is a serialized BYTES\nrepresentation of\ngoogle.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys. You can use\nthe keyset with the AEAD.ENCRYPT, AEAD.DECRYPT_BYTES, and\nAEAD.DECRYPT_STRING functions for encryption and decryption, as well as with\nthe KEYS group of key- and keyset-related functions.key_type is a STRING literal representation of the type of key to create.\nkey_type cannot be NULL. key_type can be:AEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
-  },
-  {
-    "name": "KEYS.NEW_WRAPPED_KEYSET",
-    "arguments": [],
-    "category": "AEAD encryption functions",
-    "return_type": "BYTES",
-    "description": "Creates a new keyset and encrypts it with a\nCloud KMS key.\nReturns the wrapped keyset as a BYTES\nrepresentation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.This function takes the following arguments:kms_resource_name: A STRING literal representation of the\nCloud KMS key.  kms_resource_name cannot be NULL. The\nCloud KMS key must reside in the same Cloud region where this\nfunction is executed. A Cloud KMS key looks like this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nkey_type: A STRING literal representation of the keyset type.\nkey_type cannot be NULL but can be one of the following values:\n\nAEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
-  },
-  {
-    "name": "KEYS.REWRAP_KEYSET",
-    "arguments": [],
-    "category": "AEAD encryption functions",
-    "return_type": "BYTES",
-    "description": "Re-encrypts a wrapped keyset with a new\nCloud KMS key. Returns the wrapped keyset as a\nBYTES representation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.When this function is used, a wrapped keyset is decrypted by\nsource_kms_resource_name and then re-encrypted by target_kms_resource_name.\nDuring this process, the decrypted keyset is never visible to customers.This function takes the following arguments:source_kms_resource_name: A STRING literal representation of the\nCloud KMS key you want to replace. This key must reside in the same\nCloud region where this function is executed. A Cloud KMS key looks\nlike this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\ntarget_kms_resource_name: A STRING literal representation of the\nnew Cloud KMS key that you want to use.\nwrapped_keyset: A BYTES literal representation of the\nkeyset that you want to re-encrypt."
-  },
-  {
-    "name": "KEYS.ADD_KEY_FROM_RAW_BYTES",
-    "arguments": [],
-    "category": "AEAD encryption functions",
-    "return_type": "BYTES",
-    "description": "Returns a serialized keyset as BYTES with the\naddition of a key to keyset based on key_type and raw_key_bytes.The primary cryptographic key remains the same as in keyset. The expected\nlength of raw_key_bytes depends on the value of key_type. The following are\nsupported key_types:'AES_CBC_PKCS': Creates a key for AES decryption using cipher block chaining\nand PKCS padding. raw_key_bytes is expected to be a raw key\nBYTES value of length 16, 24, or 32; these\nlengths have sizes of 128, 192, and 256 bits, respectively. GoogleSQL\nAEAD functions do not support keys of these types for encryption; instead,\nprefer 'AEAD_AES_GCM_256' or 'AES_GCM' keys.\n'AES_GCM': Creates a key for AES decryption or encryption using\nGalois/Counter Mode.\nraw_key_bytes must be a raw key BYTES\nvalue of length 16 or 32; these lengths have sizes of 128 and 256 bits,\nrespectively. When keys of this type are inputs to AEAD.ENCRYPT, the output\nciphertext does not have a Tink-specific prefix indicating which key was\nused as input."
   },
   {
     "name": "AEAD.DECRYPT_BYTES",
@@ -2051,6 +2037,13 @@
     "description": "Encrypts plaintext using the primary cryptographic key in keyset using\ndeterministic AEAD. The algorithm of the primary key must\nbe DETERMINISTIC_AEAD_AES_SIV_CMAC_256. Binds the ciphertext to the context\ndefined by additional_data. Returns NULL if any input is NULL.keyset is a serialized BYTES value or a STRUCT\nvalue returned by one of the KEYS functions.plaintext is the STRING or BYTES value to be encrypted.additional_data is a STRING or BYTES value that binds the ciphertext to\nits context. This forces the ciphertext to be decrypted in the same context in\nwhich it was encrypted. plaintext and additional_data must be of the same\ntype. DETERMINISTIC_ENCRYPT(keyset, string1, string2) is equivalent to\nDETERMINISTIC_ENCRYPT(keyset, CAST(string1 AS BYTES), CAST(string2 AS BYTES)).The output is ciphertext BYTES. The ciphertext contains a\nTink-specific prefix indicating the key used to perform the encryption.\nGiven an identical keyset and plaintext, this function returns the same\nciphertext each time it is invoked (including across queries)."
   },
   {
+    "name": "KEYS.ADD_KEY_FROM_RAW_BYTES",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Returns a serialized keyset as BYTES with the\naddition of a key to keyset based on key_type and raw_key_bytes.The primary cryptographic key remains the same as in keyset. The expected\nlength of raw_key_bytes depends on the value of key_type. The following are\nsupported key_types:'AES_CBC_PKCS': Creates a key for AES decryption using cipher block chaining\nand PKCS padding. raw_key_bytes is expected to be a raw key\nBYTES value of length 16, 24, or 32; these\nlengths have sizes of 128, 192, and 256 bits, respectively. GoogleSQL\nAEAD functions do not support keys of these types for encryption; instead,\nprefer 'AEAD_AES_GCM_256' or 'AES_GCM' keys.\n'AES_GCM': Creates a key for AES decryption or encryption using\nGalois/Counter Mode.\nraw_key_bytes must be a raw key BYTES\nvalue of length 16 or 32; these lengths have sizes of 128 and 256 bits,\nrespectively. When keys of this type are inputs to AEAD.ENCRYPT, the output\nciphertext does not have a Tink-specific prefix indicating which key was\nused as input."
+  },
+  {
     "name": "KEYS.KEYSET_CHAIN",
     "arguments": [],
     "category": "AEAD encryption functions",
@@ -2065,11 +2058,39 @@
     "description": "Returns the input json_keyset STRING as\nserialized BYTES, which is a valid input for other\nKEYS and AEAD functions. The JSON STRING must\nbe compatible with the definition of the\ngoogle.crypto.tink.Keyset\nprotocol buffer message: the JSON keyset should be a JSON object containing\nobjects and name-value pairs corresponding to those in the \"keyset\" message in\nthe google.crypto.tink.Keyset definition. You can convert the output serialized\nBYTES representation back to a JSON\nSTRING using KEYS.KEYSET_TO_JSON."
   },
   {
+    "name": "KEYS.KEYSET_LENGTH",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "INT64",
+    "description": "Returns the number of keys in the provided keyset."
+  },
+  {
     "name": "KEYS.KEYSET_TO_JSON",
     "arguments": [],
     "category": "AEAD encryption functions",
     "return_type": "STRING",
     "description": "Returns a JSON STRING representation of the input\nkeyset. The returned JSON STRING is compatible\nwith the definition of the\ngoogle.crypto.tink.Keyset\nprotocol buffer message. You can convert the JSON\nSTRING representation back to\nBYTES using KEYS.KEYSET_FROM_JSON."
+  },
+  {
+    "name": "KEYS.NEW_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Returns a serialized keyset containing a new key based on key_type. The\nreturned keyset is a serialized BYTES\nrepresentation of\ngoogle.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys. You can use\nthe keyset with the AEAD.ENCRYPT, AEAD.DECRYPT_BYTES, and\nAEAD.DECRYPT_STRING functions for encryption and decryption, as well as with\nthe KEYS group of key- and keyset-related functions.key_type is a STRING literal representation of the type of key to create.\nkey_type cannot be NULL. key_type can be:AEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
+  },
+  {
+    "name": "KEYS.NEW_WRAPPED_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Creates a new keyset and encrypts it with a\nCloud KMS key.\nReturns the wrapped keyset as a BYTES\nrepresentation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.This function takes the following arguments:kms_resource_name: A STRING literal representation of the\nCloud KMS key.  kms_resource_name cannot be NULL. The\nCloud KMS key must reside in the same Cloud region where this\nfunction is executed. A Cloud KMS key looks like this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nkey_type: A STRING literal representation of the keyset type.\nkey_type cannot be NULL but can be one of the following values:\n\nAEAD_AES_GCM_256: Creates a 256-bit key with the pseudo-random number\ngenerator provided by boringSSL. The key uses AES-GCM for\nencryption and decryption operations.\nDETERMINISTIC_AEAD_AES_SIV_CMAC_256:\nCreates a 512-bit AES-SIV-CMAC key, which contains a 256-bit AES-CTR key\nand 256-bit AES-CMAC key. The AES-SIV-CMAC key is created with the\npseudo-random number generator provided by boringSSL. The key\nuses AES-SIV for encryption and decryption operations."
+  },
+  {
+    "name": "KEYS.REWRAP_KEYSET",
+    "arguments": [],
+    "category": "AEAD encryption functions",
+    "return_type": "BYTES",
+    "description": "Re-encrypts a wrapped keyset with a new\nCloud KMS key. Returns the wrapped keyset as a\nBYTES representation of google.crypto.tink.Keyset\nthat contains a primary cryptographic key and no additional keys.When this function is used, a wrapped keyset is decrypted by\nsource_kms_resource_name and then re-encrypted by target_kms_resource_name.\nDuring this process, the decrypted keyset is never visible to customers.This function takes the following arguments:source_kms_resource_name: A STRING literal representation of the\nCloud KMS key you want to replace. This key must reside in the same\nCloud region where this function is executed. A Cloud KMS key looks\nlike this:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\ntarget_kms_resource_name: A STRING literal representation of the\nnew Cloud KMS key that you want to use.\nwrapped_keyset: A BYTES literal representation of the\nkeyset that you want to re-encrypt."
   },
   {
     "name": "KEYS.ROTATE_KEYSET",
@@ -2084,13 +2105,6 @@
     "category": "AEAD encryption functions",
     "return_type": "BYTES",
     "description": "Takes an existing wrapped keyset and returns a rotated and\nrewrapped keyset. The returned wrapped keyset is a BYTES\nrepresentation of google.crypto.tink.Keyset.When this function is used, the wrapped keyset is decrypted,\nthe new key is added, and then the keyset is re-encrypted. The primary\ncryptographic key from the input wrapped_keyset remains as an\nadditional key in the returned keyset. During this rotation process,\nthe decrypted keyset is never visible to customers.This function takes the following arguments:kms_resource_name: A STRING literal representation of the\nCloud KMS key that was used to wrap the\nwrapped keyset. The Cloud KMS key must reside in the same Cloud\nregion where this function is executed. A Cloud KMS key looks like\nthis:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nwrapped_keyset: A BYTES literal representation of the\nexisting keyset that you want to work with.\nkey_type: A STRING literal representation of the keyset type. This must\nmatch the key type of existing keys in wrapped_keyset."
-  },
-  {
-    "name": "KEYS.KEYSET_LENGTH",
-    "arguments": [],
-    "category": "AEAD encryption functions",
-    "return_type": "INT64",
-    "description": "Returns the number of keys in the provided keyset."
   },
   {
     "name": "EXTERNAL_OBJECT_TRANSFORM",
