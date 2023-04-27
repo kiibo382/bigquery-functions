@@ -4,154 +4,154 @@
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any",
-    "description": "Returns expression for some row chosen from the group. Which row is chosen is\nnondeterministic, not random. Returns NULL when the input produces no\nrows. Returns NULL when expression is NULL for all rows in the group.ANY_VALUE behaves as if RESPECT NULLS is specified;\nrows for which expression is NULL are considered and may be selected.If the HAVING clause is included in the ANY_VALUE function, the\nOVER clause can't be used with this function.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns expression for some row chosen from the group. Which row is chosen is\nnondeterministic, not random. Returns NULL when the input produces no\nrows. Returns NULL when expression is NULL for all rows in the group.ANY_VALUE behaves as if RESPECT NULLS is specified;\nrows for which expression is NULL are considered and may be selected.If the HAVING clause is included in the ANY_VALUE function, the\nOVER clause can't be used with this function.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "ARRAY_AGG",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "All data types except ARRAY.",
-    "description": "Returns an ARRAY of expression values.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.An error is raised if an array in the final query result contains a NULL\nelement."
+    "description": "Returns an ARRAY of expression values.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls.An error is raised if an array in the final query result contains a NULL\nelement."
   },
   {
     "name": "ARRAY_CONCAT_AGG",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "ARRAY",
-    "description": "Concatenates elements from expression of type ARRAY, returning a single\narray as a result.This function ignores NULL input arrays, but respects the NULL elements in\nnon-NULL input arrays. An\nerror is raised, however, if an array in the final query result contains a\nNULL element. Returns NULL if there are zero input rows or\nexpression evaluates to NULL for all rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Concatenates elements from expression of type ARRAY, returning a single\narray as a result.This function ignores NULL input arrays, but respects the NULL elements in\nnon-NULL input arrays. An\nerror is raised, however, if an array in the final query result contains a\nNULL element. Returns NULL if there are zero input rows or\nexpression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "AVG",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any numeric input type\nINTERVAL",
-    "description": "Returns the average of non-NULL values in an aggregated group.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
+    "description": "Returns the average of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
   },
   {
     "name": "BIT_AND",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "INT64",
-    "description": "Performs a bitwise AND operation on expression and returns the result.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Performs a bitwise AND operation on expression and returns the result.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "BIT_OR",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "INT64",
-    "description": "Performs a bitwise OR operation on expression and returns the result.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Performs a bitwise OR operation on expression and returns the result.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "BIT_XOR",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "INT64",
-    "description": "Performs a bitwise XOR operation on expression and returns the result.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Performs a bitwise XOR operation on expression and returns the result.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "COUNT",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "expression can be any data type. If\nDISTINCT is present, expression can only be a data type that is\ngroupable.",
-    "description": "Returns the number of rows in the input.\nReturns the number of rows with expression evaluated to any value other\nthan NULL.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function with DISTINCT supports specifying collation."
+    "description": "Returns the number of rows in the input.\nReturns the number of rows with expression evaluated to any value other\nthan NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function with DISTINCT supports specifying collation."
   },
   {
     "name": "COUNTIF",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...)\nis not supported. This would not be useful: there is only one distinct value of\nTRUE.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...)\nis not supported. This would not be useful: there is only one distinct value of\nTRUE.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "LOGICAL_AND",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the logical AND of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Returns the logical AND of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "LOGICAL_OR",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the logical OR of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Returns the logical OR of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "MAX",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any orderable data type except for ARRAY.",
-    "description": "Returns the maximum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
+    "description": "Returns the maximum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
   },
   {
     "name": "MIN",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any orderable data type except for ARRAY.",
-    "description": "Returns the minimum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
+    "description": "Returns the minimum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
   },
   {
     "name": "STRING_AGG",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Either STRING or BYTES.",
-    "description": "Returns a value (either STRING or BYTES) obtained by concatenating\nnon-NULL values. Returns NULL if there are zero input rows or expression\nevaluates to NULL for all rows.If a delimiter is specified, concatenated values are separated by that\ndelimiter; otherwise, a comma is used as a delimiter.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns a value (either STRING or BYTES) obtained by concatenating\nnon-NULL values. Returns NULL if there are zero input rows or expression\nevaluates to NULL for all rows.If a delimiter is specified, concatenated values are separated by that\ndelimiter; otherwise, a comma is used as a delimiter.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "SUM",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any supported numeric data type\nINTERVAL",
-    "description": "Returns the sum of non-NULL values in an aggregated group.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
+    "description": "Returns the sum of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
   },
   {
     "name": "CORR",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the Pearson coefficient\nof correlation of a set of number pairs. For each number pair, the first number\nis the dependent variable and the second number is the independent variable.\nThe return result is between -1 and 1. A result of 0 indicates no\ncorrelation.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the Pearson coefficient\nof correlation of a set of number pairs. For each number pair, the first number\nis the dependent variable and the second number is the independent variable.\nThe return result is between -1 and 1. A result of 0 indicates no\ncorrelation.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "COVAR_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population covariance of\na set of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere is no input pair without NULL values, this function returns NULL. If there\nis exactly one input pair without NULL values, this function returns 0.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population covariance of\na set of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere is no input pair without NULL values, this function returns NULL. If there\nis exactly one input pair without NULL values, this function returns 0.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "COVAR_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample covariance of a\nset of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample covariance of a\nset of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "STDDEV_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population (biased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population (biased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "STDDEV_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample (unbiased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample (unbiased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "VAR_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population (biased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population (biased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "VAR_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample (unbiased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample (unbiased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "APPROX_COUNT_DISTINCT",
@@ -165,21 +165,21 @@
     "arguments": [],
     "category": "Approximate aggregate functions",
     "return_type": "expression: Any supported data type except:\n\nARRAY\nSTRUCT\nINTERVAL\nnumber: INT64 literal or query parameter.",
-    "description": "Returns the approximate boundaries for a group of expression values, where\nnumber represents the number of quantiles to create. This function returns\nan array of number + 1 elements, where the first element is the approximate\nminimum and the last element is the approximate maximum.Returns NULL if there are zero input rows or expression evaluates to\nNULL for all rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Returns the approximate boundaries for a group of expression values, where\nnumber represents the number of quantiles to create. This function returns\nan array of number + 1 elements, where the first element is the approximate\nminimum and the last element is the approximate maximum.Returns NULL if there are zero input rows or expression evaluates to\nNULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "APPROX_TOP_COUNT",
     "arguments": [],
     "category": "Approximate aggregate functions",
     "return_type": "expression: Any data type that the GROUP BY clause supports.\nnumber: INT64 literal or query parameter.",
-    "description": "Returns the approximate top elements of expression as an array of STRUCTs.\nThe number parameter specifies the number of elements returned.Each STRUCT contains two fields. The first field (named value) contains an\ninput value. The second field (named count) contains an INT64 specifying the\nnumber of times the value was returned.Returns NULL if there are zero input rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Returns the approximate top elements of expression as an array of STRUCTs.\nThe number parameter specifies the number of elements returned.Each STRUCT contains two fields. The first field (named value) contains an\ninput value. The second field (named count) contains an INT64 specifying the\nnumber of times the value was returned.Returns NULL if there are zero input rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "APPROX_TOP_SUM",
     "arguments": [],
     "category": "Approximate aggregate functions",
     "return_type": "expression: Any data type that the GROUP BY clause supports.\nweight: One of the following:\n\nINT64\nNUMERIC\nBIGNUMERIC\nFLOAT64\nnumber: INT64 literal or query parameter.",
-    "description": "Returns the approximate top elements of expression, based on the sum of an\nassigned weight. The number parameter specifies the number of elements\nreturned.If the weight input is negative or NaN, this function returns an error.The elements are returned as an array of STRUCTs.\nEach STRUCT contains two fields: value and sum.\nThe value field contains the value of the input expression. The sum field is\nthe same type as weight, and is the approximate sum of the input weight\nassociated with the value field.Returns NULL if there are zero input rows.To learn more about the optional arguments in this function and how to use them,\nsee Aggregate function calls."
+    "description": "Returns the approximate top elements of expression, based on the sum of an\nassigned weight. The number parameter specifies the number of elements\nreturned.If the weight input is negative or NaN, this function returns an error.The elements are returned as an array of STRUCTs.\nEach STRUCT contains two fields: value and sum.\nThe value field contains the value of the input expression. The sum field is\nthe same type as weight, and is the approximate sum of the input weight\nassociated with the value field.Returns NULL if there are zero input rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "HLL_COUNT.EXTRACT",
