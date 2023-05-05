@@ -2006,7 +2006,7 @@
     "arguments": [],
     "category": "AEAD encryption functions",
     "return_type": "STRING",
-    "description": "Like AEAD.DECRYPT_BYTES, but where plaintext is\nof type STRING."
+    "description": "Like AEAD.DECRYPT_BYTES, but where ciphertext is\nof type STRING."
   },
   {
     "name": "AEAD.ENCRYPT",
