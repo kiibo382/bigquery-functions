@@ -25,7 +25,7 @@
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any numeric input type\nINTERVAL",
-    "description": "Returns the average of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
+    "description": "Returns the average of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls.AVG can be used with differential privacy. For more information, see\nDifferentially private aggregate functions.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
   },
   {
     "name": "BIT_AND",
@@ -53,28 +53,35 @@
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "expression can be any data type. If\nDISTINCT is present, expression can only be a data type that is\ngroupable.",
-    "description": "Returns the number of rows in the input.\nReturns the number of rows with expression evaluated to any value other\nthan NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function with DISTINCT supports specifying collation."
+    "description": "Returns the number of rows in the input.\nReturns the number of rows with expression evaluated to any value other\nthan NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function with DISTINCT supports specifying collation.COUNT can be used with differential privacy. For more information, see\nDifferentially private aggregate functions."
   },
   {
     "name": "COUNTIF",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...)\nis not supported. This would not be useful: there is only one distinct value of\nTRUE.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...)\nis not supported. This would not be useful: there is only one distinct value of\nTRUE.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+  },
+  {
+    "name": "GROUPING",
+    "arguments": [],
+    "category": "Aggregate functions",
+    "return_type": "INT64",
+    "description": "If a groupable item in the GROUP BY clause is aggregated\n(and thus not grouped), this function returns 1. Otherwise,\nthis function returns 0.Definitions:groupable_value: An expression that represents a value that can be grouped\nin the GROUP BY clause.Details:The GROUPING function is helpful if you need to determine which rows are\nproduced by which grouping sets. A grouping set is a group of columns by which\nrows can be grouped together. So, if you need to filter rows by\na few specific grouping sets, you can use the GROUPING function to identify\nwhich grouping sets grouped which rows by creating a matrix of the results.In addition, you can use the GROUPING function to determine the type of\nNULL produced by the GROUP BY clause. In some cases, the GROUP BY clause\nproduces a NULL placeholder. This placeholder represents all groupable items\nthat are aggregated (not grouped) in the current grouping set. This is different\nfrom a standard NULL, which can also be produced by a query.For more information, see the following examples."
   },
   {
     "name": "LOGICAL_AND",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the logical AND of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
+    "description": "Returns the logical AND of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause."
   },
   {
     "name": "LOGICAL_OR",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the logical OR of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
+    "description": "Returns the logical OR of all non-NULL expressions. Returns NULL if there\nare zero input rows or expression evaluates to NULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause."
   },
   {
     "name": "MAX",
@@ -84,11 +91,25 @@
     "description": "Returns the maximum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
   },
   {
+    "name": "MAX_BY",
+    "arguments": [],
+    "category": "Aggregate functions",
+    "return_type": "Matches the input x data type.",
+    "description": "Synonym for ANY_VALUE(x HAVING MAX y)."
+  },
+  {
     "name": "MIN",
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any orderable data type except for ARRAY.",
     "description": "Returns the minimum non-NULL value in an aggregated group.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.This function supports specifying collation."
+  },
+  {
+    "name": "MIN_BY",
+    "arguments": [],
+    "category": "Aggregate functions",
+    "return_type": "Matches the input x data type.",
+    "description": "Synonym for ANY_VALUE(x HAVING MIN y)."
   },
   {
     "name": "STRING_AGG",
@@ -102,56 +123,56 @@
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "Any supported numeric data type\nINTERVAL",
-    "description": "Returns the sum of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
+    "description": "Returns the sum of non-NULL values in an aggregated group.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls.SUM can be used with differential privacy. For more information, see\nDifferentially private aggregate functions.Caveats:If the aggregated group is empty or the argument is NULL for all rows in\nthe group, returns NULL.\nIf the argument is NaN for any row in the group, returns NaN.\nIf the argument is [+|-]Infinity for any row in the group, returns either\n[+|-]Infinity or NaN.\nIf there is numeric overflow, produces an error.\nIf a floating-point type is returned, the result is\nnon-deterministic, which means you might receive a\ndifferent result each time you use this function."
   },
   {
     "name": "CORR",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the Pearson coefficient\nof correlation of a set of number pairs. For each number pair, the first number\nis the dependent variable and the second number is the independent variable.\nThe return result is between -1 and 1. A result of 0 indicates no\ncorrelation.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the Pearson coefficient\nof correlation of a set of number pairs. For each number pair, the first number\nis the dependent variable and the second number is the independent variable.\nThe return result is between -1 and 1. A result of 0 indicates no\ncorrelation.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function\nreturns NULL.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.\nThe variance of X1 or X2 is 0.\nThe covariance of X1 and X2 is 0.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "COVAR_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population covariance of\na set of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere is no input pair without NULL values, this function returns NULL. If there\nis exactly one input pair without NULL values, this function returns 0.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population covariance of\na set of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere is no input pair without NULL values, this function returns NULL.\nIf there is exactly one input pair without NULL values, this function returns\n0.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "COVAR_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample covariance of a\nset of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function returns\nNULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample covariance of a\nset of number pairs. The first number is the dependent variable; the second\nnumber is the independent variable. The return result is between -Inf and\n+Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any input pairs that contain one or more NULL values. If\nthere are fewer than two input pairs without NULL values, this function\nreturns NULL.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "STDDEV_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population (biased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population (biased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this\nfunction returns NULL. If this function receives a single non-NULL input,\nit returns 0.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "STDDEV_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample (unbiased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample (unbiased) standard deviation of the values. The return\nresult is between 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "VAR_POP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the population (biased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this function\nreturns NULL.If this function receives a single non-NULL input, it returns 0.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the population (biased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If all inputs are ignored, this\nfunction returns NULL. If this function receives a single non-NULL input,\nit returns 0.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "VAR_SAMP",
     "arguments": [],
     "category": "Statistical aggregate functions",
     "return_type": "FLOAT64",
-    "description": "Returns the sample (unbiased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the sample (unbiased) variance of the values. The return result is\nbetween 0 and +Inf.All numeric types are supported. If the\ninput is NUMERIC or BIGNUMERIC then the internal aggregation is\nstable with the final output converted to a FLOAT64.\nOtherwise the input is converted to a FLOAT64\nbefore aggregation, resulting in a potentially unstable result.This function ignores any NULL inputs. If there are fewer than two non-NULL\ninputs, this function returns NULL.NaN is produced if:Any input value is NaN\nAny input value is positive infinity or negative infinity.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.If this function is used with the OVER clause, it's part of a\nwindow function call. In a window function call,\naggregate function clauses can't be used.\nTo learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "APPROX_COUNT_DISTINCT",
@@ -165,7 +186,7 @@
     "arguments": [],
     "category": "Approximate aggregate functions",
     "return_type": "expression: Any supported data type except:\n\nARRAY\nSTRUCT\nINTERVAL\nnumber: INT64 literal or query parameter.",
-    "description": "Returns the approximate boundaries for a group of expression values, where\nnumber represents the number of quantiles to create. This function returns\nan array of number + 1 elements, where the first element is the approximate\nminimum and the last element is the approximate maximum.Returns NULL if there are zero input rows or expression evaluates to\nNULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
+    "description": "Returns the approximate boundaries for a group of expression values, where\nnumber represents the number of quantiles to create. This function returns an\narray of number + 1 elements, sorted in ascending order, where the\nfirst element is the approximate minimum and the last element is the approximate\nmaximum.Returns NULL if there are zero input rows or expression evaluates to\nNULL for all rows.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls."
   },
   {
     "name": "APPROX_TOP_COUNT",
@@ -196,6 +217,13 @@
     "description": "An aggregate function that takes one or more input values and aggregates them\ninto a HLL++ sketch. Each sketch\nis represented using the BYTES data type. You can then merge sketches using\nHLL_COUNT.MERGE or HLL_COUNT.MERGE_PARTIAL. If no merging is needed,\nyou can extract the final count of distinct values from the sketch using\nHLL_COUNT.EXTRACT.This function supports an optional parameter, precision. This parameter\ndefines the accuracy of the estimate at the cost of additional memory required\nto process the sketches or store them on disk. The range for this value is\n10 to 24. The default value is 15. For more information about precision,\nsee Precision for sketches.If the input is NULL, this function returns NULL.For more information, see HyperLogLog in Practice: Algorithmic Engineering of\na State of The Art Cardinality Estimation Algorithm."
   },
   {
+    "name": "HLL_COUNT.MERGE",
+    "arguments": [],
+    "category": "HyperLogLog++ functions",
+    "return_type": "BYTES",
+    "description": "An aggregate function that returns the cardinality of several\nHLL++ sketches by computing their union.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge.This function ignores NULL values when merging sketches. If the merge happens\nover zero rows or only over NULL values, the function returns 0."
+  },
+  {
     "name": "HLL_COUNT.MERGE_PARTIAL",
     "arguments": [],
     "category": "HyperLogLog++ functions",
@@ -203,11 +231,25 @@
     "description": "An aggregate function that takes one or more\nHLL++ sketch\ninputs and merges them into a new sketch.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge. For example,\nif MERGE_PARTIAL encounters sketches of precision 14 and 15, the returned new\nsketch will have precision 14.This function returns NULL if there is no input or all inputs are NULL."
   },
   {
-    "name": "HLL_COUNT.MERGE",
+    "name": "DLP_DETERMINISTIC_ENCRYPT",
     "arguments": [],
-    "category": "HyperLogLog++ functions",
-    "return_type": "BYTES",
-    "description": "An aggregate function that returns the cardinality of several\nHLL++ set sketches by computing their union.Each sketch must be initialized on the same type. Attempts to merge sketches\nfor different types results in an error. For example, you cannot merge a sketch\ninitialized from INT64 data with one initialized from STRING data.If the merged sketches were initialized with different precisions, the precision\nwill be downgraded to the lowest precision involved in the merge.This function ignores NULL values when merging sketches. If the merge happens\nover zero rows or only over NULL values, the function returns 0."
+    "category": "DLP encryption functions",
+    "return_type": "key: A serialized BYTES value that is returned by DLP_KEY_CHAIN.\nkey must be set to ENABLED in Cloud KMS. For\ninformation about how to generate a wrapped key, see\ngcloud kms encrypt.\nplaintext: The STRING value to encrypt.\ncontext: A user-provided STRING value that is used with a\nCloud KMS key to derive a data encryption key. For more information,\nsee CryptoDeterministicConfig:context.\nsurrogate: A STRING value that you can prepend to output.",
+    "description": "This function derives a data encryption key from key and context, and then\nencrypts plaintext. Optionally, you can use surrogate to prepend the\nencryption result."
+  },
+  {
+    "name": "DLP_DETERMINISTIC_DECRYPT",
+    "arguments": [],
+    "category": "DLP encryption functions",
+    "return_type": "key: A serialized BYTES value returned by DLP_KEY_CHAIN.\nkey must be set to ENABLED in Cloud KMS. For\ninformation about how to generate a wrapped key, see\ngcloud kms encrypt.\nciphertext: The STRING value to decrypt.\ncontext: A STRING value that is used with a\nCloud KMS key to derive a data encryption key. For more information,\nsee CryptoDeterministicConfig:context.\nsurrogate: A STRING value that you can prepend to output.",
+    "description": "This function decrypts ciphertext using an encryption key derived from key\nand context. Optionally, you can use surrogate to prepend the decryption\nresult."
+  },
+  {
+    "name": "DLP_KEY_CHAIN",
+    "arguments": [],
+    "category": "DLP encryption functions",
+    "return_type": "kms_resource_name: A STRING literal that contains the resource path to the\nCloud KMS key. kms_resource_name cannot be NULL and must reside\nin the same Cloud region where this function is executed. This argument is\nused to derive the data encryption key in the DLP_DETERMINISTIC_DECRYPT and\nDLP_DETERMINISTIC_ENCRYPT functions. A Cloud KMS key looks like\nthis:\ngcp-kms://projects/my-project/locations/us/keyRings/my-key-ring/cryptoKeys/my-crypto-key\nwrapped_key: A BYTES literal that represents a secret text chosen by the\nuser. This secret text can be 16, 24, or 32 bytes. For information about\nhow to generate a wrapped key, see gcloud kms encrypt.",
+    "description": "You can use this function instead of the key argument for\nDLP deterministic encryption functions. This function lets\nyou use the AES-SIV encryption functions\nwithout including plaintext keys in a query."
   },
   {
     "name": "CUME_DIST",
@@ -270,14 +312,14 @@
     "arguments": [],
     "category": "Conversion functions",
     "return_type": "BIGNUMERIC",
-    "description": "Converts a STRING to a BIGNUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the BIGNUMERIC type, or an\nerror occurs. If the number of digits after the decimal point exceeds 38, then\nthe resulting BIGNUMERIC value rounds\nhalf away from zero to have 38 digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.456E37\") AS parsed\n\n/*-----------------------------------------*\n | parsed                                  |\n +-----------------------------------------+\n | 123400000000000000000000000000000000000 |\n *-----------------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 38.\nSELECT PARSE_BIGNUMERIC(\"1.123456789012345678901234567890123456789\") as parsed\n\n/*------------------------------------------*\n | parsed                                   |\n +------------------------------------------+\n | 1.12345678901234567890123456789012345679 |\n *------------------------------------------*/This funcion is similar to using the CAST AS BIGNUMERIC\nfunction except that the PARSE_BIGNUMERIC function only accepts string inputs\nand allows the following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After the\n        e, digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
+    "description": "Converts a STRING to a BIGNUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the BIGNUMERIC type, or an\nerror occurs. If the number of digits after the decimal point exceeds 38, then\nthe resulting BIGNUMERIC value rounds\nhalf away from zero to have 38 digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_BIGNUMERIC(\"123.456E37\") AS parsed\n\n/*-----------------------------------------*\n | parsed                                  |\n +-----------------------------------------+\n | 123400000000000000000000000000000000000 |\n *-----------------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 38.\nSELECT PARSE_BIGNUMERIC(\"1.123456789012345678901234567890123456789\") as parsed\n\n/*------------------------------------------*\n | parsed                                   |\n +------------------------------------------+\n | 1.12345678901234567890123456789012345679 |\n *------------------------------------------*/This funcion is similar to using the CAST AS BIGNUMERIC\nfunction except that the PARSE_BIGNUMERIC function only accepts string inputs\nand allows the following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitespaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After the\n        e, digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
   },
   {
     "name": "PARSE_NUMERIC",
     "arguments": [],
     "category": "Conversion functions",
     "return_type": "NUMERIC",
-    "description": "Converts a STRING to a NUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the NUMERIC type, or an error\noccurs. If the number of digits after the decimal point exceeds nine, then the\nresulting NUMERIC value rounds\nhalf away from zero to have nine digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_NUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_NUMERIC(\"12.34E27\") as parsed\n\n/*-------------------------------*\n | parsed                        |\n +-------------------------------+\n | 12340000000000000000000000000 |\n *-------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 9.\nSELECT PARSE_NUMERIC(\"1.0123456789\") as parsed\n\n/*-------------*\n | parsed      |\n +-------------+\n | 1.012345679 |\n *-------------*/This function is similar to using the CAST AS NUMERIC function\nexcept that the PARSE_NUMERIC function only accepts string inputs and allows\nthe following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitepaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After\n        the e,\n        digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
+    "description": "Converts a STRING to a NUMERIC value.The numeric literal contained in the string must not exceed the\nmaximum precision or range of the NUMERIC type, or an error\noccurs. If the number of digits after the decimal point exceeds nine, then the\nresulting NUMERIC value rounds\nhalf away from zero to have nine digits after the\ndecimal point.-- This example shows how a string with a decimal point is parsed.\nSELECT PARSE_NUMERIC(\"123.45\") AS parsed\n\n/*--------*\n | parsed |\n +--------+\n | 123.45 |\n *--------*/\n\n-- This example shows how a string with an exponent is parsed.\nSELECT PARSE_NUMERIC(\"12.34E27\") as parsed\n\n/*-------------------------------*\n | parsed                        |\n +-------------------------------+\n | 12340000000000000000000000000 |\n *-------------------------------*/\n\n-- This example shows the rounding when digits after the decimal point exceeds 9.\nSELECT PARSE_NUMERIC(\"1.0123456789\") as parsed\n\n/*-------------*\n | parsed      |\n +-------------+\n | 1.012345679 |\n *-------------*/This function is similar to using the CAST AS NUMERIC function\nexcept that the PARSE_NUMERIC function only accepts string inputs and allows\nthe following in the string:Spaces between the sign (+/-) and the number\nSigns (+/-) after the numberRules for valid input strings:Rule\n      Example Input\n      Output\n  The string can only contain digits, commas, decimal points and signs.\n      \"- 12,34567,89.0\"\n      -123456789\n    Whitespaces are allowed anywhere except between digits.\n      \"  -  12.345  \"\n      -12.345\n    Only digits and commas are allowed before the decimal point.\n      \" 12,345,678\"\n      12345678\n    Only digits are allowed after the decimal point.\n      \"1.234 \"\n      1.234\n    Use E or e for exponents. After\n        the e,\n        digits and a leading sign indicator are allowed.\n      \" 123.45e-1\"\n      12.345\n    If the integer part is not empty, then it must contain at least one\n        digit.\n      \" 0,.12 -\"\n      -0.12\n    If the string contains a decimal point, then it must contain at least\n        one digit.\n      \" .1\"\n      0.1\n    The string cannot contain more than one sign.\n      \" 0.5 +\"\n      0.5"
   },
   {
     "name": "ABS",
@@ -522,7 +564,7 @@
     "arguments": [],
     "category": "Navigation functions",
     "return_type": "value_expression and percentile must have one of the following types:\nNUMERIC\nBIGNUMERIC\nFLOAT64\npercentile must be a literal in the range [0, 1].",
-    "description": "Computes the specified percentile value for the value_expression, with linear\ninterpolation.This function ignores NULL\nvalues if\nRESPECT NULLS is absent.  If RESPECT NULLS is present:Interpolation between two NULL values returns NULL.\nInterpolation between a NULL value and a non-NULL value returns the\nnon-NULL value.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Computes the specified percentile value for the value_expression, with linear\ninterpolation.This function ignores NULL\nvalues if\nRESPECT NULLS is absent.  If RESPECT NULLS is present:Interpolation between two NULL values returns NULL.\nInterpolation between a NULL value and a non-NULL value returns the\nnon-NULL value.To learn more about the OVER clause and how to use it, see\nWindow function calls.PERCENTILE_CONT can be used with differential privacy. To learn more, see\nDifferentially private aggregate functions."
   },
   {
     "name": "PERCENTILE_DISC",
@@ -543,14 +585,14 @@
     "arguments": [],
     "category": "Hash functions",
     "return_type": "BYTES",
-    "description": "Computes the hash of the input using the\nMD5 algorithm. The input can either be\nSTRING or BYTES. The string version treats the input as an array of bytes.This function returns 16 bytes."
+    "description": "Computes the hash of the input using the\nMD5 algorithm. The input can either be\nSTRING or BYTES. The string version treats the input as an array of bytes.This function returns 16 bytes.Warning:MD5 is no longer considered secure.\nFor increased security use another hashing function."
   },
   {
     "name": "SHA1",
     "arguments": [],
     "category": "Hash functions",
     "return_type": "BYTES",
-    "description": "Computes the hash of the input using the\nSHA-1 algorithm. The input can either be\nSTRING or BYTES. The string version treats the input as an array of bytes.This function returns 20 bytes."
+    "description": "Computes the hash of the input using the\nSHA-1 algorithm. The input can either be\nSTRING or BYTES. The string version treats the input as an array of bytes.This function returns 20 bytes.Warning:SHA1 is no longer considered secure.\nFor increased security, use another hashing function."
   },
   {
     "name": "SHA256",
@@ -578,14 +620,14 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Returns the length of the STRING or BYTES value in BYTES,\nregardless of whether the type of the value is STRING or BYTES."
+    "description": "Gets the number of BYTES in a STRING or BYTES value,\nregardless of whether the value is a STRING or BYTES type."
   },
   {
     "name": "CHAR_LENGTH",
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Returns the length of the STRING in characters."
+    "description": "Gets the number of characters in a STRING value."
   },
   {
     "name": "CHARACTER_LENGTH",
@@ -641,7 +683,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "BOOL",
-    "description": "Takes two STRING or BYTES values. Returns TRUE if the second\nvalue is a suffix of the first.This function supports specifying collation."
+    "description": "Takes two STRING or BYTES values. Returns TRUE if suffix\nis a suffix of value.This function supports specifying collation."
   },
   {
     "name": "FORMAT",
@@ -683,7 +725,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Returns the lowest 1-based position of search_value in source_value.\nsource_value and search_value must be the same type, either\nSTRING or BYTES.If position is specified, the search starts at this position in\nsource_value, otherwise it starts at 1, which is the beginning of\nsource_value. If position is negative, the function searches backwards\nfrom the end of source_value, with -1 indicating the last character.\nposition is of type INT64 and cannot be 0.If occurrence is specified, the search returns the position of a specific\ninstance of search_value in source_value. If not specified, occurrence\ndefaults to 1 and returns the position of the first occurrence.\nFor occurrence > 1, the function includes overlapping occurrences.\noccurrence is of type INT64 and must be positive.This function supports specifying collation.Returns 0 if:No match is found.\nIf occurrence is greater than the number of matches found.\nIf position is greater than the length of source_value.Returns NULL if:Any input argument is NULL.Returns an error if:position is 0.\noccurrence is 0 or negative."
+    "description": "Returns the lowest 1-based position of subvalue in value.\nvalue and subvalue must be the same type, either\nSTRING or BYTES.If position is specified, the search starts at this position in\nvalue, otherwise it starts at 1, which is the beginning of\nvalue. If position is negative, the function searches backwards\nfrom the end of value, with -1 indicating the last character.\nposition is of type INT64 and cannot be 0.If occurrence is specified, the search returns the position of a specific\ninstance of subvalue in value. If not specified, occurrence\ndefaults to 1 and returns the position of the first occurrence.\nFor occurrence > 1, the function includes overlapping occurrences.\noccurrence is of type INT64 and must be positive.This function supports specifying collation.Returns 0 if:No match is found.\nIf occurrence is greater than the number of matches found.\nIf position is greater than the length of value.Returns NULL if:Any input argument is NULL.Returns an error if:position is 0.\noccurrence is 0 or negative."
   },
   {
     "name": "LEFT",
@@ -721,18 +763,18 @@
     "description": "Identical to TRIM, but only removes leading characters."
   },
   {
-    "name": "NORMALIZE_AND_CASEFOLD",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "STRING",
-    "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.Case folding is used for the caseless\ncomparison of strings. If you need to compare strings and case should not be\nconsidered, use NORMALIZE_AND_CASEFOLD, otherwise use\nNORMALIZE.NORMALIZE_AND_CASEFOLD supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
-  },
-  {
     "name": "NORMALIZE",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING",
     "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.NORMALIZE supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
+  },
+  {
+    "name": "NORMALIZE_AND_CASEFOLD",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "STRING",
+    "description": "Takes a string value and returns it as a normalized string. If you do not\nprovide a normalization mode, NFC is used.Normalization is used to ensure that\ntwo strings are equivalent. Normalization is often used in situations in which\ntwo strings render the same on the screen but have different Unicode code\npoints.Case folding is used for the caseless\ncomparison of strings. If you need to compare strings and case should not be\nconsidered, use NORMALIZE_AND_CASEFOLD, otherwise use\nNORMALIZE.NORMALIZE_AND_CASEFOLD supports four optional normalization modes:Value\nName\nDescription\n\nNFC\nNormalization Form Canonical Composition\nDecomposes and recomposes characters by canonical equivalence.\nNFKC\nNormalization Form Compatibility Composition\nDecomposes characters by compatibility, then recomposes them by canonical equivalence.\nNFD\nNormalization Form Canonical Decomposition\nDecomposes characters by canonical equivalence, and multiple combining characters are arranged in a specific order.\nNFKD\nNormalization Form Compatibility Decomposition\nDecomposes characters by compatibility, and multiple combining characters are arranged in a specific order."
   },
   {
     "name": "REGEXP_CONTAINS",
@@ -742,18 +784,18 @@
     "description": "Returns TRUE if value is a partial match for the regular expression,\nregexp.If the regexp argument is invalid, the function returns an error.You can search for a full match by using ^ (beginning of text) and $ (end of\ntext). Due to regular expression operator precedence, it is good practice to use\nparentheses around everything between ^ and $.Note:GoogleSQL provides regular expression support using the\nre2 library; see that documentation for its\nregular expression syntax."
   },
   {
-    "name": "REGEXP_EXTRACT_ALL",
-    "arguments": [],
-    "category": "String functions",
-    "return_type": "ARRAY<STRING> or ARRAY<BYTES>",
-    "description": "Returns an array of all substrings of value that match the\nre2 regular expression, regexp. Returns an empty array\nif there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is added to the results. If there\nare multiple matches for a capturing group, the last match is added to the\nresults.The REGEXP_EXTRACT_ALL function only returns non-overlapping matches. For\nexample, using this function to extract ana from banana returns only one\nsubstring, not two.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group"
-  },
-  {
     "name": "REGEXP_EXTRACT",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
-    "description": "Returns the substring in value that matches the\nre2 regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is returned. If there\nare multiple matches for a capturing group, the last match is returned.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integer"
+    "description": "Returns the substring in value that matches the\nre2 regular expression, regexp.\nReturns NULL if there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is returned. If there\nare multiple matches for a capturing group, the first match is returned.If position is specified, the search starts at this\nposition in value, otherwise it starts at the beginning of value. The\nposition must be a positive integer and cannot be 0. If position is greater\nthan the length of value, NULL is returned.If occurrence is specified, the search returns a specific occurrence of the\nregexp in value, otherwise returns the first match. If occurrence is\ngreater than the number of matches found, NULL is returned. For\noccurrence > 1, the function searches for additional occurrences beginning\nwith the character following the previous occurrence.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group\nThe position is not a positive integer\nThe occurrence is not a positive integer"
+  },
+  {
+    "name": "REGEXP_EXTRACT_ALL",
+    "arguments": [],
+    "category": "String functions",
+    "return_type": "ARRAY<STRING> or ARRAY<BYTES>",
+    "description": "Returns an array of all substrings of value that match the\nre2 regular expression, regexp. Returns an empty array\nif there is no match.If the regular expression contains a capturing group ((...)), and there is a\nmatch for that capturing group, that match is added to the results.The REGEXP_EXTRACT_ALL function only returns non-overlapping matches. For\nexample, using this function to extract ana from banana returns only one\nsubstring, not two.Returns an error if:The regular expression is invalid\nThe regular expression has more than one capturing group"
   },
   {
     "name": "REGEXP_INSTR",
@@ -788,7 +830,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
-    "description": "Replaces all occurrences of from_value with to_value in original_value.\nIf from_value is empty, no replacement is made.This function supports specifying collation."
+    "description": "Replaces all occurrences of from_pattern with to_pattern in\noriginal_value. If from_pattern is empty, no replacement is made.This function supports specifying collation."
   },
   {
     "name": "REVERSE",
@@ -844,21 +886,21 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "BOOL",
-    "description": "Takes two STRING or BYTES values. Returns TRUE if the second value is a\nprefix of the first.This function supports specifying collation."
+    "description": "Takes two STRING or BYTES values. Returns TRUE if prefix is a\nprefix of value.This function supports specifying collation."
   },
   {
     "name": "STRPOS",
     "arguments": [],
     "category": "String functions",
     "return_type": "INT64",
-    "description": "Takes two STRING or BYTES values. Returns the 1-based position of the first\noccurrence of value2 inside value1. Returns 0 if value2 is not found.This function supports specifying collation."
+    "description": "Takes two STRING or BYTES values. Returns the 1-based position of the first\noccurrence of subvalue inside value. Returns 0 if subvalue is not found.This function supports specifying collation."
   },
   {
     "name": "SUBSTR",
     "arguments": [],
     "category": "String functions",
     "return_type": "STRING or BYTES",
-    "description": "Returns a substring of the supplied STRING or BYTES value.The position argument is an integer specifying the starting position of the\nsubstring.If position is 1, the substring starts from the first character or byte.\nIf position is 0 or less than -LENGTH(value), position is set to 1,\nand the substring starts from the first character or byte.\nIf position is greater than the length of value, the function produces\nan empty substring.\nIf position is negative, the function counts from the end of value,\nwith -1 indicating the last character or byte.The length argument specifies the maximum number of characters or bytes to\nreturn.If length is not specified, the function produces a substring that starts\nat the specified position and ends at the last character or byte of value.\nIf length is 0, the function produces an empty substring.\nIf length is negative, the function produces an error.\nThe returned substring may be shorter than length, for example, when\nlength exceeds the length of value, or when the starting position of the\nsubstring plus length is greater than the length of value."
+    "description": "Gets a portion (substring) of the supplied STRING or BYTES value.The position argument is an integer specifying the starting position of the\nsubstring.If position is 1, the substring starts from the first character or byte.\nIf position is 0 or less than -LENGTH(value), position is set to 1,\nand the substring starts from the first character or byte.\nIf position is greater than the length of value, the function produces\nan empty substring.\nIf position is negative, the function counts from the end of value,\nwith -1 indicating the last character or byte.The length argument specifies the maximum number of characters or bytes to\nreturn.If length is not specified, the function produces a substring that starts\nat the specified position and ends at the last character or byte of value.\nIf length is 0, the function produces an empty substring.\nIf length is negative, the function produces an error.\nThe returned substring may be shorter than length, for example, when\nlength exceeds the length of value, or when the starting position of the\nsubstring plus length is greater than the length of value."
   },
   {
     "name": "TO_BASE32",
@@ -879,7 +921,7 @@
     "arguments": [],
     "category": "String functions",
     "return_type": "ARRAY<INT64>",
-    "description": "Takes a STRING or BYTES value and returns an array of\nINT64.If value is a STRING, each element in the returned array represents a\ncode point. Each code point falls\nwithin the range of [0, 0xD7FF] and [0xE000, 0x10FFFF].\nIf value is BYTES, each element in the array is an extended ASCII\ncharacter value in the range of [0, 255].To convert from an array of code points to a STRING or BYTES, see\nCODE_POINTS_TO_STRING or\nCODE_POINTS_TO_BYTES."
+    "description": "Takes a STRING or BYTES value and returns an array of INT64 values that\nrepresent code points or extended ASCII character values.If value is a STRING, each element in the returned array represents a\ncode point. Each code point falls\nwithin the range of [0, 0xD7FF] and [0xE000, 0x10FFFF].\nIf value is BYTES, each element in the array is an extended ASCII\ncharacter value in the range of [0, 255].To convert from an array of code points to a STRING or BYTES, see\nCODE_POINTS_TO_STRING or\nCODE_POINTS_TO_BYTES."
   },
   {
     "name": "TO_HEX",
@@ -921,112 +963,189 @@
     "arguments": [],
     "category": "JSON functions",
     "return_type": "BOOL",
-    "description": "Takes a JSON expression, extracts a JSON boolean, and returns that value as a SQL\nBOOL. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a boolean, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
+    "description": "Converts a JSON boolean to a SQL BOOL value.Arguments:json_expr: JSON. For example:\nJSON 'true'\nIf the JSON value is not a boolean, an error is produced. If the expression\nis SQL NULL, the function returns SQL NULL."
   },
   {
     "name": "FLOAT64",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "FLOAT64",
-    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nFLOAT64. If the expression is SQL NULL, the\nfunction returns SQL NULL. If the extracted JSON value is not a number, an\nerror is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'This function supports an optional mandatory-named argument called\nwide_number_mode which defines what happens with a number that cannot be\nrepresented as a FLOAT64 without loss of precision.This argument accepts one of the two case-sensitive values:‘exact’: The function fails if the result cannot be represented as a\nFLOAT64 without loss of precision.\n‘round’: The numeric value stored in JSON will be rounded to\nFLOAT64. If such rounding is not possible, the\nfunction fails. This is the default value if the argument is not specified."
+    "description": "Converts a JSON number to a SQL FLOAT64 value.Arguments:json_expr: JSON. For example:\nJSON '9.8'\nIf the JSON value is not a number, an error is produced. If the expression\nis a SQL NULL, the function returns SQL NULL.\nwide_number_mode: Optional mandatory-named argument,\nwhich defines what happens with a number that cannot be\nrepresented as a FLOAT64 without loss of\nprecision. This argument accepts one of the two case-sensitive values:\n\nexact: The function fails if the result cannot be represented as a\nFLOAT64 without loss of precision.\nround (default): The numeric value stored in JSON will be rounded to\nFLOAT64. If such rounding is not possible,\nthe function fails."
   },
   {
     "name": "INT64",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "INT64",
-    "description": "Takes a JSON expression, extracts a JSON number and returns that value as a SQL\nINT64. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON number has a fractional part or is outside of the\nINT64 domain, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
+    "description": "Converts a JSON number to a SQL INT64 value.Arguments:json_expr: JSON. For example:\nJSON '999'\nIf the JSON value is not a number, or the JSON number is not in the SQL\nINT64 domain, an error is produced. If the expression is SQL NULL, the\nfunction returns SQL NULL."
   },
   {
-    "name": "JSON_EXTRACT_ARRAY",
+    "name": "JSON_ARRAY",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "json_string_expr: ARRAY<JSON-formatted STRING>\njson_expr: ARRAY<JSON>",
-    "description": "Extracts an array of JSON values, such as arrays or objects, and\nJSON scalar values, such as strings, numbers, and booleans.\nIf a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "JSON",
+    "description": "Creates a JSON array from zero or more SQL values.Arguments:value: A JSON encoding-supported value to add\nto a JSON array."
   },
   {
-    "name": "JSON_EXTRACT_SCALAR",
+    "name": "JSON_ARRAY_APPEND",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "STRING",
-    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "return_type": "In the following example, path $ is matched and appends 1.SELECT JSON_ARRAY_APPEND(JSON '[\"a\", \"b\", \"c\"]', '$', 1) AS json_data\n\n/*-----------------*\n | json_data       |\n +-----------------+\n | [\"a\",\"b\",\"c\",1] |\n *-----------------*/In the following example, append_each_element defaults to TRUE, so\n[1, 2] is appended as individual elements.SELECT JSON_ARRAY_APPEND(JSON '[\"a\", \"b\", \"c\"]', '$', [1, 2]) AS json_data\n\n/*-------------------*\n | json_data         |\n +-------------------+\n | [\"a\",\"b\",\"c\",1,2] |\n *-------------------*/In the following example, append_each_element is FALSE, so\n[1, 2] is appended as one element.SELECT JSON_ARRAY_APPEND(\n  JSON '[\"a\", \"b\", \"c\"]',\n  '$', [1, 2],\n  append_each_element=>FALSE) AS json_data\n\n/*---------------------*\n | json_data           |\n +---------------------+\n | [\"a\",\"b\",\"c\",[1,2]] |\n *---------------------*/In the following example, append_each_element is FALSE, so\n[1, 2] and [3, 4] are each appended as one element.SELECT JSON_ARRAY_APPEND(\n  JSON '[\"a\", [\"b\"], \"c\"]',\n  '$[1]', [1, 2],\n  '$[1][1]', [3, 4],\n  append_each_element=>FALSE) AS json_data\n\n/*-----------------------------*\n | json_data                   |\n +-----------------------------+\n | [\"a\",[\"b\",[1,2,[3,4]]],\"c\"] |\n *-----------------------------*/In the following example, the first path $[1] appends [1, 2] as single\nelements, and then the second path $[1][1] is not a valid path to an array,\nso the second operation is ignored.SELECT JSON_ARRAY_APPEND(\n  JSON '[\"a\", [\"b\"], \"c\"]',\n  '$[1]', [1, 2],\n  '$[1][1]', [3, 4]) AS json_data\n\n/*---------------------*\n | json_data           |\n +---------------------+\n | [\"a\",[\"b\",1,2],\"c\"] |\n *---------------------*/In the following example, path $.a is matched and appends 2.SELECT JSON_ARRAY_APPEND(JSON '{\"a\": [1]}', '$.a', 2) AS json_data\n\n/*-------------*\n | json_data   |\n +-------------+\n | {\"a\":[1,2]} |\n *-------------*/In the following example, a value is appended into a JSON null.SELECT JSON_ARRAY_APPEND(JSON '{\"a\": null}', '$.a', 10)\n\n/*------------*\n | json_data  |\n +------------+\n | {\"a\":[10]} |\n *------------*/In the following example, path $.a is not an array, so the operation is\nignored.SELECT JSON_ARRAY_APPEND(JSON '{\"a\": 1}', '$.a', 2) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":1}   |\n *-----------*/In the following example, path $.b does not exist, so the operation is\nignored.SELECT JSON_ARRAY_APPEND(JSON '{\"a\": 1}', '$.b', 2) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":1}   |\n *-----------*/",
+    "description": "JSON"
   },
   {
-    "name": "JSON_EXTRACT_STRING_ARRAY",
+    "name": "JSON_ARRAY_INSERT",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "ARRAY<STRING>",
-    "description": "Extracts an array of scalar values and returns an array of string-formatted\nscalar values. A scalar value can represent a string, number, or boolean.\nIf a JSON key uses invalid JSONPath characters, you can\nescape those characters using single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types.Caveats:A JSON null in the input array produces a SQL NULL as the output for that\nJSON null. If the output contains a NULL array element, an error is\nproduced because the final output cannot be an array with NULL values.\nIf a JSONPath matches an array that contains scalar objects and a JSON null,\nthen the output of the function must be transformed because the final output\ncannot be an array with NULL values."
+    "return_type": "In the following example, path $[1] is matched and inserts 1.SELECT JSON_ARRAY_INSERT(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1]', 1) AS json_data\n\n/*-----------------------*\n | json_data             |\n +-----------------------+\n | [\"a\",1,[\"b\",\"c\"],\"d\"] |\n *-----------------------*/In the following example, path $[1][0] is matched and inserts 1.SELECT JSON_ARRAY_INSERT(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1][0]', 1) AS json_data\n\n/*-----------------------*\n | json_data             |\n +-----------------------+\n | [\"a\",[1,\"b\",\"c\"],\"d\"] |\n *-----------------------*/In the following example, insert_each_element defaults to TRUE, so\n[1, 2] is inserted as individual elements.SELECT JSON_ARRAY_INSERT(JSON '[\"a\", \"b\", \"c\"]', '$[1]', [1, 2]) AS json_data\n\n/*-------------------*\n | json_data         |\n +-------------------+\n | [\"a\",1,2,\"b\",\"c\"] |\n *-------------------*/In the following example, insert_each_element is FALSE, so [1, 2] is\ninserted as one element.SELECT JSON_ARRAY_INSERT(\n  JSON '[\"a\", \"b\", \"c\"]',\n  '$[1]', [1, 2],\n  insert_each_element=>FALSE) AS json_data\n\n/*---------------------*\n | json_data           |\n +---------------------+\n | [\"a\",[1,2],\"b\",\"c\"] |\n *---------------------*/In the following example, path $[7] is larger than the length of the\nmatched array, so the array is extended with JSON nulls and \"e\" is inserted at\nthe end of the array.SELECT JSON_ARRAY_INSERT(JSON '[\"a\", \"b\", \"c\", \"d\"]', '$[7]', \"e\") AS json_data\n\n/*--------------------------------------*\n | json_data                            |\n +--------------------------------------+\n | [\"a\",\"b\",\"c\",\"d\",null,null,null,\"e\"] |\n *--------------------------------------*/In the following example, path $.a is an object, so the operation is ignored.SELECT JSON_ARRAY_INSERT(JSON '{\"a\": {}}', '$.a[0]', 2) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":{}}  |\n *-----------*/In the following example, path $ does not specify a valid array position,\nso the operation is ignored.SELECT JSON_ARRAY_INSERT(JSON '[1, 2]', '$', 3) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [1,2]     |\n *-----------*/In the following example, a value is inserted into a JSON null.SELECT JSON_ARRAY_INSERT(JSON '{\"a\": null}', '$.a[2]', 10) AS json_data\n\n/*----------------------*\n | json_data            |\n +----------------------+\n | {\"a\":[null,null,10]} |\n *----------------------*/In the following example, the operation is ignored because you can't insert\ndata into a JSON number.SELECT JSON_ARRAY_INSERT(JSON '1', '$[0]', 'r1') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | 1         |\n *-----------*/",
+    "description": "JSON"
   },
   {
     "name": "JSON_EXTRACT",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
-    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing single quotes and brackets.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_EXTRACT(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_EXTRACT(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "description": "Extracts a JSON value and converts it to a\nSQL JSON-formatted STRING or JSON value.\nThis function uses single quotes and brackets to escape invalid\nJSONPath characters in JSON keys. For example: ['a.b'].Arguments:json_string_expr: A JSON-formatted string. For example:\n'{\"class\": {\"students\": [{\"name\": \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_EXTRACT(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\": {\"students\": [{\"name\": \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_EXTRACT(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
   },
   {
-    "name": "JSON_QUERY_ARRAY",
+    "name": "JSON_EXTRACT_ARRAY",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "json_string_expr: ARRAY<JSON-formatted STRING>\njson_expr: ARRAY<JSON>",
-    "description": "Extracts an array of JSON values, such as arrays or objects, and\nJSON scalar values, such as strings, numbers, and booleans.\nIf a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "description": "Extracts a JSON array and converts it to\na SQL ARRAY<JSON-formatted STRING> or\nARRAY<JSON> value.\nThis function uses single quotes and brackets to escape invalid\nJSONPath characters in JSON keys. For example: ['a.b'].Arguments:json_string_expr: A JSON-formatted string. For example:\n'[\"a\", \"b\", {\"key\": \"c\"}]'\njson_expr: JSON. For example:\nJSON '[\"a\", \"b\", {\"key\": \"c\"}]'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_EXTRACT_SCALAR",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "STRING",
+    "description": "Extracts a JSON scalar value and converts it to a SQL STRING value.\nIn addition, this function:Removes the outermost quotes and unescapes the return values.\nReturns a SQL NULL if a non-scalar value is selected.\nUses single quotes and brackets to escape invalid JSONPath\ncharacters in JSON keys. For example: ['a.b'].Arguments:json_string_expr: A JSON-formatted string. For example:\n'{\"name\": \"Jane\", \"age\": \"6\"}'\njson_expr: JSON. For example:\nJSON '{\"name\": \"Jane\", \"age\": \"6\"}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_EXTRACT_STRING_ARRAY",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "ARRAY<STRING>",
+    "description": "Extracts a JSON array of scalar values and converts it to a SQL ARRAY<STRING>\nvalue. In addition, this function:Removes the outermost quotes and unescapes the values.\nReturns a SQL NULL if the selected value is not an array or\nnot an array containing only scalar values.\nUses single quotes and brackets to escape invalid JSONPath\ncharacters in JSON keys. For example: ['a.b'].Arguments:json_string_expr: A JSON-formatted string. For example:\n'[\"apples\", \"oranges\", \"grapes\"]'\njson_expr: JSON. For example:\nJSON '[\"apples\", \"oranges\", \"grapes\"]'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types.Caveats:A JSON null in the input array produces a SQL NULL as the output for that\nJSON null. If the output contains a NULL array element, an error is\nproduced because the final output cannot be an array with NULL values.\nIf a JSONPath matches an array that contains scalar objects and a JSON null,\nthen the output of the function must be transformed because the final output\ncannot be an array with NULL values."
+  },
+  {
+    "name": "JSON_OBJECT",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "JSON",
+    "description": "Creates a JSON object, using key-value pairs.Arguments:json_key: A STRING value that represents a key.\njson_value: A JSON encoding-supported value.Details:If two keys are passed in with the same name, only the first key-value pair\nis preserved.\nThe order of key-value pairs is not preserved.\nIf json_key is NULL, an error is produced."
   },
   {
     "name": "JSON_QUERY",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "json_string_expr: A JSON-formatted STRING\njson_expr: JSON",
-    "description": "Extracts a JSON value, such as an array or object, or a JSON scalar\nvalue, such as a string, number, or boolean. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_QUERY(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_QUERY(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "description": "Extracts a JSON value and converts it to a SQL\nJSON-formatted STRING or\nJSON value.\nThis function uses double quotes to escape invalid\nJSONPath characters in JSON keys. For example: \"a.b\".Arguments:json_string_expr: A JSON-formatted string. For example:\n'{\"class\": {\"students\": [{\"name\": \"Jane\"}]}}'\nExtracts a SQL NULL when a JSON-formatted string null is encountered.\nFor example:\nSELECT JSON_QUERY(\"null\", \"$\") -- Returns a SQL NULL\njson_expr: JSON. For example:\nJSON '{\"class\": {\"students\": [{\"name\": \"Jane\"}]}}'\nExtracts a JSON null when a JSON null is encountered.\nSELECT JSON_QUERY(JSON 'null', \"$\") -- Returns a JSON 'null'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_QUERY_ARRAY",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "json_string_expr: ARRAY<JSON-formatted STRING>\njson_expr: ARRAY<JSON>",
+    "description": "Extracts a JSON array and converts it to\na SQL ARRAY<JSON-formatted STRING> or\nARRAY<JSON> value.\nIn addition, this function uses double quotes to escape invalid\nJSONPath characters in JSON keys. For example: \"a.b\".Arguments:json_string_expr: A JSON-formatted string. For example:\n'[\"a\", \"b\", {\"key\": \"c\"}]'\njson_expr: JSON. For example:\nJSON '[\"a\", \"b\", {\"key\": \"c\"}]'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+  },
+  {
+    "name": "JSON_REMOVE",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "In the following example, the path $[1] is matched and removes\n[\"b\", \"c\"].SELECT JSON_REMOVE(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [\"a\",\"d\"] |\n *-----------*/You can use the field access operator to pass JSON data into this function.\nFor example:WITH T AS (SELECT JSON '{\"a\": {\"b\": 10, \"c\": 20}}' AS data)\nSELECT JSON_REMOVE(data.a, '$.b') AS json_data FROM T\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"c\":20}  |\n *-----------*/In the following example, the first path $[1] is matched and removes\n[\"b\", \"c\"]. Then, the second path $[1] is matched and removes \"d\".SELECT JSON_REMOVE(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1]', '$[1]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [\"a\"]     |\n *-----------*/The structure of an empty array is preserved when all elements are deleted\nfrom it. For example:SELECT JSON_REMOVE(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1]', '$[1]', '$[0]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | []        |\n *-----------*/In the following example, the path $.a.b.c is matched and removes the\n\"c\":\"d\" key-value pair from the JSON object.SELECT JSON_REMOVE(JSON '{\"a\": {\"b\": {\"c\": \"d\"}}}', '$.a.b.c') AS json_data\n\n/*----------------*\n | json_data      |\n +----------------+\n | {\"a\":{\"b\":{}}} |\n *----------------*/In the following example, the path $.a.b is matched and removes the\n\"b\": {\"c\":\"d\"} key-value pair from the JSON object.SELECT JSON_REMOVE(JSON '{\"a\": {\"b\": {\"c\": \"d\"}}}', '$.a.b') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":{}}  |\n *-----------*/In the following example, the path $.b is not valid, so the operation makes\nno changes.SELECT JSON_REMOVE(JSON '{\"a\": 1}', '$.b') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":1}   |\n *-----------*/In the following example, path $.a.b and $.b don't exist, so those\noperations are ignored, but the others are processed.SELECT JSON_REMOVE(JSON '{\"a\": [1, 2, 3]}', '$.a[0]', '$.a.b', '$.b', '$.a[0]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"a\":[3]} |\n *-----------*/If you pass in $ as the path, an error is produced. For example:-- Error: The JSONPath cannot be '$'\nSELECT JSON_REMOVE(JSON '{}', '$') AS json_dataIn the following example, the operation is ignored because you can't remove\ndata from a JSON null.SELECT JSON_REMOVE(JSON 'null', '$.a.b') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | null      |\n *-----------*/",
+    "description": "JSON"
+  },
+  {
+    "name": "JSON_SET",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "In the following example, the path $ matches the entire JSON value\nand replaces it with {\"b\": 2, \"c\": 3}.SELECT JSON_SET(JSON '{\"a\": 1}', '$', JSON '{\"b\": 2, \"c\": 3}') AS json_data\n\n/*---------------*\n | json_data     |\n +---------------+\n | {\"b\":2,\"c\":3} |\n *---------------*/In the following example, the path $.a is matched, but $.a.b does not\nexist, so the new path and the value are inserted.SELECT JSON_SET(JSON '{\"a\": {}}', '$.a.b', 100) AS json_data\n\n/*-----------------*\n | json_data       |\n +-----------------+\n | {\"a\":{\"b\":100}} |\n *-----------------*/In the following example, the path prefix $ points to a JSON null, so the\nremainder of the path is created for the value 100.SELECT JSON_SET(JSON 'null', '$.a.b', 100) AS json_data\n\n/*-----------------*\n | json_data       |\n +-----------------+\n | {\"a\":{\"b\":100}} |\n *-----------------*/In the following example, the path $.a.c implies that the value at $.a is\na JSON object but it's not. This part of the operation is ignored, but the other\nparts of the operation are completed successfully.SELECT JSON_SET(\n  JSON '{\"a\": 1}',\n  '$.b', 2,\n  '$.a.c', 100,\n  '$.d', 3) AS json_data\n\n/*---------------------*\n | json_data           |\n +---------------------+\n | {\"a\":1,\"b\":2,\"d\":3} |\n *---------------------*/In the following example, the path $.a[2] implies that the value for $.a is\nan array, but it's not, so the operation is ignored for that value.SELECT JSON_SET(\n  JSON '{\"a\": 1}',\n  '$.a[2]', 100,\n  '$.b', 2) AS json_data\n\n/*---------------*\n | json_data     |\n +---------------+\n | {\"a\":1,\"b\":2} |\n *---------------*/In the following example, the path $[1] is matched and replaces the\narray element value with foo.SELECT JSON_SET(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1]', \"foo\") AS json_data\n\n/*-----------------*\n | json_data       |\n +-----------------+\n | [\"a\",\"foo\",\"d\"] |\n *-----------------*/In the following example, the path $[1][0] is matched and replaces the\narray element value with foo.SELECT JSON_SET(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1][0]', \"foo\") AS json_data\n\n/*-----------------------*\n | json_data             |\n +-----------------------+\n | [\"a\",[\"foo\",\"c\"],\"d\"] |\n *-----------------------*/In the following example, the path prefix $ points to a JSON null, so the\nremainder of the path is created. The resulting array is padded with\nJSON nulls and appended with foo.SELECT JSON_SET(JSON 'null', '$[0][3]', \"foo\")\n\n/*--------------------------*\n | json_data                |\n +--------------------------+\n | [[null,null,null,\"foo\"]] |\n *--------------------------*/In the following example, the path $[1] is matched, the matched array is\nextended since $[1][4] is larger than the existing array, and then foo is\ninserted in the array.SELECT JSON_SET(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1][4]', \"foo\") AS json_data\n\n/*-------------------------------------*\n | json_data                           |\n +-------------------------------------+\n | [\"a\",[\"b\",\"c\",null,null,\"foo\"],\"d\"] |\n *-------------------------------------*/In the following example, the path $[1][0][0] implies that the value of\n$[1][0] is an array, but it is not, so the operation is ignored.SELECT JSON_SET(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1][0][0]', \"foo\") AS json_data\n\n/*---------------------*\n | json_data           |\n +---------------------+\n | [\"a\",[\"b\",\"c\"],\"d\"] |\n *---------------------*/In the following example, the path $[1][2] is larger than the length of\nthe matched array. The array length is extended and the remainder of the path\nis recursively created. The operation continues to the path $[1][2][1]\nand inserts foo.SELECT JSON_SET(JSON '[\"a\", [\"b\", \"c\"], \"d\"]', '$[1][2][1]', \"foo\") AS json_data\n\n/*----------------------------------*\n | json_data                        |\n +----------------------------------+\n | [\"a\",[\"b\",\"c\",[null,\"foo\"]],\"d\"] |\n *----------------------------------*/In the following example, because the JSON object is empty, key b is\ninserted, and the remainder of the path is recursively created.SELECT JSON_SET(JSON '{}', '$.b[2].d', 100) AS json_data\n\n/*-----------------------------*\n | json_data                   |\n +-----------------------------+\n | {\"b\":[null,null,{\"d\":100}]} |\n *-----------------------------*/In the following example, multiple values are set.SELECT JSON_SET(\n  JSON '{\"a\": 1, \"b\": {\"c\":3}, \"d\": [4]}',\n  '$.a', 'v1',\n  '$.b.e', 'v2',\n  '$.d[2]', 'v3') AS json_data\n\n/*---------------------------------------------------*\n | json_data                                         |\n +---------------------------------------------------+\n | {\"a\":\"v1\",\"b\":{\"c\":3,\"e\":\"v2\"},\"d\":[4,null,\"v3\"]} |\n *---------------------------------------------------*/",
+    "description": "JSON"
+  },
+  {
+    "name": "JSON_STRIP_NULLS",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "In the following example, all JSON nulls are removed.SELECT JSON_STRIP_NULLS(JSON '{\"a\": null, \"b\": \"c\"}') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"b\":\"c\"} |\n *-----------*/In the following example, all JSON nulls are removed from a JSON array.SELECT JSON_STRIP_NULLS(JSON '[1, null, 2, null]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [1,2]     |\n *-----------*/In the following example, include_arrays is set as FALSE so that JSON nulls\nare not removed from JSON arrays.SELECT JSON_STRIP_NULLS(JSON '[1, null, 2, null]', include_arrays=>FALSE) AS json_data\n\n/*-----------------*\n | json_data       |\n +-----------------+\n | [1,null,2,null] |\n *-----------------*/In the following example, remove_empty is omitted and defaults to\nFALSE, and the empty structures are retained.SELECT JSON_STRIP_NULLS(JSON '[1, null, 2, null, [null]]') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [1,2,[]]  |\n *-----------*/In the following example, remove_empty is set as TRUE, and the\nempty structures are removed.SELECT JSON_STRIP_NULLS(\n  JSON '[1, null, 2, null, [null]]',\n  remove_empty=>TRUE) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | [1,2]     |\n *-----------*/In the following examples, remove_empty is set as TRUE, and the\nempty structures are removed. Because no JSON data is left the function\nreturns JSON null.SELECT JSON_STRIP_NULLS(JSON '{\"a\": null}', remove_empty=>TRUE) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | null      |\n *-----------*/SELECT JSON_STRIP_NULLS(JSON '{\"a\": [null]}', remove_empty=>TRUE) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | null      |\n *-----------*/In the following example, empty structures are removed for JSON objects,\nbut not JSON arrays.SELECT JSON_STRIP_NULLS(\n  JSON '{\"a\": {\"b\": {\"c\": null}}, \"d\": [null], \"e\": [], \"f\": 1}',\n  include_arrays=>FALSE,\n  remove_empty=>TRUE) AS json_data\n\n/*---------------------------*\n | json_data                 |\n +---------------------------+\n | {\"d\":[null],\"e\":[],\"f\":1} |\n *---------------------------*/In the following example, empty structures are removed for both JSON objects,\nand JSON arrays.SELECT JSON_STRIP_NULLS(\n  JSON '{\"a\": {\"b\": {\"c\": null}}, \"d\": [null], \"e\": [], \"f\": 1}',\n  remove_empty=>TRUE) AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | {\"f\":1}   |\n *-----------*/In the following example, because no JSON data is left, the function returns a\nJSON null.SELECT JSON_STRIP_NULLS(JSON 'null') AS json_data\n\n/*-----------*\n | json_data |\n +-----------+\n | null      |\n *-----------*/",
+    "description": "JSON"
   },
   {
     "name": "JSON_TYPE",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "STRING",
-    "description": "Takes a JSON expression and returns the type of the outermost JSON value as a\nSQL STRING. The names of these JSON types can be returned:object\narray\nstring\nnumber\nboolean\nnullIf the expression is SQL NULL, the function returns SQL NULL. If the\nextracted JSON value is not a valid JSON type, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
+    "description": "Gets the JSON type of the outermost JSON value and converts the name of\nthis type to a SQL STRING value. The names of these JSON types can be\nreturned: object, array, string, number, boolean, nullArguments:json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\": \"blue\"}'\nIf this expression is SQL NULL, the function returns SQL NULL. If the\nextracted JSON value is not a valid JSON type, an error is produced."
   },
   {
     "name": "JSON_VALUE",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "STRING",
-    "description": "Extracts a scalar value and then returns it as a string. A scalar value can\nrepresent a string, number, or boolean. Removes the outermost quotes and\nunescapes the return values. If a JSON key uses invalid\nJSONPath characters, then you can escape those characters\nusing double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
+    "description": "Extracts a JSON scalar value and converts it to a SQL STRING value.\nIn addition, this function:Removes the outermost quotes and unescapes the values.\nReturns a SQL NULL if a non-scalar value is selected.\nUses double quotes to escape invalid JSONPath characters\nin JSON keys. For example: \"a.b\".Arguments:json_string_expr: A JSON-formatted string. For example:\n'{\"name\": \"Jakob\", \"age\": \"6\"}'\njson_expr: JSON. For example:\nJSON '{\"name\": \"Jane\", \"age\": \"6\"}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.\n\nIf json_path returns a JSON null or a non-scalar value (in other words,\nif json_path refers to an object or an array), then a SQL NULL is\nreturned.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types."
   },
   {
     "name": "JSON_VALUE_ARRAY",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "ARRAY<STRING>",
-    "description": "Extracts an array of scalar values and returns an array of string-formatted\nscalar values. A scalar value can represent a string, number, or boolean.\nIf a JSON key uses invalid JSONPath characters, you can\nescape those characters using double quotes.json_string_expr: A JSON-formatted string. For example:\n'{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_expr: JSON. For example:\nJSON '{\"class\" : {\"students\" : [{\"name\" : \"Jane\"}]}}'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types.Caveats:A JSON null in the input array produces a SQL NULL as the output for\nJSON null. If the output contains a NULL array element, an error is\nproduced because the final output cannot be an array with NULL values.\nIf a JSONPath matches an array that contains scalar objects and a JSON null,\nthen the output of the function must be transformed because the final output\ncannot be an array with NULL values."
+    "description": "Extracts a JSON array of scalar values and converts it to a SQL\nARRAY<STRING> value.\nIn addition, this function:Removes the outermost quotes and unescapes the values.\nReturns a SQL NULL if the selected value is not an array or\nnot an array containing only scalar values.\nUses double quotes to escape invalid JSONPath characters\nin JSON keys. For example: \"a.b\".Arguments:json_string_expr: A JSON-formatted string. For example:\n'[\"apples\", \"oranges\", \"grapes\"]'\njson_expr: JSON. For example:\nJSON '[\"apples\", \"oranges\", \"grapes\"]'\njson_path: The JSONPath. This identifies the data that\nyou want to obtain from the input. If this optional parameter is not\nprovided, then the JSONPath $ symbol is applied, which means that all of\nthe data is analyzed.There are differences between the JSON-formatted string and JSON input types.\nFor details, see Differences between the JSON and JSON-formatted STRING types.Caveats:A JSON null in the input array produces a SQL NULL as the output for\nJSON null. If the output contains a NULL array element, an error is\nproduced because the final output cannot be an array with NULL values.\nIf a JSONPath matches an array that contains scalar objects and a JSON null,\nthen the output of the function must be transformed because the final output\ncannot be an array with NULL values."
+  },
+  {
+    "name": "LAX_BOOL",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "From JSON type\n    To SQL BOOL\n  boolean\n    If the JSON boolean is true, returns TRUE.\n      Otherwise, returns FALSE.\n  string\n    If the JSON string is 'true', returns TRUE.\n      If the JSON string is 'false', returns FALSE.\n      If the JSON string is any other value or has whitespace in it,\n      returns NULL.\n      This conversion is case-insensitive.\n  number\n    If the JSON number is a representation of 0,\n      returns FALSE. Otherwise, returns TRUE.\n  other type or null\n    NULL",
+    "description": "Attempts to convert a JSON value to a SQL BOOL value.Arguments:json_expr: JSON. For example:\nJSON 'true'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
+  },
+  {
+    "name": "LAX_FLOAT64",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "From JSON type\n    To SQL FLOAT64\n  boolean\n    NULL\n  string\n    If the JSON string represents a JSON number, parses it as a\n      BIGNUMERIC value, and then safe casts the result as a\n      FLOAT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as a\n      FLOAT64 value.\n      Large JSON numbers are rounded.\n  other type or null\n    NULL",
+    "description": "Attempts to convert a JSON value to a\nSQL FLOAT64 value.Arguments:json_expr: JSON. For example:\nJSON '9.8'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
+  },
+  {
+    "name": "LAX_INT64",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "From JSON type\n    To SQL INT64\n  boolean\n    If the JSON boolean is true, returns 1.\n      If false, returns 0.\n  string\n    If the JSON string represents a JSON number, parses it as a\n      BIGNUMERIC value, and then safe casts the results as an\n      INT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as an INT64 value.\n      If the JSON number can't be converted, returns NULL.\n  other type or null\n    NULL",
+    "description": "Attempts to convert a JSON value to a SQL INT64 value.Arguments:json_expr: JSON. For example:\nJSON '999'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
+  },
+  {
+    "name": "LAX_STRING",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "From JSON type\n    To SQL STRING\n  boolean\n    If the JSON boolean is true, returns 'true'.\n      If false, returns 'false'.\n  string\n    Returns the JSON string as a STRINGvalue.\n  number\n    Returns the JSON number as a STRINGvalue.\n  other type or null\n    NULL",
+    "description": "Attempts to convert a JSON value to a SQL STRING value.Arguments:json_expr: JSON. For example:\nJSON '\"name\"'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
   },
   {
     "name": "PARSE_JSON",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "JSON",
-    "description": "Takes a SQL STRING value and returns a SQL JSON value.\nThe STRING value represents a string-formatted JSON value.This function supports an optional mandatory-named argument called\nwide_number_mode that determines how to handle numbers that cannot be stored\nin a JSON value without the loss of precision. If used,\nwide_number_mode must include one of these values:exact: Only accept numbers that can be stored without loss of precision. If\na number that cannot be stored without loss of precision is encountered,\nthe function throws an error.\nround: If a number that cannot be stored without loss of precision is\nencountered, attempt to round it to a number that can be stored without\nloss of precision. If the number cannot be rounded, the function throws an\nerror.If wide_number_mode is not used, the function implicitly includes\nwide_number_mode=>'exact'. If a number appears in a JSON object or array,\nthe wide_number_mode argument is applied to the number in the object or array.Numbers from the following domains can be stored in JSON without loss of\nprecision:64-bit signed/unsigned integers, such as INT64\nFLOAT64"
+    "description": "Converts a JSON-formatted STRING value to a JSON value.Arguments:json_string_expr: A JSON-formatted string. For example:\n'{\"class\": {\"students\": [{\"name\": \"Jane\"}]}}'\nwide_number_mode: Optional mandatory-named argument that determines how to\nhandle numbers that cannot be stored in a JSON value without the loss of\nprecision. If used, wide_number_mode must include one of these values:\n\nexact (default): Only accept numbers that can be stored without loss\nof precision. If a number that cannot be stored without loss of\nprecision is encountered, the function throws an error.\nround: If a number that cannot be stored without loss of precision is\nencountered, attempt to round it to a number that can be stored without\nloss of precision. If the number cannot be rounded, the function throws\nan error.\n\nIf a number appears in a JSON object or array, the wide_number_mode\nargument is applied to the number in the object or array.Numbers from the following domains can be stored in JSON without loss of\nprecision:64-bit signed/unsigned integers, such as INT64\nFLOAT64"
   },
   {
     "name": "STRING",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "STRING",
-    "description": "Takes a JSON expression, extracts a JSON string, and returns that value as a SQL\nSTRING. If the expression is SQL NULL, the function returns SQL\nNULL. If the extracted JSON value is not a string, an error is produced.json_expr: JSON. For example:\nJSON '{\"name\": \"sky\", \"color\" : \"blue\"}'"
-  },
-  {
-    "name": "TO_JSON_STRING",
-    "arguments": [],
-    "category": "JSON functions",
-    "return_type": "A JSON-formatted STRING",
-    "description": "Takes a SQL value and returns a JSON-formatted string\nrepresentation of the value. The value must be a supported GoogleSQL\ndata type. You can review the GoogleSQL data types that this function\nsupports and their JSON encodings here.This function supports an optional boolean parameter called pretty_print.\nIf pretty_print is true, the returned value is formatted for easy\nreadability."
+    "description": "Converts a JSON string to a SQL STRING value.Arguments:json_expr: JSON. For example:\nJSON '\"purple\"'\nIf the JSON value is not a string, an error is produced. If the expression\nis SQL NULL, the function returns SQL NULL."
   },
   {
     "name": "TO_JSON",
     "arguments": [],
     "category": "JSON functions",
     "return_type": "JSON",
-    "description": "Takes a SQL value and returns a JSON value. The value\nmust be a supported GoogleSQL data type. You can review the\nGoogleSQL data types that this function supports and their\nJSON encodings here.This function supports an optional mandatory-named argument called\nstringify_wide_numbers.If this argument is TRUE, numeric values outside\nof the FLOAT64 type domain are encoded as strings.\nIf this argument is not used or is FALSE, numeric values outside\nof the FLOAT64 type domain are not encoded\nas strings, but are stored as JSON numbers. If a numerical value cannot be\nstored in JSON without loss of precision, an error is thrown.The following numerical data types are affected by the\nstringify_wide_numbers argument:INT64\nNUMERIC\nBIGNUMERICIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
+    "description": "Converts a SQL value to a JSON value.Arguments:sql_value: The SQL value to convert to a JSON value. You can review the\nGoogleSQL data types that this function supports and their\nJSON encodings here.\nstringify_wide_numbers: Optional mandatory-named argument that is either\nTRUE or FALSE (default).\n\nIf TRUE, numeric values outside of the\nFLOAT64 type domain are encoded as strings.\nIf FALSE (default), numeric values outside of the\nFLOAT64 type domain are not encoded as strings,\nbut are stored as JSON numbers. If a numerical value cannot be stored in\nJSON without loss of precision, an error is thrown.\n\nThe following numerical data types are affected by the\nstringify_wide_numbers argument:\nINT64\nNUMERIC\nBIGNUMERIC\n\nIf one of these numerical data types appears in a container data type\nsuch as an ARRAY or STRUCT, the stringify_wide_numbers argument is\napplied to the numerical data types in the container data type."
+  },
+  {
+    "name": "TO_JSON_STRING",
+    "arguments": [],
+    "category": "JSON functions",
+    "return_type": "A JSON-formatted STRING",
+    "description": "Converts a SQL value to a JSON-formatted STRING value.Arguments:value: A SQL value. You can review the GoogleSQL data types that\nthis function supports and their JSON encodings here.\npretty_print: Optional boolean parameter. If pretty_print is true, the\n`returned value is formatted for easy readability."
   },
   {
     "name": "ARRAY",
@@ -1089,7 +1208,7 @@
     "arguments": [],
     "category": "Date functions",
     "return_type": "DATE",
-    "description": "Returns the current date.This function supports the following arguments:time_zone_expression: A STRING expression that represents a\ntime zone. If no time zone is specified, the\ndefault time zone, UTC, is used. If this expression is\nused and it evaluates to NULL, this function returns NULL."
+    "description": "Returns the current date as a DATE object. Parentheses are optional when\ncalled with no arguments.This function supports the following arguments:time_zone_expression: A STRING expression that represents a\ntime zone. If no time zone is specified, the\ndefault time zone, UTC, is used. If this expression is\nused and it evaluates to NULL, this function returns NULL.The current date is recorded at the start of the query\nstatement which contains this function, not when this specific function is\nevaluated."
   },
   {
     "name": "DATE",
@@ -1159,7 +1278,7 @@
     "arguments": [],
     "category": "Date functions",
     "return_type": "DATE",
-    "description": "Converts a string representation of date to a\nDATE object.format_string contains the format elements\nthat define how date_string is formatted. Each element in\ndate_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in date_string.-- This works because elements on both sides match.\nSELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008')\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_DATE('%Y %A %b %e', 'Thursday Dec 25 2008')\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_DATE('%A %b %e', 'Thursday Dec 25 2008')\n\n-- This works because %F can find all matching elements in date_string.\nSELECT PARSE_DATE('%F', '2000-12-30')When using PARSE_DATE, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the date string. In\naddition, leading and trailing white spaces in the date string are always\nallowed -- even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones."
+    "description": "Converts a string representation of date to a\nDATE object.format_string contains the format elements\nthat define how date_string is formatted. Each element in\ndate_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in date_string.-- This works because elements on both sides match.\nSELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008')\n\n-- This produces an error because the year element is in different locations.\nSELECT PARSE_DATE('%Y %A %b %e', 'Thursday Dec 25 2008')\n\n-- This produces an error because one of the year elements is missing.\nSELECT PARSE_DATE('%A %b %e', 'Thursday Dec 25 2008')\n\n-- This works because %F can find all matching elements in date_string.\nSELECT PARSE_DATE('%F', '2000-12-30')When using PARSE_DATE, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the date string. In\naddition, leading and trailing white spaces in the date string are always\nallowed -- even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones."
   },
   {
     "name": "UNIX_DATE",
@@ -1173,7 +1292,7 @@
     "arguments": [],
     "category": "Datetime functions",
     "return_type": "DATETIME",
-    "description": "Returns the current time as a DATETIME object. Parentheses are optional when\ncalled with no arguments.This function supports an optional time_zone parameter.\nSee Time zone definitions for\ninformation on how to specify a time zone."
+    "description": "Returns the current time as a DATETIME object. Parentheses are optional when\ncalled with no arguments.This function supports an optional time_zone parameter.\nSee Time zone definitions for\ninformation on how to specify a time zone.The current date and time is recorded at the start of the query\nstatement which contains this function, not when this specific function is\nevaluated."
   },
   {
     "name": "DATETIME",
@@ -1236,14 +1355,14 @@
     "arguments": [],
     "category": "Datetime functions",
     "return_type": "DATETIME",
-    "description": "Converts a string representation of a datetime to a\nDATETIME object.format_string contains the format elements\nthat define how datetime_string is formatted. Each element in\ndatetime_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in datetime_string.-- This works because elements on both sides match.\nSELECT PARSE_DATETIME(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_DATETIME(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_DATETIME(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in datetime_string.\nSELECT PARSE_DATETIME(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.PARSE_DATETIME parses string according to the following rules:Unspecified fields. Any unspecified field is initialized from\n1970-01-01 00:00:00.0. For example, if the year is unspecified then it\ndefaults to 1970.\nCase insensitivity. Names, such as Monday and February,\nare case insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the\nDATETIME string. Leading and trailing\nwhite spaces in the DATETIME string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two or more format elements have overlapping\ninformation, the last one generally overrides any earlier ones, with some\nexceptions. For example, both %F and %Y affect the year, so the earlier\nelement overrides the later. See the descriptions\nof %s, %C, and %y in\nSupported Format Elements For DATETIME.\nFormat divergence. %p can be used with am, AM, pm, and PM."
+    "description": "Converts a string representation of a datetime to a\nDATETIME object.format_string contains the format elements\nthat define how datetime_string is formatted. Each element in\ndatetime_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in datetime_string.-- This works because elements on both sides match.\nSELECT PARSE_DATETIME(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This produces an error because the year element is in different locations.\nSELECT PARSE_DATETIME(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This produces an error because one of the year elements is missing.\nSELECT PARSE_DATETIME(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in datetime_string.\nSELECT PARSE_DATETIME(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.PARSE_DATETIME parses string according to the following rules:Unspecified fields. Any unspecified field is initialized from\n1970-01-01 00:00:00.0. For example, if the year is unspecified then it\ndefaults to 1970.\nCase insensitivity. Names, such as Monday and February,\nare case insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the\nDATETIME string. Leading and trailing\nwhite spaces in the DATETIME string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two or more format elements have overlapping\ninformation, the last one generally overrides any earlier ones, with some\nexceptions. For example, both %F and %Y affect the year, so the earlier\nelement overrides the later. See the descriptions\nof %s, %C, and %y in\nSupported Format Elements For DATETIME.\nFormat divergence. %p can be used with am, AM, pm, and PM."
   },
   {
     "name": "CURRENT_TIME",
     "arguments": [],
     "category": "Time functions",
     "return_type": "TIME",
-    "description": "Returns the current time as a TIME object. Parentheses are optional when\ncalled with no arguments.This function supports an optional time_zone parameter.\nSee Time zone definitions for information\non how to specify a time zone."
+    "description": "Returns the current time as a TIME object. Parentheses are optional when\ncalled with no arguments.This function supports an optional time_zone parameter.\nSee Time zone definitions for information\non how to specify a time zone.The current time is recorded at the start of the query\nstatement which contains this function, not when this specific function is\nevaluated."
   },
   {
     "name": "EXTRACT",
@@ -1264,7 +1383,7 @@
     "arguments": [],
     "category": "Time functions",
     "return_type": "TIME",
-    "description": "Converts a string representation of time to a\nTIME object.format_string contains the format elements\nthat define how time_string is formatted. Each element in\ntime_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in time_string.-- This works because elements on both sides match.\nSELECT PARSE_TIME(\"%I:%M:%S\", \"07:30:00\")\n\n-- This doesn't work because the seconds element is in different locations.\nSELECT PARSE_TIME(\"%S:%I:%M\", \"07:30:00\")\n\n-- This doesn't work because one of the seconds elements is missing.\nSELECT PARSE_TIME(\"%I:%M\", \"07:30:00\")\n\n-- This works because %T can find all matching elements in time_string.\nSELECT PARSE_TIME(\"%T\", \"07:30:00\")The format string fully supports most format elements except for %P.When using PARSE_TIME, keep the following in mind:Unspecified fields. Any unspecified field is initialized from\n00:00:00.0. For instance, if seconds is unspecified then it\ndefaults to 00, and so on.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the TIME string. In\naddition, leading and trailing white spaces in the TIME string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation, the last one generally overrides any earlier ones.\nFormat divergence. %p can be used with am, AM, pm, and PM."
+    "description": "Converts a string representation of time to a\nTIME object.format_string contains the format elements\nthat define how time_string is formatted. Each element in\ntime_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in time_string.-- This works because elements on both sides match.\nSELECT PARSE_TIME(\"%I:%M:%S\", \"07:30:00\")\n\n-- This produces an error because the seconds element is in different locations.\nSELECT PARSE_TIME(\"%S:%I:%M\", \"07:30:00\")\n\n-- This produces an error because one of the seconds elements is missing.\nSELECT PARSE_TIME(\"%I:%M\", \"07:30:00\")\n\n-- This works because %T can find all matching elements in time_string.\nSELECT PARSE_TIME(\"%T\", \"07:30:00\")The format string fully supports most format elements except for %P.When using PARSE_TIME, keep the following in mind:Unspecified fields. Any unspecified field is initialized from\n00:00:00.0. For instance, if seconds is unspecified then it\ndefaults to 00, and so on.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the TIME string. In\naddition, leading and trailing white spaces in the TIME string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation, the last one generally overrides any earlier ones.\nFormat divergence. %p can be used with am, AM, pm, and PM."
   },
   {
     "name": "TIME",
@@ -1306,13 +1425,13 @@
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "Not applicable",
-    "description": "CURRENT_TIMESTAMP() produces a TIMESTAMP value that is continuous,\nnon-ambiguous, has exactly 60 seconds per minute and does not repeat values over\nthe leap second. Parentheses are optional.This function handles leap seconds by smearing them across a window of 20 hours\naround the inserted leap second."
+    "description": "Returns the current date and time as a timestamp object. The timestamp is\ncontinuous, non-ambiguous, has exactly 60 seconds per minute and does not repeat\nvalues over the leap second. Parentheses are optional.This function handles leap seconds by smearing them across a window of 20 hours\naround the inserted leap second.The current date and time is recorded at the start of the query\nstatement which contains this function, not when this specific function is\nevaluated."
   },
   {
     "name": "EXTRACT",
     "arguments": [],
     "category": "Timestamp functions",
-    "return_type": "INT64, except when:part is DATE, returns a DATE object.\npart is DATETIME, returns a DATETIME object.\npart is TIME, returns a TIME object.",
+    "return_type": "INT64, except in the following cases:If part is DATE, the function returns a DATE object.",
     "description": "Returns a value that corresponds to the specified part from\na supplied timestamp_expression. This function supports an optional\ntime_zone parameter. See\nTime zone definitions for information\non how to specify a time zone.Allowed part values are:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR\nDAYOFWEEK: Returns values in the range [1,7] with Sunday as the first day of\nof the week.\nDAY\nDAYOFYEAR\nWEEK: Returns the week number of the date in the range [0, 53].  Weeks begin\nwith Sunday, and dates prior to the first Sunday of the year are in week 0.\nWEEK(<WEEKDAY>): Returns the week number of timestamp_expression in the\nrange [0, 53]. Weeks begin on WEEKDAY. datetimes prior to the first\nWEEKDAY of the year are in week 0. Valid values for WEEKDAY are SUNDAY,\nMONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, and SATURDAY.\nISOWEEK: Returns the ISO 8601 week\nnumber of the datetime_expression. ISOWEEKs begin on Monday. Return values\nare in the range [1, 53]. The first ISOWEEK of each ISO year begins on the\nMonday before the first Thursday of the Gregorian calendar year.\nMONTH\nQUARTER\nYEAR\nISOYEAR: Returns the ISO 8601\nweek-numbering year, which is the Gregorian calendar year containing the\nThursday of the week to which date_expression belongs.\nDATE\nDATETIME\nTIMEReturned values truncate lower order time periods. For example, when extracting\nseconds, EXTRACT truncates the millisecond and microsecond values."
   },
   {
@@ -1320,42 +1439,42 @@
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "STRING",
-    "description": "Formats a timestamp according to the specified format_string.See Supported Format Elements For TIMESTAMP\nfor a list of format elements that this function supports."
+    "description": "Formats a timestamp according to the specified format_string.See Format elements for date and time parts\nfor a list of format elements that this function supports."
   },
   {
     "name": "PARSE_TIMESTAMP",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "TIMESTAMP",
-    "description": "Converts a string representation of a timestamp to a\nTIMESTAMP object.format_string contains the format elements\nthat define how timestamp_string is formatted. Each element in\ntimestamp_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in timestamp_string.-- This works because elements on both sides match.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because the year element is in different locations.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This doesn't work because one of the year elements is missing.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in timestamp_string.\nSELECT PARSE_TIMESTAMP(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.When using PARSE_TIMESTAMP, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01\n00:00:00.0. This initialization value uses the time zone specified by the\nfunction's time zone argument, if present. If not, the initialization value\nuses the default time zone, UTC.  For instance, if the year\nis unspecified then it defaults to 1970, and so on.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the timestamp string. In\naddition, leading and trailing white spaces in the timestamp string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones, with some exceptions (see the\ndescriptions of %s, %C, and %y).\nFormat divergence. %p can be used with am, AM, pm, and PM."
+    "description": "Converts a string representation of a timestamp to a\nTIMESTAMP object.format_string contains the format elements\nthat define how timestamp_string is formatted. Each element in\ntimestamp_string must have a corresponding element in format_string. The\nlocation of each element in format_string must match the location of\neach element in timestamp_string.-- This works because elements on both sides match.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S %Y\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This produces an error because the year element is in different locations.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %Y %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This produces an error because one of the year elements is missing.\nSELECT PARSE_TIMESTAMP(\"%a %b %e %I:%M:%S\", \"Thu Dec 25 07:30:00 2008\")\n\n-- This works because %c can find all matching elements in timestamp_string.\nSELECT PARSE_TIMESTAMP(\"%c\", \"Thu Dec 25 07:30:00 2008\")The format string fully supports most format elements, except for\n%P.When using PARSE_TIMESTAMP, keep the following in mind:Unspecified fields. Any unspecified field is initialized from 1970-01-01\n00:00:00.0. This initialization value uses the time zone specified by the\nfunction's time zone argument, if present. If not, the initialization value\nuses the default time zone, UTC.  For instance, if the year\nis unspecified then it defaults to 1970, and so on.\nCase insensitivity. Names, such as Monday, February, and so on, are\ncase insensitive.\nWhitespace. One or more consecutive white spaces in the format string\nmatches zero or more consecutive white spaces in the timestamp string. In\naddition, leading and trailing white spaces in the timestamp string are always\nallowed, even if they are not in the format string.\nFormat precedence. When two (or more) format elements have overlapping\ninformation (for example both %F and %Y affect the year), the last one\ngenerally overrides any earlier ones, with some exceptions (see the\ndescriptions of %s, %C, and %y).\nFormat divergence. %p can be used with am, AM, pm, and PM."
   },
   {
     "name": "STRING",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "STRING",
-    "description": "Converts a timestamp_expression to a STRING data type. Supports an optional\nparameter to specify a time zone. See\nTime zone definitions for information\non how to specify a time zone."
+    "description": "Converts a timestamp to a string. Supports an optional\nparameter to specify a time zone. See\nTime zone definitions for information\non how to specify a time zone."
   },
   {
     "name": "TIMESTAMP",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "TIMESTAMP",
-    "description": "string_expression[, time_zone]: Converts a STRING expression to a TIMESTAMP\ndata type. string_expression must include a\ntimestamp literal.\nIf string_expression includes a time_zone in the timestamp literal, do not\ninclude an explicit time_zone\nargument.\ndate_expression[, time_zone]: Converts a DATE object to a TIMESTAMP\ndata type. The value returned is the earliest timestamp that falls within the\ngiven date.\ndatetime_expression[, time_zone]: Converts a\nDATETIME object to a TIMESTAMP data type.This function supports an optional\nparameter to specify a time zone. If\nno time zone is specified, the default time zone, UTC,\nis used."
+    "description": "string_expression[, time_zone]: Converts a string to a\ntimestamp. string_expression must include a\ntimestamp literal.\nIf string_expression includes a time zone in the timestamp literal, do\nnot include an explicit time_zone\nargument.\ndate_expression[, time_zone]: Converts a date to a timestamp.\nThe value returned is the earliest timestamp that falls within\nthe given date.\ndatetime_expression[, time_zone]: Converts a\ndatetime to a timestamp.This function supports an optional\nparameter to specify a time zone. If\nno time zone is specified, the default time zone, UTC,\nis used."
   },
   {
     "name": "TIMESTAMP_ADD",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "TIMESTAMP",
-    "description": "Adds int64_expression units of date_part to the timestamp, independent of\nany time zone.TIMESTAMP_ADD supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
+    "description": "Adds int64_expression units of date_part to the timestamp, independent of\nany time zone.TIMESTAMP_ADD supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTE parts.\nDAY. Equivalent to 24 HOUR parts."
   },
   {
     "name": "TIMESTAMP_DIFF",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "INT64",
-    "description": "Returns the whole number of specified date_part intervals between two\nTIMESTAMP objects (timestamp_expression_a - timestamp_expression_b).\nIf the first TIMESTAMP is earlier than the second one,\nthe output is negative. Throws an error if the computation overflows the\nresult type, such as if the difference in\nmicroseconds\nbetween the two TIMESTAMP objects would overflow an\nINT64 value.TIMESTAMP_DIFF supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
+    "description": "Returns the whole number of specified date_part intervals between two\ntimestamps (timestamp_expression_a - timestamp_expression_b).\nIf the first timestamp is earlier than the second one,\nthe output is negative. Produces an error if the computation overflows the\nresult type, such as if the difference in\nmicroseconds\nbetween the two timestamps would overflow an\nINT64 value.TIMESTAMP_DIFF supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
   },
   {
     "name": "TIMESTAMP_MICROS",
@@ -1383,14 +1502,14 @@
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "TIMESTAMP",
-    "description": "Subtracts int64_expression units of date_part from the timestamp,\nindependent of any time zone.TIMESTAMP_SUB supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTEs.\nDAY. Equivalent to 24 HOURs."
+    "description": "Subtracts int64_expression units of date_part from the timestamp,\nindependent of any time zone.TIMESTAMP_SUB supports the following values for date_part:MICROSECOND\nMILLISECOND\nSECOND\nMINUTE\nHOUR. Equivalent to 60 MINUTE parts.\nDAY. Equivalent to 24 HOUR parts."
   },
   {
     "name": "TIMESTAMP_TRUNC",
     "arguments": [],
     "category": "Timestamp functions",
     "return_type": "TIMESTAMP",
-    "description": "Truncates a TIMESTAMP value to the granularity of date_time_part.\nThe TIMESTAMP value is always rounded to the beginning of date_time_part,\nwhich can be one of the following:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour.\nDAY: The day in the Gregorian calendar year that contains the\nTIMESTAMP value.\nWEEK: The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the TIMESTAMP value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nTIMESTAMP value.\nQUARTER: The first day of the quarter in the quarter that contains the\nTIMESTAMP value.\nYEAR: The first day of the year in the year that contains the\nTIMESTAMP value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the TIMESTAMP value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year.TIMESTAMP_TRUNC function supports an optional time_zone parameter. This\nparameter applies to the following date_time_part:MINUTE\nHOUR\nDAY\nWEEK\nWEEK(<WEEKDAY>)\nISOWEEK\nMONTH\nQUARTER\nYEAR\nISOYEARUse this parameter if you want to use a time zone other than the\ndefault time zone, UTC, as part of the\ntruncate operation.When truncating a TIMESTAMP to MINUTE\norHOUR, TIMESTAMP_TRUNC determines the civil time of the\nTIMESTAMP in the specified (or default) time zone\nand subtracts the minutes and seconds (when truncating to HOUR) or the seconds\n(when truncating to MINUTE) from that TIMESTAMP.\nWhile this provides intuitive results in most cases, the result is\nnon-intuitive near daylight savings transitions that are not hour aligned."
+    "description": "Truncates a timestamp to the granularity of date_time_part.\nThe timestamp is always rounded to the beginning of date_time_part,\nwhich can be one of the following:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour.\nDAY: The day in the Gregorian calendar year that contains the\nTIMESTAMP value.\nWEEK: The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on Sundays. WEEK is equivalent to\nWEEK(SUNDAY).\nWEEK(WEEKDAY): The first day of the week in the week that contains the\nTIMESTAMP value. Weeks begin on WEEKDAY. WEEKDAY must be one of the\nfollowing: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY,\nor SATURDAY.\nISOWEEK: The first day of the ISO 8601 week in the\nISO week that contains the TIMESTAMP value. The ISO week begins on\nMonday. The first ISO week of each ISO year contains the first Thursday of the\ncorresponding Gregorian calendar year.\nMONTH: The first day of the month in the month that contains the\nTIMESTAMP value.\nQUARTER: The first day of the quarter in the quarter that contains the\nTIMESTAMP value.\nYEAR: The first day of the year in the year that contains the\nTIMESTAMP value.\nISOYEAR: The first day of the ISO 8601 week-numbering year\nin the ISO year that contains the TIMESTAMP value. The ISO year is the\nMonday of the first week whose Thursday belongs to the corresponding\nGregorian calendar year.TIMESTAMP_TRUNC function supports an optional time_zone parameter. This\nparameter applies to the following date_time_part:MINUTE\nHOUR\nDAY\nWEEK\nWEEK(<WEEKDAY>)\nISOWEEK\nMONTH\nQUARTER\nYEAR\nISOYEARUse this parameter if you want to use a time zone other than the\ndefault time zone, UTC, as part of the\ntruncate operation.When truncating a timestamp to MINUTE\norHOUR parts, TIMESTAMP_TRUNC determines the civil time of the\ntimestamp in the specified (or default) time zone\nand subtracts the minutes and seconds (when truncating to HOUR) or the seconds\n(when truncating to MINUTE) from that timestamp.\nWhile this provides intuitive results in most cases, the result is\nnon-intuitive near daylight savings transitions that are not hour-aligned."
   },
   {
     "name": "UNIX_MICROS",
@@ -1446,7 +1565,7 @@
     "arguments": [],
     "category": "Interval functions",
     "return_type": "INTERVAL",
-    "description": "Constructs an INTERVAL object using INT64 values representing the year,\nmonth, day, hour, minute, and second. All arguments are optional with default\nvalue of 0 and can be used as named arguments."
+    "description": "Constructs an INTERVAL object using INT64 values\nrepresenting the year, month, day, hour, minute, and second. All arguments are\noptional, 0 by default, and can be named arguments."
   },
   {
     "name": "S2_CELLIDFROMPOINT",
@@ -1460,7 +1579,7 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "Returns the cell ID as a signed INT64 bit-equivalent to\nunsigned 64-bit integer representation.\nCan return negative cell IDs.\nValid S2 cell levels are 0 to 30.\nmax_cells defaults to 8 if not explicitly specified.\nbuffer should be nonnegative. It defaults to 0.0 meters if not explicitly\nspecified.",
-    "description": "Returns an array of S2 cell ids that cover the input\nGEOGRAPHY. The function returns at most max_cells cells. The optional\narguments min_level and max_level specify minimum and maximum levels for\nreturned S2 cells. The array size is limited by the optional max_cells\nargument. The optional buffer argument specifies a buffering factor in\nmeters; the region being covered is expanded from the extent of the\ninput geography by this amount.This is advanced functionality for interoperability with systems utilizing the\nS2 Geometry Library."
+    "description": "Returns an array of S2 cell IDs that cover the input\nGEOGRAPHY. The function returns at most max_cells cells. The optional\narguments min_level and max_level specify minimum and maximum levels for\nreturned S2 cells. The array size is limited by the optional max_cells\nargument. The optional buffer argument specifies a buffering factor in\nmeters; the region being covered is expanded from the extent of the\ninput geography by this amount.This is advanced functionality for interoperability with systems utilizing the\nS2 Geometry Library."
   },
   {
     "name": "ST_ANGLE",
@@ -1533,18 +1652,18 @@
     "description": "Polygon GEOGRAPHY"
   },
   {
-    "name": "ST_CENTROID_AGG",
-    "arguments": [],
-    "category": "Geography functions",
-    "return_type": "Point GEOGRAPHY",
-    "description": "Computes the centroid of the set of input GEOGRAPHYs as a single point\nGEOGRAPHY.The centroid over the set of input GEOGRAPHYs is the weighted average of the\ncentroid of each individual GEOGRAPHY. Only the GEOGRAPHYs with the highest\ndimension present in the input contribute to the centroid of the entire set.\nFor example, if the input contains both GEOGRAPHYs  with lines and\nGEOGRAPHYs with only points, ST_CENTROID_AGG returns the weighted average\nof the GEOGRAPHYs with lines, since those have maximal dimension. In this\nexample, ST_CENTROID_AGG ignores GEOGRAPHYs with only points when\ncalculating the aggregate centroid.ST_CENTROID_AGG ignores NULL input GEOGRAPHY values.See ST_CENTROID for the non-aggregate version of\nST_CENTROID_AGG and the definition of centroid for an individual GEOGRAPHY\nvalue."
-  },
-  {
     "name": "ST_CENTROID",
     "arguments": [],
     "category": "Geography functions",
     "return_type": "In the unlikely event that the centroid of a GEOGRAPHY cannot be defined by a\nsingle point on the surface of the Earth, a deterministic but otherwise\narbitrary point is returned. This can only happen if the centroid is exactly at\nthe center of the Earth, such as the centroid for a pair of antipodal points,\nand the likelihood of this happening is vanishingly small.",
     "description": "Returns the centroid of the input GEOGRAPHY as a single point GEOGRAPHY.The centroid of a GEOGRAPHY is the weighted average of the centroids of the\nhighest-dimensional components in the GEOGRAPHY. The centroid for components\nin each dimension is defined as follows:The centroid of points is the arithmetic mean of the input coordinates.\nThe centroid of linestrings is the centroid of all the edges weighted by\nlength. The centroid of each edge is the geodesic midpoint of the edge.\nThe centroid of a polygon is its center of mass.If the input GEOGRAPHY is empty, an empty GEOGRAPHY is returned."
+  },
+  {
+    "name": "ST_CENTROID_AGG",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "Point GEOGRAPHY",
+    "description": "Computes the centroid of the set of input GEOGRAPHYs as a single point\nGEOGRAPHY.The centroid over the set of input GEOGRAPHYs is the weighted average of the\ncentroid of each individual GEOGRAPHY. Only the GEOGRAPHYs with the highest\ndimension present in the input contribute to the centroid of the entire set.\nFor example, if the input contains both GEOGRAPHYs  with lines and\nGEOGRAPHYs with only points, ST_CENTROID_AGG returns the weighted average\nof the GEOGRAPHYs with lines, since those have maximal dimension. In this\nexample, ST_CENTROID_AGG ignores GEOGRAPHYs with only points when\ncalculating the aggregate centroid.ST_CENTROID_AGG ignores NULL input GEOGRAPHY values.See ST_CENTROID for the non-aggregate version of\nST_CENTROID_AGG and the definition of centroid for an individual GEOGRAPHY\nvalue."
   },
   {
     "name": "ST_CLOSESTPOINT",
@@ -1712,7 +1831,14 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "STRING",
-    "description": "Returns the Open Geospatial Consortium (OGC) geometry type that\ndescribes the input GEOGRAPHY as a STRING. The OGC geometry type matches the\ntypes that are used in WKT and GeoJSON formats and\nprinted for ST_ASTEXT and ST_ASGEOJSON.\nST_GEOMETRYTYPE returns the OGC geometry type with the \"ST_\" prefix.ST_GEOMETRYTYPE returns the following given the type on the input:Single point geography: Returns ST_Point.\nCollection of only points: Returns ST_MultiPoint.\nSingle linestring geography: Returns ST_LineString.\nCollection of only linestrings: Returns ST_MultiLineString.\nSingle polygon geography: Returns ST_Polygon.\nCollection of only polygons: Returns ST_MultiPolygon.\nCollection with elements of different dimensions, or the input is the empty\ngeography: Returns ST_GeometryCollection."
+    "description": "Returns the Open Geospatial Consortium (OGC) geometry type that\ndescribes the input GEOGRAPHY. The OGC geometry type matches the\ntypes that are used in WKT and GeoJSON formats and\nprinted for ST_ASTEXT and ST_ASGEOJSON.\nST_GEOMETRYTYPE returns the OGC geometry type with the \"ST_\" prefix.ST_GEOMETRYTYPE returns the following given the type on the input:Single point geography: Returns ST_Point.\nCollection of only points: Returns ST_MultiPoint.\nSingle linestring geography: Returns ST_LineString.\nCollection of only linestrings: Returns ST_MultiLineString.\nSingle polygon geography: Returns ST_Polygon.\nCollection of only polygons: Returns ST_MultiPolygon.\nCollection with elements of different dimensions, or the input is the empty\ngeography: Returns ST_GeometryCollection."
+  },
+  {
+    "name": "ST_HAUSDORFFDISTANCE",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "geography_1: A GEOGRAPHY value that represents the first geography.\ngeography_2: A GEOGRAPHY value that represents the second geography.\ndirected: Optional, required named argument that represents the type of\ncomputation to use on the input geographies. If this argument is not\nspecified, directed=>FALSE is used by default.\n\nFALSE: The largest Hausdorff distance found in\n(geography_1, geography_2) and\n(geography_2, geography_1).\nTRUE (default): The Hausdorff distance for\n(geography_1, geography_2).",
+    "description": "Gets the discrete Hausdorff distance, which is the greatest of all\nthe distances from a discrete point in one geography to the closest\ndiscrete point in another geography."
   },
   {
     "name": "ST_INTERIORRINGS",
@@ -1783,6 +1909,13 @@
     "category": "Geography functions",
     "return_type": "DOUBLE",
     "description": "Gets a section of a linestring between the start point and a selected point (a\npoint on the linestring closest to the point_geography argument). Returns the\npercentage that this section represents in the linestring.Details:To select a point on the linestring GEOGRAPHY (linestring_geography),\nthis function takes a point GEOGRAPHY (point_geography) and finds the\nclosest point to it on the linestring.\nIf two points on linestring_geography are an equal distance away from\npoint_geography, it is not guaranteed which one will be selected.\nThe return value is an inclusive value between 0 and 1 (0-100%).\nIf the selected point is the start point on the linestring, function returns\n0 (0%).\nIf the selected point is the end point on the linestring, function returns 1\n(100%).NULL and error handling:Returns NULL if any input argument is NULL.\nReturns an error if linestring_geography is not a linestring or if\npoint_geography is not a point. Use the SAFE prefix\nto obtain NULL for invalid input instead of an error."
+  },
+  {
+    "name": "ST_LINESUBSTRING",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "linestring_geography: The LineString GEOGRAPHY value that represents the\nlinestring from which to extract a segment.\nstart_fraction: FLOAT64 value that represents\nthe starting fraction of the total length of linestring_geography.\nThis must be an inclusive value between 0 and 1 (0-100%).\nend_fraction: FLOAT64 value that represents\nthe ending fraction of the total length of linestring_geography.\nThis must be an inclusive value between 0 and 1 (0-100%).",
+    "description": "Gets a segment of a linestring at a specific starting and ending fraction."
   },
   {
     "name": "ST_MAKELINE",
@@ -1862,18 +1995,18 @@
     "description": "Returns TRUE provided the following two conditions are satisfied:geography_1 intersects geography_2.\nThe interior of geography_1 and the interior of geography_2 are\ndisjoint."
   },
   {
-    "name": "ST_UNION_AGG",
-    "arguments": [],
-    "category": "Geography functions",
-    "return_type": "GEOGRAPHY",
-    "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION_AGG ignores NULL input GEOGRAPHY values.See ST_UNION for the non-aggregate version of ST_UNION_AGG."
-  },
-  {
     "name": "ST_UNION",
     "arguments": [],
     "category": "Geography functions",
     "return_type": "GEOGRAPHY",
     "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION comes in two variants. For the first variant, input must be two\nGEOGRAPHYs. For the second, the input is an\nARRAY of type GEOGRAPHY.For the first variant of ST_UNION, if an input\nGEOGRAPHY is NULL, ST_UNION returns NULL.\nFor the second variant, if the input ARRAY value\nis NULL, ST_UNION returns NULL.\nFor a non-NULL input ARRAY, the union is computed\nand NULL elements are ignored so that they do not affect the output.See ST_UNION_AGG for the aggregate version of ST_UNION."
+  },
+  {
+    "name": "ST_UNION_AGG",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "GEOGRAPHY",
+    "description": "Returns a GEOGRAPHY that represents the point set\nunion of all input GEOGRAPHYs.ST_UNION_AGG ignores NULL input GEOGRAPHY values.See ST_UNION for the non-aggregate version of ST_UNION_AGG."
   },
   {
     "name": "ST_WITHIN",
@@ -1900,7 +2033,7 @@
     "name": "SEARCH",
     "arguments": [],
     "category": "Search functions",
-    "return_type": "search_data: the data to search over, in the form of a STRING literal,\nlist of columns, or table reference. A table reference is evaluated as a\nSTRUCT whose fields are the columns of the table. A column reference must\nbe one of the following types:\n\nARRAY<STRING>\nARRAY<STRUCT>\nJSON\nSTRING\nSTRUCT\nNote:search_data can be any type, but SEARCH will return FALSE for\nall types except those listed here.\nsearch_query: a STRING literal that represents the terms of the search\nquery. If search_query is NULL, an error is returned. If search_query\ncontains no tokens and the text analyzer is LOG_ANALYZER, an error is\nreturned.\njson_scope: This optional mandatory-named argument\ntakes one of the following values to indicate the scope of JSON data to be\nsearched. It has no effect if search_data is not a JSON or does not\ncontain a JSON field.\n\n'JSON_VALUES': Only the JSON values are searched. If json_scope is\nnot provided, this is used by default.\n'JSON_KEYS': Only the JSON keys are searched.\n'JSON_KEYS_AND_VALUES': The JSON keys and values are searched.\nanalyzer: This optional mandatory-named argument takes\none of the following values to indicate the text analyzer to use:\n\n'LOG_ANALYZER': (Default) This text analyzer tokenizes and normalizes\nthe text according to the rules in the following section.\n'NO_OP_ANALYZER': No tokenization or normalization is applied to the\ntext. If the underlying search index uses NO_OP_ANALYZER, then you\nmust set this argument when you search against the table; otherwise, the\nindex is not used.Text analyzer rulesThe search_data and the search_query are run through a text analyzer. The\nanalyzer should match the one used to create the index.The SEARCH function supports two text analyzers: NO_OP_ANALYZER and\nLOG_ANALYZER. Use the NO_OP_ANALYZER when you have pre-processed\ndata that you want to match exactly. No tokenization or\nnormalization is applied to the text. The LOG_ANALYZER modifies text data\nin the following ways:Text is made lowercase. ASCII values greater than 127 are kept as is.\nText is split into individual terms called tokens by the following\ndelimiters:\n\n[ ] < > ( ) { } | ! ; , ' \" * & ? + / : = @ . - $ % \\ _ \\n \\r \\s \\t %21 %26\n%2526 %3B %7C %20 %2B %3D %2520 %5D %5B %3A %0A %2C %28 %29\n\nFor example, Hello|WORLD becomes hello and world.The search_query has the following additional rules for parsing which do not\napply to search_data:Text enclosed in backticks forces an exact match.\n\nFor example, `Hello World` happy days becomes Hello World, happy,\nand days.\nSearch query text enclosed in backticks must match exactly in search_data,\nsubject to the following conditions:\n\nIt appears at the start of search_data or is immediately preceded by a\ndelimiter.\nIt appears at the end of search_data or is immediately followed by a\ndelimiter.\n\nFor example, SEARCH('foo.bar', '`foo.`') returns FALSE because the\ntext enclosed in the backticks foo. is immediately followed by the\ncharacter b in the search data foo.bar, rather than by a delimiter or\nthe end of the string. However, SEARCH('foo..bar', '`foo.`') returns\nTRUE because foo. is immediately followed by the delimiter . in the\nsearch data.\nThe backtick itself can be escaped using a backslash,\nas in \\`foobar\\`.\nThe following are reserved words and must be enclosed\nin backticks:\n\nAND, NOT, OR, IN, and NEAR\nText not enclosed in backticks requires the following\nreserved characters to be escaped by a double backslash\n\\\\:\n\n[ ] < > ( ) { } | ! ' \" * & ? + / : = - \\ ~ ^\nIf the quoted string is preceded by the character r or R, such as\nr\"my\\+string\", then it is treated as a raw string and only a single\nbackslash is required to escape the reserved characters. For more\ninformation about raw strings and escape\nsequences, see String and byte literals.The terms within search_data must contain all query terms, in any order, from\nthe search_query for the function to return TRUE. To perform a cross-field\nsearch, search_data must be a STRUCT, ARRAY, or JSON. Each STRING\nfield of a STRUCT, ARRAY, or JSON is individually searched for the query\nterms. If at least one field includes all search_query tokens, in any order,\nSEARCH returns TRUE. Otherwise it has the following behavior:If at least one field is a NULL STRING, SEARCH returns NULL.\nOtherwise, SEARCH returns FALSE.",
+    "return_type": "search_data: the data to search over, in the form of a STRING literal,\nlist of columns, or table reference. A table reference is evaluated as a\nSTRUCT whose fields are the columns of the table. A column reference must\nbe one of the following types:\n\nARRAY<STRING>\nARRAY<STRUCT>\nJSON\nSTRING\nSTRUCT\nNote:search_data can be any type, but SEARCH will return FALSE for\nall types except those listed here.\nsearch_query: a STRING literal that represents the terms of the search\nquery. If search_query is NULL, an error is returned. If search_query\ncontains no tokens and the text analyzer is LOG_ANALYZER, an error is\nreturned.\njson_scope: This optional mandatory-named argument\ntakes one of the following values to indicate the scope of JSON data to be\nsearched. It has no effect if search_data is not a JSON or does not\ncontain a JSON field.\n\n'JSON_VALUES': Only the JSON values are searched. If json_scope is\nnot provided, this is used by default.\n'JSON_KEYS': Only the JSON keys are searched.\n'JSON_KEYS_AND_VALUES': The JSON keys and values are searched.\nanalyzer: This optional mandatory-named argument takes\none of the following values to indicate the text analyzer to use:\n\n'LOG_ANALYZER': (Default) This text analyzer tokenizes and normalizes\nthe text according to the rules in the following section.\n'NO_OP_ANALYZER': No tokenization or normalization is applied to the\ntext. If the underlying search index uses NO_OP_ANALYZER, then you\nmust set this argument when you search against the table; otherwise, the\nindex is not used.Text analyzer rulesThe search_data and the search_query are run through a text analyzer. The\nanalyzer should match the one used to create the index.The SEARCH function supports two text analyzers: NO_OP_ANALYZER and\nLOG_ANALYZER. Use the NO_OP_ANALYZER when you have pre-processed\ndata that you want to match exactly. No tokenization or\nnormalization is applied to the text. The LOG_ANALYZER modifies text data\nin the following ways:Text is made lowercase. ASCII values greater than 127 are kept as is.\nText is split into individual terms called tokens by the following\ndelimiters:\n\n[ ] < > ( ) { } | ! ; , ' \" * & ? + / : = @ . - $ % \\ _ \\n \\r \\s \\t %21 %26\n%2526 %3B %3b %7C %7c %20 %2B %2b %3D %3d %2520 %5D %5d %5B %5b %3A %3a %0A\n%0a %2C %2c %28 %29\n\nFor example, Hello|WORLD becomes hello and world.The search_query has the following additional rules for parsing which do not\napply to search_data:Text enclosed in backticks forces an exact match.\n\nFor example, `Hello World` happy days becomes Hello World, happy,\nand days.\nSearch query text enclosed in backticks must match exactly in search_data,\nsubject to the following conditions:\n\nIt appears at the start of search_data or is immediately preceded by a\ndelimiter.\nIt appears at the end of search_data or is immediately followed by a\ndelimiter.\n\nFor example, SEARCH('foo.bar', '`foo.`') returns FALSE because the\ntext enclosed in the backticks foo. is immediately followed by the\ncharacter b in the search data foo.bar, rather than by a delimiter or\nthe end of the string. However, SEARCH('foo..bar', '`foo.`') returns\nTRUE because foo. is immediately followed by the delimiter . in the\nsearch data.\nThe backtick itself can be escaped using a backslash,\nas in \\`foobar\\`.\nThe following are reserved words and must be enclosed\nin backticks:\n\nAND, NOT, OR, IN, and NEAR\nText not enclosed in backticks requires the following\nreserved characters to be escaped by a double backslash\n\\\\:\n\n[ ] < > ( ) { } | ! ' \" * & ? + / : = - \\ ~ ^\nIf the quoted string is preceded by the character r or R, such as\nr\"my\\+string\", then it is treated as a raw string and only a single\nbackslash is required to escape the reserved characters. For more\ninformation about raw strings and escape\nsequences, see String and byte literals.The terms within search_data must contain all query terms, in any order, from\nthe search_query for the function to return TRUE. To perform a cross-field\nsearch, search_data must be a STRUCT, ARRAY, or JSON. Each STRING\nfield of a STRUCT, ARRAY, or JSON is individually searched for the query\nterms. If at least one field includes all search_query tokens, in any order,\nSEARCH returns TRUE. Otherwise it has the following behavior:If at least one field is a NULL STRING, SEARCH returns NULL.\nOtherwise, SEARCH returns FALSE.",
     "description": "The SEARCH function checks to see whether a BigQuery table or other\nsearch data contains a set of search terms. It returns TRUE if all tokens in\nthe search_query appear in the search_data based on the tokenization\ndescribed in the text analyzer, and FALSE otherwise. If\nsearch_query is NULL or doesn't contain any search terms, an error is\nthrown.SEARCH is designed to work with\nsearch indexes to\noptimize point lookups. Although the SEARCH function works for columns of a\ntable that are not indexed, its performance will be greatly improved with a\nsearch index."
   },
   {
@@ -1922,7 +2055,7 @@
     "arguments": [],
     "category": "Net functions",
     "return_type": "STRING",
-    "description": "Takes a URL as a STRING and returns the host as a STRING. For best results, URL\nvalues should comply with the format as defined by\nRFC 3986. If the URL value does not comply with RFC 3986 formatting,\nthis function makes a best effort to parse the input and return a relevant\nresult. If the function cannot parse the input, it\nreturns NULL.Note: The function does not perform any normalization."
+    "description": "Takes a URL as a STRING value and returns the host. For best results, URL\nvalues should comply with the format as defined by\nRFC 3986. If the URL value does not comply\nwith RFC 3986 formatting, this function makes a best effort to parse the input\nand return a relevant result. If the function cannot parse the input, it\nreturns NULL.Note:The function does not perform any normalization."
   },
   {
     "name": "NET.IP_FROM_STRING",
@@ -1971,14 +2104,14 @@
     "arguments": [],
     "category": "Net functions",
     "return_type": "STRING",
-    "description": "Takes a URL as a STRING and returns the public suffix (such as com, org,\nor net) as a STRING. A public suffix is an ICANN domain registered at\npublicsuffix.org. For best results, URL values\nshould comply with the format as defined by\nRFC 3986. If the URL value does not comply\nwith RFC 3986 formatting, this function makes a best effort to parse the input\nand return a relevant result.This function returns NULL if any of the following is true:It cannot parse the host from the input;\nThe parsed host contains adjacent dots in the middle (not leading or trailing);\nThe parsed host does not contain any public suffix.Before looking up the public suffix, this function temporarily normalizes the\nhost by converting upper case English letters to lower case and encoding all\nnon-ASCII characters with Punycode.\nThe function then returns the public suffix as part of the original host instead\nof the normalized host.Note: The function does not perform\nUnicode normalization.Note: The public suffix data at\npublicsuffix.org also contains\nprivate domains. This function ignores the private domains.Note: The public suffix data may change over time.\nConsequently, input that produces a NULL result now may produce a non-NULL value\nin the future."
+    "description": "Takes a URL as a STRING value and returns the public suffix (such as com,\norg, or net). A public suffix is an ICANN domain registered at\npublicsuffix.org. For best results, URL values\nshould comply with the format as defined by\nRFC 3986. If the URL value does not comply\nwith RFC 3986 formatting, this function makes a best effort to parse the input\nand return a relevant result.This function returns NULL if any of the following is true:It cannot parse the host from the input;\nThe parsed host contains adjacent dots in the middle\n(not leading or trailing);\nThe parsed host does not contain any public suffix.Before looking up the public suffix, this function temporarily normalizes the\nhost by converting uppercase English letters to lowercase and encoding all\nnon-ASCII characters with Punycode.\nThe function then returns the public suffix as part of the original host instead\nof the normalized host.Note:The function does not perform\nUnicode normalization.Note:The public suffix data at\npublicsuffix.org also contains\nprivate domains. This function ignores the private domains.Note:The public suffix data may change over time. Consequently, input that\nproduces a NULL result now may produce a non-NULL value in the future."
   },
   {
     "name": "NET.REG_DOMAIN",
     "arguments": [],
     "category": "Net functions",
     "return_type": "STRING",
-    "description": "Takes a URL as a STRING and returns the registered or registerable domain (the\npublic suffix plus one preceding label), as a\nSTRING. For best results, URL values should comply with the format as defined by\nRFC 3986. If the URL value does not comply with RFC 3986 formatting,\nthis function makes a best effort to parse the input and return a relevant\nresult.This function returns NULL if any of the following is true:It cannot parse the host from the input;\nThe parsed host contains adjacent dots in the middle (not leading or trailing);\nThe parsed host does not contain any public suffix;\nThe parsed host contains only a public suffix without any preceding label.Before looking up the public suffix, this function temporarily normalizes the\nhost by converting upper case English letters to lowercase and encoding all\nnon-ASCII characters with Punycode. The function then returns\nthe registered or registerable domain as part of the original host instead of\nthe normalized host.Note: The function does not perform\nUnicode normalization.Note: The public suffix data at\npublicsuffix.org also contains\nprivate domains. This function does not treat a private domain as a public\nsuffix. For example, if \"us.com\" is a private domain in the public suffix data,\nNET.REG_DOMAIN(\"foo.us.com\") returns \"us.com\" (the public suffix \"com\" plus\nthe preceding label \"us\") rather than \"foo.us.com\" (the private domain \"us.com\"\nplus the preceding label \"foo\").Note: The public suffix data may change over time.\nConsequently, input that produces a NULL result now may produce a non-NULL value\nin the future."
+    "description": "Takes a URL as a string and returns the registered or registrable domain (the\npublic suffix plus one preceding label), as a\nstring. For best results, URL values should comply with the format as defined by\nRFC 3986. If the URL value does not comply\nwith RFC 3986 formatting, this function makes a best effort to parse the input\nand return a relevant result.This function returns NULL if any of the following is true:It cannot parse the host from the input;\nThe parsed host contains adjacent dots in the middle\n(not leading or trailing);\nThe parsed host does not contain any public suffix;\nThe parsed host contains only a public suffix without any preceding label.Before looking up the public suffix, this function temporarily normalizes the\nhost by converting uppercase English letters to lowercase and encoding all\nnon-ASCII characters with Punycode. The function then\nreturns the registered or registerable domain as part of the original host\ninstead of the normalized host.Note:The function does not perform\nUnicode normalization.Note:The public suffix data at\npublicsuffix.org also contains\nprivate domains. This function does not treat a private domain as a public\nsuffix. For example, if us.com is a private domain in the public suffix data,\nNET.REG_DOMAIN(\"foo.us.com\") returns us.com (the public suffix com plus\nthe preceding label us) rather than foo.us.com (the private domain us.com\nplus the preceding label foo).Note:The public suffix data may change over time.\nConsequently, input that produces a NULL result now may produce a non-NULL\nvalue in the future."
   },
   {
     "name": "NET.SAFE_IP_FROM_STRING",

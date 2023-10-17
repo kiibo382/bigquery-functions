@@ -1,8 +1,10 @@
 [
   "Aggregate functions",
   "Statistical aggregate functions",
+  "Differentially private aggregate functions",
   "Approximate aggregate functions",
   "HyperLogLog++ functions",
+  "DLP encryption functions",
   "Numbering functions",
   "Bit functions",
   "Conversion functions",
