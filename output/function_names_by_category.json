@@ -1,4 +1,22 @@
 {
+  "AEAD": [
+    "AEAD.DECRYPT_BYTES",
+    "AEAD.DECRYPT_STRING",
+    "AEAD.ENCRYPT",
+    "DETERMINISTIC_DECRYPT_BYTES",
+    "DETERMINISTIC_DECRYPT_STRING",
+    "DETERMINISTIC_ENCRYPT",
+    "KEYS.ADD_KEY_FROM_RAW_BYTES",
+    "KEYS.KEYSET_CHAIN",
+    "KEYS.KEYSET_FROM_JSON",
+    "KEYS.KEYSET_LENGTH",
+    "KEYS.KEYSET_TO_JSON",
+    "KEYS.NEW_KEYSET",
+    "KEYS.NEW_WRAPPED_KEYSET",
+    "KEYS.REWRAP_KEYSET",
+    "KEYS.ROTATE_KEYSET",
+    "KEYS.ROTATE_WRAPPED_KEYSET"
+  ],
   "Aggregate": [
     "ANY_VALUE",
     "ARRAY_AGG",
@@ -19,178 +37,11 @@
     "STRING_AGG",
     "SUM"
   ],
-  "Statistical": [
-    "CORR",
-    "COVAR_POP",
-    "COVAR_SAMP",
-    "STDDEV_POP",
-    "STDDEV_SAMP",
-    "VAR_POP",
-    "VAR_SAMP"
-  ],
   "Approximate": [
     "APPROX_COUNT_DISTINCT",
     "APPROX_QUANTILES",
     "APPROX_TOP_COUNT",
     "APPROX_TOP_SUM"
-  ],
-  "HyperLogLog": [
-    "HLL_COUNT.EXTRACT",
-    "HLL_COUNT.INIT",
-    "HLL_COUNT.MERGE",
-    "HLL_COUNT.MERGE_PARTIAL"
-  ],
-  "DLP": [
-    "DLP_DETERMINISTIC_ENCRYPT",
-    "DLP_DETERMINISTIC_DECRYPT",
-    "DLP_KEY_CHAIN"
-  ],
-  "Numbering": [
-    "CUME_DIST",
-    "DENSE_RANK",
-    "NTILE",
-    "PERCENT_RANK",
-    "RANK",
-    "ROW_NUMBER"
-  ],
-  "Bit": [
-    "BIT_COUNT"
-  ],
-  "Conversion": [
-    "CAST",
-    "PARSE_BIGNUMERIC",
-    "PARSE_NUMERIC"
-  ],
-  "Mathematical": [
-    "ABS",
-    "CBRT",
-    "CEIL",
-    "COSINE_DISTANCE",
-    "COT",
-    "COTH",
-    "CSC",
-    "CSCH",
-    "DIV",
-    "EXP",
-    "EUCLIDEAN_DISTANCE",
-    "FLOOR",
-    "GREATEST",
-    "LEAST",
-    "LN",
-    "LOG",
-    "LOG10",
-    "MOD",
-    "POW",
-    "RANGE_BUCKET",
-    "ROUND",
-    "SAFE_ADD",
-    "SAFE_DIVIDE",
-    "SAFE_MULTIPLY",
-    "SAFE_NEGATE",
-    "SAFE_SUBTRACT",
-    "SEC",
-    "SECH",
-    "SIGN",
-    "SQRT",
-    "TRUNC"
-  ],
-  "Navigation": [
-    "FIRST_VALUE",
-    "LAG",
-    "LAST_VALUE",
-    "LEAD",
-    "NTH_VALUE",
-    "PERCENTILE_CONT",
-    "PERCENTILE_DISC"
-  ],
-  "Hash": [
-    "FARM_FINGERPRINT",
-    "MD5",
-    "SHA1",
-    "SHA256",
-    "SHA512"
-  ],
-  "String": [
-    "ASCII",
-    "BYTE_LENGTH",
-    "CHAR_LENGTH",
-    "CHARACTER_LENGTH",
-    "CHR",
-    "CODE_POINTS_TO_BYTES",
-    "CODE_POINTS_TO_STRING",
-    "COLLATE",
-    "CONCAT",
-    "CONTAINS_SUBSTR",
-    "EDIT_DISTANCE",
-    "ENDS_WITH",
-    "FORMAT",
-    "FROM_BASE32",
-    "FROM_BASE64",
-    "FROM_HEX",
-    "INITCAP",
-    "INSTR",
-    "LEFT",
-    "LENGTH",
-    "LOWER",
-    "LPAD",
-    "LTRIM",
-    "NORMALIZE",
-    "NORMALIZE_AND_CASEFOLD",
-    "REGEXP_CONTAINS",
-    "REGEXP_EXTRACT",
-    "REGEXP_EXTRACT_ALL",
-    "REGEXP_INSTR",
-    "REGEXP_REPLACE",
-    "REGEXP_SUBSTR",
-    "REPEAT",
-    "REPLACE",
-    "REVERSE",
-    "RIGHT",
-    "RPAD",
-    "RTRIM",
-    "SAFE_CONVERT_BYTES_TO_STRING",
-    "SOUNDEX",
-    "SPLIT",
-    "STARTS_WITH",
-    "STRPOS",
-    "SUBSTR",
-    "TO_BASE32",
-    "TO_BASE64",
-    "TO_CODE_POINTS",
-    "TO_HEX",
-    "TRANSLATE",
-    "TRIM",
-    "UNICODE",
-    "UPPER"
-  ],
-  "JSON": [
-    "BOOL",
-    "FLOAT64",
-    "INT64",
-    "JSON_ARRAY",
-    "JSON_ARRAY_APPEND",
-    "JSON_ARRAY_INSERT",
-    "JSON_EXTRACT",
-    "JSON_EXTRACT_ARRAY",
-    "JSON_EXTRACT_SCALAR",
-    "JSON_EXTRACT_STRING_ARRAY",
-    "JSON_OBJECT",
-    "JSON_QUERY",
-    "JSON_QUERY_ARRAY",
-    "JSON_REMOVE",
-    "JSON_SET",
-    "JSON_STRIP_NULLS",
-    "JSON_TYPE",
-    "JSON_VALUE",
-    "JSON_VALUE_ARRAY",
-    "LAX_BOOL",
-    "LAX_FLOAT64",
-    "LAX_INT64",
-    "LAX_STRING",
-    "PARSE_JSON",
-    "STRING",
-    "TO_JSON",
-    "TO_JSON_STRING"
   ],
   "Array": [
     "ARRAY",
@@ -201,6 +52,14 @@
     "GENERATE_ARRAY",
     "GENERATE_DATE_ARRAY",
     "GENERATE_TIMESTAMP_ARRAY"
+  ],
+  "Bit": [
+    "BIT_COUNT"
+  ],
+  "Conversion": [
+    "CAST",
+    "PARSE_BIGNUMERIC",
+    "PARSE_NUMERIC"
   ],
   "Date": [
     "CURRENT_DATE",
@@ -228,41 +87,13 @@
     "LAST_DAY",
     "PARSE_DATETIME"
   ],
-  "Time": [
-    "CURRENT_TIME",
-    "EXTRACT",
-    "FORMAT_TIME",
-    "PARSE_TIME",
-    "TIME",
-    "TIME_ADD",
-    "TIME_DIFF",
-    "TIME_SUB",
-    "TIME_TRUNC"
+  "Debugging": [
+    "ERROR"
   ],
-  "Timestamp": [
-    "CURRENT_TIMESTAMP",
-    "EXTRACT",
-    "FORMAT_TIMESTAMP",
-    "PARSE_TIMESTAMP",
-    "STRING",
-    "TIMESTAMP",
-    "TIMESTAMP_ADD",
-    "TIMESTAMP_DIFF",
-    "TIMESTAMP_MICROS",
-    "TIMESTAMP_MILLIS",
-    "TIMESTAMP_SECONDS",
-    "TIMESTAMP_SUB",
-    "TIMESTAMP_TRUNC",
-    "UNIX_MICROS",
-    "UNIX_MILLIS",
-    "UNIX_SECONDS"
-  ],
-  "Interval": [
-    "EXTRACT",
-    "JUSTIFY_DAYS",
-    "JUSTIFY_HOURS",
-    "JUSTIFY_INTERVAL",
-    "MAKE_INTERVAL"
+  "DLP": [
+    "DLP_DETERMINISTIC_ENCRYPT",
+    "DLP_DETERMINISTIC_DECRYPT",
+    "DLP_KEY_CHAIN"
   ],
   "Geography": [
     "S2_CELLIDFROMPOINT",
@@ -332,14 +163,96 @@
     "ST_X",
     "ST_Y"
   ],
-  "Search": [
-    "SEARCH"
+  "Hash": [
+    "FARM_FINGERPRINT",
+    "MD5",
+    "SHA1",
+    "SHA256",
+    "SHA512"
   ],
-  "Security": [
-    "SESSION_USER"
+  "HyperLogLog": [
+    "HLL_COUNT.EXTRACT",
+    "HLL_COUNT.INIT",
+    "HLL_COUNT.MERGE",
+    "HLL_COUNT.MERGE_PARTIAL"
   ],
-  "Utility": [
-    "GENERATE_UUID"
+  "Interval": [
+    "EXTRACT",
+    "JUSTIFY_DAYS",
+    "JUSTIFY_HOURS",
+    "JUSTIFY_INTERVAL",
+    "MAKE_INTERVAL"
+  ],
+  "JSON": [
+    "BOOL",
+    "FLOAT64",
+    "INT64",
+    "JSON_ARRAY",
+    "JSON_ARRAY_APPEND",
+    "JSON_ARRAY_INSERT",
+    "JSON_EXTRACT",
+    "JSON_EXTRACT_ARRAY",
+    "JSON_EXTRACT_SCALAR",
+    "JSON_EXTRACT_STRING_ARRAY",
+    "JSON_OBJECT",
+    "JSON_QUERY",
+    "JSON_QUERY_ARRAY",
+    "JSON_REMOVE",
+    "JSON_SET",
+    "JSON_STRIP_NULLS",
+    "JSON_TYPE",
+    "JSON_VALUE",
+    "JSON_VALUE_ARRAY",
+    "LAX_BOOL",
+    "LAX_FLOAT64",
+    "LAX_INT64",
+    "LAX_STRING",
+    "PARSE_JSON",
+    "STRING",
+    "TO_JSON",
+    "TO_JSON_STRING"
+  ],
+  "Mathematical": [
+    "ABS",
+    "CBRT",
+    "CEIL",
+    "COSINE_DISTANCE",
+    "COT",
+    "COTH",
+    "CSC",
+    "CSCH",
+    "DIV",
+    "EXP",
+    "EUCLIDEAN_DISTANCE",
+    "FLOOR",
+    "GREATEST",
+    "LEAST",
+    "LN",
+    "LOG",
+    "LOG10",
+    "MOD",
+    "POW",
+    "RANGE_BUCKET",
+    "ROUND",
+    "SAFE_ADD",
+    "SAFE_DIVIDE",
+    "SAFE_MULTIPLY",
+    "SAFE_NEGATE",
+    "SAFE_SUBTRACT",
+    "SEC",
+    "SECH",
+    "SIGN",
+    "SQRT",
+    "TRUNC"
+  ],
+  "Navigation": [
+    "FIRST_VALUE",
+    "LAG",
+    "LAST_VALUE",
+    "LEAD",
+    "NTH_VALUE",
+    "PERCENTILE_CONT",
+    "PERCENTILE_DISC"
   ],
   "Net": [
     "NET.HOST",
@@ -353,28 +266,115 @@
     "NET.REG_DOMAIN",
     "NET.SAFE_IP_FROM_STRING"
   ],
-  "Debugging": [
-    "ERROR"
+  "Numbering": [
+    "CUME_DIST",
+    "DENSE_RANK",
+    "NTILE",
+    "PERCENT_RANK",
+    "RANK",
+    "ROW_NUMBER"
   ],
-  "AEAD": [
-    "AEAD.DECRYPT_BYTES",
-    "AEAD.DECRYPT_STRING",
-    "AEAD.ENCRYPT",
-    "DETERMINISTIC_DECRYPT_BYTES",
-    "DETERMINISTIC_DECRYPT_STRING",
-    "DETERMINISTIC_ENCRYPT",
-    "KEYS.ADD_KEY_FROM_RAW_BYTES",
-    "KEYS.KEYSET_CHAIN",
-    "KEYS.KEYSET_FROM_JSON",
-    "KEYS.KEYSET_LENGTH",
-    "KEYS.KEYSET_TO_JSON",
-    "KEYS.NEW_KEYSET",
-    "KEYS.NEW_WRAPPED_KEYSET",
-    "KEYS.REWRAP_KEYSET",
-    "KEYS.ROTATE_KEYSET",
-    "KEYS.ROTATE_WRAPPED_KEYSET"
+  "Search": [
+    "SEARCH"
   ],
-  "Built_in": [
+  "Security": [
+    "SESSION_USER"
+  ],
+  "Statistical": [
+    "CORR",
+    "COVAR_POP",
+    "COVAR_SAMP",
+    "STDDEV_POP",
+    "STDDEV_SAMP",
+    "VAR_POP",
+    "VAR_SAMP"
+  ],
+  "String": [
+    "ASCII",
+    "BYTE_LENGTH",
+    "CHAR_LENGTH",
+    "CHARACTER_LENGTH",
+    "CHR",
+    "CODE_POINTS_TO_BYTES",
+    "CODE_POINTS_TO_STRING",
+    "COLLATE",
+    "CONCAT",
+    "CONTAINS_SUBSTR",
+    "EDIT_DISTANCE",
+    "ENDS_WITH",
+    "FORMAT",
+    "FROM_BASE32",
+    "FROM_BASE64",
+    "FROM_HEX",
+    "INITCAP",
+    "INSTR",
+    "LEFT",
+    "LENGTH",
+    "LOWER",
+    "LPAD",
+    "LTRIM",
+    "NORMALIZE",
+    "NORMALIZE_AND_CASEFOLD",
+    "REGEXP_CONTAINS",
+    "REGEXP_EXTRACT",
+    "REGEXP_EXTRACT_ALL",
+    "REGEXP_INSTR",
+    "REGEXP_REPLACE",
+    "REGEXP_SUBSTR",
+    "REPEAT",
+    "REPLACE",
+    "REVERSE",
+    "RIGHT",
+    "RPAD",
+    "RTRIM",
+    "SAFE_CONVERT_BYTES_TO_STRING",
+    "SOUNDEX",
+    "SPLIT",
+    "STARTS_WITH",
+    "STRPOS",
+    "SUBSTR",
+    "TO_BASE32",
+    "TO_BASE64",
+    "TO_CODE_POINTS",
+    "TO_HEX",
+    "TRANSLATE",
+    "TRIM",
+    "UNICODE",
+    "UPPER"
+  ],
+  "Table": [
     "EXTERNAL_OBJECT_TRANSFORM"
+  ],
+  "Time": [
+    "CURRENT_TIME",
+    "EXTRACT",
+    "FORMAT_TIME",
+    "PARSE_TIME",
+    "TIME",
+    "TIME_ADD",
+    "TIME_DIFF",
+    "TIME_SUB",
+    "TIME_TRUNC"
+  ],
+  "Timestamp": [
+    "CURRENT_TIMESTAMP",
+    "EXTRACT",
+    "FORMAT_TIMESTAMP",
+    "PARSE_TIMESTAMP",
+    "STRING",
+    "TIMESTAMP",
+    "TIMESTAMP_ADD",
+    "TIMESTAMP_DIFF",
+    "TIMESTAMP_MICROS",
+    "TIMESTAMP_MILLIS",
+    "TIMESTAMP_SECONDS",
+    "TIMESTAMP_SUB",
+    "TIMESTAMP_TRUNC",
+    "UNIX_MICROS",
+    "UNIX_MILLIS",
+    "UNIX_SECONDS"
+  ],
+  "Utility": [
+    "GENERATE_UUID"
   ]
 }
