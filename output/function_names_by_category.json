@@ -144,6 +144,7 @@
     "ST_ISEMPTY",
     "ST_ISRING",
     "ST_LENGTH",
+    "ST_LINEINTERPOLATEPOINT",
     "ST_LINELOCATEPOINT",
     "ST_LINESUBSTRING",
     "ST_MAKELINE",
@@ -274,8 +275,18 @@
     "RANK",
     "ROW_NUMBER"
   ],
+  "Range": [
+    "GENERATE_RANGE_ARRAY",
+    "RANGE",
+    "RANGE_CONTAINS",
+    "RANGE_END",
+    "RANGE_INTERSECT",
+    "RANGE_OVERLAPS",
+    "RANGE_START"
+  ],
   "Search": [
-    "SEARCH"
+    "SEARCH",
+    "VECTOR_SEARCH"
   ],
   "Security": [
     "SESSION_USER"
@@ -354,7 +365,11 @@
     "TIME_ADD",
     "TIME_DIFF",
     "TIME_SUB",
-    "TIME_TRUNC"
+    "TIME_TRUNC",
+    "DATE_BUCKET",
+    "DATETIME_BUCKET",
+    "GAP_FILL",
+    "TIMESTAMP_BUCKET"
   ],
   "Timestamp": [
     "CURRENT_TIMESTAMP",

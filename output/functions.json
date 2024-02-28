@@ -172,7 +172,7 @@
     "arguments": [],
     "category": "Aggregate functions",
     "return_type": "BOOL",
-    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...)\nis not supported. This would not be useful: there is only one distinct value of\nTRUE.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls."
+    "description": "Returns the count of TRUE values for expression. Returns 0 if there are\nzero input rows, or if expression evaluates to FALSE or NULL for all rows.Since expression must be a BOOL, the form COUNTIF(DISTINCT ...) is\ngenerally not useful: there is only one distinct value of TRUE. So\nCOUNTIF(DISTINCT ...) will return 1 if expression evaluates to TRUE for\none or more input rows, or 0 otherwise.\nUsually when someone wants to combine COUNTIF and DISTINCT, they\nwant to count the number of distinct values of an expression for which a certain\ncondition is satisfied. One recipe to achieve this is the following:COUNT(DISTINCT IF(condition, expression, NULL))Note that this uses COUNT, not COUNTIF; the IF part has been moved inside.\nTo learn more, see the examples for COUNT.To learn more about the optional aggregate clauses that you can pass\ninto this function, see\nAggregate function calls.This function can be used with the\nAGGREGATION_THRESHOLD clause.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
     "name": "GROUPING",
@@ -606,7 +606,7 @@
     "arguments": [],
     "category": "Geography functions",
     "return_type": "Polygon GEOGRAPHY",
-    "description": "Returns a GEOGRAPHY that represents the buffer around the input GEOGRAPHY.\nThis function is similar to ST_BUFFERWITHTOLERANCE,\nbut you specify the number of segments instead of providing tolerance to\ndetermine how much the resulting geography can deviate from the ideal\nbuffer radius.geography: The input GEOGRAPHY to encircle with the buffer radius.\nbuffer_radius: DOUBLE that represents the radius of the buffer\naround the input geography. The radius is in meters. Note that polygons\ncontract when buffered with a negative buffer_radius. Polygon shells and\nholes that are contracted to a point are discarded.\nnum_seg_quarter_circle: (Optional) DOUBLE specifies the number of\nsegments that are used to approximate a quarter circle. The default value is\n8.0. Naming this argument is optional.\nendcap: (Optional) STRING allows you to specify one of two endcap\nstyles: ROUND and FLAT. The default value is ROUND. This option only\naffects the endcaps of buffered linestrings.\nside: (Optional) STRING allows you to specify one of three possibilities\nfor lines: BOTH, LEFT, and RIGHT. The default is BOTH. This option\nonly affects how linestrings are buffered.\nuse_spheroid: (Optional) BOOL determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on\nthe surface of a perfect sphere. The use_spheroid parameter\ncurrently only supports the value FALSE. The default value of\nuse_spheroid is FALSE."
+    "description": "Returns a GEOGRAPHY that represents the buffer around the input GEOGRAPHY.\nThis function is similar to ST_BUFFERWITHTOLERANCE,\nbut you specify the number of segments instead of providing tolerance to\ndetermine how much the resulting geography can deviate from the ideal\nbuffer radius.geography: The input GEOGRAPHY to encircle with the buffer radius.\nbuffer_radius: FLOAT64 that represents the radius of the\nbuffer around the input geography. The radius is in meters. Note that\npolygons contract when buffered with a negative buffer_radius. Polygon\nshells and holes that are contracted to a point are discarded.\nnum_seg_quarter_circle: (Optional) FLOAT64 specifies the\nnumber of segments that are used to approximate a quarter circle. The\ndefault value is 8.0. Naming this argument is optional.\nendcap: (Optional) STRING allows you to specify one of two endcap\nstyles: ROUND and FLAT. The default value is ROUND. This option only\naffects the endcaps of buffered linestrings.\nside: (Optional) STRING allows you to specify one of three possibilities\nfor lines: BOTH, LEFT, and RIGHT. The default is BOTH. This option\nonly affects how linestrings are buffered.\nuse_spheroid: (Optional) BOOL determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on\nthe surface of a perfect sphere. The use_spheroid parameter\ncurrently only supports the value FALSE. The default value of\nuse_spheroid is FALSE."
   },
   {
     "name": "ST_BUFFERWITHTOLERANCE",
@@ -868,10 +868,17 @@
     "description": "Returns the total length in meters of the lines in the input\nGEOGRAPHY.If geography_expression is a point or a polygon, returns zero. If\ngeography_expression is a collection, returns the length of the lines in the\ncollection; if the collection does not contain lines, returns zero.The optional use_spheroid parameter determines how this function measures\ndistance. If use_spheroid is FALSE, the function measures distance on the\nsurface of a perfect sphere.The use_spheroid parameter currently only supports\nthe value FALSE. The default value of use_spheroid is FALSE."
   },
   {
+    "name": "ST_LINEINTERPOLATEPOINT",
+    "arguments": [],
+    "category": "Geography functions",
+    "return_type": "linestring_geography: A linestring GEOGRAPHY on which the target point\nis located.\nfraction: A FLOAT64 value that represents a fraction\nalong the linestring GEOGRAPHY where the target point is located.\nThis should be an inclusive value between 0 (start of the\nlinestring) and 1 (end of the linestring).",
+    "description": "Gets a point at a specific fraction in a linestring GEOGRAPHY\nvalue."
+  },
+  {
     "name": "ST_LINELOCATEPOINT",
     "arguments": [],
     "category": "Geography functions",
-    "return_type": "DOUBLE",
+    "return_type": "FLOAT64",
     "description": "Gets a section of a linestring between the start point and a selected point (a\npoint on the linestring closest to the point_geography argument). Returns the\npercentage that this section represents in the linestring.Details:To select a point on the linestring GEOGRAPHY (linestring_geography),\nthis function takes a point GEOGRAPHY (point_geography) and finds the\nclosest point to it on the linestring.\nIf two points on linestring_geography are an equal distance away from\npoint_geography, it is not guaranteed which one will be selected.\nThe return value is an inclusive value between 0 and 1 (0-100%).\nIf the selected point is the start point on the linestring, function returns\n0 (0%).\nIf the selected point is the end point on the linestring, function returns 1\n(100%).NULL and error handling:Returns NULL if any input argument is NULL.\nReturns an error if linestring_geography is not a linestring or if\npoint_geography is not a point. Use the SAFE prefix\nto obtain NULL for invalid input instead of an error."
   },
   {
@@ -1235,21 +1242,21 @@
     "name": "LAX_FLOAT64",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "From JSON type\n    To SQL FLOAT64\n  boolean\n    NULL\n  string\n    If the JSON string represents a JSON number, parses it as a\n      BIGNUMERIC value, and then safe casts the result as a\n      FLOAT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as a\n      FLOAT64 value.\n      Large JSON numbers are rounded.\n  other type or null\n    NULL",
+    "return_type": "From JSON type\n    To SQL FLOAT64\n  boolean\n    NULL\n  string\n    If the JSON string represents a JSON number, parses it as\n      a BIGNUMERIC value, and then safe casts the result as a\n      FLOAT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as a\n      FLOAT64 value.\n      Large JSON numbers are rounded.\n  other type or null\n    NULL",
     "description": "Attempts to convert a JSON value to a\nSQL FLOAT64 value.Arguments:json_expr: JSON. For example:\nJSON '9.8'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
   },
   {
     "name": "LAX_INT64",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "From JSON type\n    To SQL INT64\n  boolean\n    If the JSON boolean is true, returns 1.\n      If false, returns 0.\n  string\n    If the JSON string represents a JSON number, parses it as a\n      BIGNUMERIC value, and then safe casts the results as an\n      INT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as an INT64 value.\n      If the JSON number can't be converted, returns NULL.\n  other type or null\n    NULL",
+    "return_type": "From JSON type\n    To SQL INT64\n  boolean\n    If the JSON boolean is true, returns 1.\n      If false, returns 0.\n  string\n    If the JSON string represents a JSON number, parses it as\n      a BIGNUMERIC value, and then safe casts the results as an\n      INT64 value.\n      If the JSON string can't be converted, returns NULL.\n  number\n    Casts the JSON number as an INT64 value.\n      If the JSON number can't be converted, returns NULL.\n  other type or null\n    NULL",
     "description": "Attempts to convert a JSON value to a SQL INT64 value.Arguments:json_expr: JSON. For example:\nJSON '999'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
   },
   {
     "name": "LAX_STRING",
     "arguments": [],
     "category": "JSON functions",
-    "return_type": "From JSON type\n    To SQL STRING\n  boolean\n    If the JSON boolean is true, returns 'true'.\n      If false, returns 'false'.\n  string\n    Returns the JSON string as a STRINGvalue.\n  number\n    Returns the JSON number as a STRINGvalue.\n  other type or null\n    NULL",
+    "return_type": "From JSON type\n    To SQL STRING\n  boolean\n    If the JSON boolean is true, returns 'true'.\n      If false, returns 'false'.\n  string\n    Returns the JSON string as a STRING value.\n  number\n    Returns the JSON number as a STRING value.\n  other type or null\n    NULL",
     "description": "Attempts to convert a JSON value to a SQL STRING value.Arguments:json_expr: JSON. For example:\nJSON '\"name\"'Details:If json_expr is SQL NULL, the function returns SQL NULL.\nSee the conversion rules in the next section for additional NULL handling."
   },
   {
@@ -1305,7 +1312,7 @@
     "name": "COSINE_DISTANCE",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "vector1: The first vector.\nvector2: The second vector.",
+    "return_type": "vector1: A vector that is represented by an\nARRAY<T> value or a sparse vector that is\nrepresented by an ARRAY<STRUCT<dimension,magnitude>> value.\nvector2: A vector that is represented by an\nARRAY<T> value or a sparse vector that is\nrepresented by an ARRAY<STRUCT<dimension,magnitude>> value.",
     "description": "Computes the cosine distance between two vectors."
   },
   {
@@ -1354,7 +1361,7 @@
     "name": "EUCLIDEAN_DISTANCE",
     "arguments": [],
     "category": "Mathematical functions",
-    "return_type": "vector1: The first vector.\nvector2: The second vector.",
+    "return_type": "vector1: A vector that is represented by an\nARRAY<T> value or a sparse vector that is\nrepresented by an ARRAY<STRUCT<dimension,magnitude>> value.\nvector2: A vector that is represented by an\nARRAY<T> value or a sparse vector that is\nrepresented by an ARRAY<STRUCT<dimension,magnitude>> value.",
     "description": "Computes the Euclidean distance between two vectors."
   },
   {
@@ -1659,11 +1666,67 @@
     "description": "Does not require the ORDER BY clause. Returns the sequential\nrow ordinal (1-based) of each row for each ordered partition. If the\nORDER BY clause is unspecified then the result is\nnon-deterministic.To learn more about the OVER clause and how to use it, see\nWindow function calls."
   },
   {
+    "name": "GENERATE_RANGE_ARRAY",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "range_to_split: The RANGE<T> value to split.\nstep_interval: The INTERVAL value, which determines the maximum size of\neach subrange in the resulting array. An\ninterval single date and time part\nis supported, but an interval range of date and time parts is not.\n\nIf range_to_split is RANGE<DATE>, these interval\ndate parts are supported: YEAR to DAY.\nIf range_to_split is RANGE<DATETIME>, these interval\ndate and time parts are supported: YEAR to SECOND.\nIf range_to_split is RANGE<TIMESTAMP>, these interval\ndate and time parts are supported: DAY to SECOND.\ninclude_last_partial_range: A BOOL value, which determines whether or\nnot to include the last subrange if it's a partial subrange.\nIf this argument is not specified, the default value is TRUE.\n\nTRUE (default): The last subrange is included, even if it's\nsmaller than step_interval.\nFALSE: Exclude the last subrange if it's smaller than\nstep_interval.",
+    "description": "Splits a range into an array of subranges."
+  },
+  {
+    "name": "RANGE",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "lower_bound: The range starts from this value. This can be a\nDATE, DATETIME, or TIMESTAMP value. If this value is NULL, the range\ndoesn't include a lower bound.\nupper_bound: The range ends before this value. This can be a\nDATE, DATETIME, or TIMESTAMP value. If this value is NULL, the range\ndoesn't include an upper bound.",
+    "description": "Constructs a range of DATE, DATETIME, or\nTIMESTAMP values."
+  },
+  {
+    "name": "RANGE_CONTAINS",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "outer_range: The RANGE<T> value to search within.\ninner_range: The RANGE<T> value to search for in outer_range.",
+    "description": "Checks if the inner range is in the outer range."
+  },
+  {
+    "name": "RANGE_END",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "range_to_check: The RANGE<T> value.",
+    "description": "Gets the upper bound of a range."
+  },
+  {
+    "name": "RANGE_INTERSECT",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "range_a: The first RANGE<T> value.\nrange_b: The second RANGE<T> value.",
+    "description": "Gets a segment of two ranges that intersect."
+  },
+  {
+    "name": "RANGE_OVERLAPS",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "range_a: The first RANGE<T> value.\nrange_b: The second RANGE<T> value.",
+    "description": "Checks if two ranges overlap."
+  },
+  {
+    "name": "RANGE_START",
+    "arguments": [],
+    "category": "Range functions",
+    "return_type": "range_to_check: The RANGE<T> value.",
+    "description": "Gets the lower bound of a range."
+  },
+  {
     "name": "SEARCH",
     "arguments": [],
     "category": "Search functions",
-    "return_type": "data_to_search: The data to search over. The value can be:\n\nAny GoogleSQL data type literal\nA list of columns\nA table reference\nA column of any type\n\nA table reference is evaluated as a STRUCT whose fields are the columns of\nthe table. data_to_search can be any type, but SEARCH will return\nFALSE for all types except those listed here:\n\nARRAY<STRING>\nARRAY<STRUCT>\nJSON\nSTRING\nSTRUCT\n\nYou can search for string literals in columns of the preceding types.\nFor additional rules, see Search data rules.\nsearch_query: a STRING literal, or a STRING constant expression that\nrepresents the terms of the search query. If search_query is NULL, an\nerror is returned. If search_query contains no tokens and the text\nanalyzer is LOG_ANALYZER, an error is returned.\njson_scope: Optional mandatory-named argument that\ntakes one of the following values to indicate the scope of JSON data to be\nsearched. It has no effect if data_to_search isn't a JSON value or\ndoesn't contain a JSON field.\n\n'JSON_VALUES' (default): Only the JSON values are searched. If\njson_scope isn't provided, this is used by default.\n'JSON_KEYS': Only the JSON keys are searched.\n'JSON_KEYS_AND_VALUES': The JSON keys and values are searched.\nanalyzer: Optional mandatory-named argument that takes\none of the following values to indicate the text analyzer to use:\n\n'LOG_ANALYZER' (default): Breaks the input into terms when delimiters\nare encountered and then normalizes the terms.\nFor more information, see LOG_ANALYZER.\n'NO_OP_ANALYZER': Extracts the text as a single term (token), but\ndoesn't apply normalization. For more information about this analyzer,\nsee NO_OP_ANALYZER.\n'PATTERN_ANALYZER': Breaks the input into terms that match a\nregular expression. For more information, see\nPATTERN_ANALYZER text analyzer.\nanalyzer_options: Optional mandatory-named argument that takes a list of\ntext analysis rules as a JSON-formatted STRING. For more information,\nsee Text analyzer options.",
+    "return_type": "data_to_search: The data to search over. The value can be:\n\nAny GoogleSQL data type literal\nA list of columns\nA table reference\nA column of any type\n\nA table reference is evaluated as a STRUCT whose fields are the columns of\nthe table. data_to_search can be any type, but SEARCH will return\nFALSE for all types except those listed here:\n\nARRAY<STRING>\nARRAY<STRUCT>\nJSON\nSTRING\nSTRUCT\n\nYou can search for string literals in columns of the preceding types.\nFor additional rules, see Search data rules.\nsearch_query: A STRING literal, or a STRING constant expression that\nrepresents the terms of the search query. If search_query is NULL, an\nerror is returned. If search_query contains no tokens and the text\nanalyzer is LOG_ANALYZER, an error is returned.\njson_scope: Optional mandatory-named argument that\ntakes one of the following values to indicate the scope of JSON data to be\nsearched. It has no effect if data_to_search isn't a JSON value or\ndoesn't contain a JSON field.\n\n'JSON_VALUES' (default): Only the JSON values are searched. If\njson_scope isn't provided, this is used by default.\n'JSON_KEYS': Only the JSON keys are searched.\n'JSON_KEYS_AND_VALUES': The JSON keys and values are searched.\nanalyzer: Optional mandatory-named argument that takes\none of the following values to indicate the text analyzer to use:\n\n'LOG_ANALYZER' (default): Breaks the input into terms when delimiters\nare encountered and then normalizes the terms.\nFor more information, see LOG_ANALYZER.\n'NO_OP_ANALYZER': Extracts the text as a single term (token), but\ndoesn't apply normalization. For more information about this analyzer,\nsee NO_OP_ANALYZER.\n'PATTERN_ANALYZER': Breaks the input into terms that match a\nregular expression. For more information, see\nPATTERN_ANALYZER text analyzer.\nanalyzer_options: Optional mandatory-named argument that takes a list of\ntext analysis rules as a JSON-formatted STRING. For more information,\nsee Text analyzer options.",
     "description": "The SEARCH function checks to see whether a BigQuery table or other\nsearch data contains a set of search terms (tokens). It returns TRUE if all\nsearch terms appear in the data, based on the text analysis\ndescribed in the text analyzer, and FALSE otherwise."
+  },
+  {
+    "name": "VECTOR_SEARCH",
+    "arguments": [],
+    "category": "Search functions",
+    "return_type": "base_table: The table to search for nearest neighbor embeddings.\ncolumn_to_search: The name of the base table column\nto search for nearest neighbor embeddings. The column must have\na type of ARRAY<FLOAT64>. All elements in the array must be non-NULL, and\nall values in the column must have the same array dimensions.\nIf the column has a vector index, BigQuery attempts to use it.\nTo determine if an index was used in the vector search, see\nVector index usage.\nquery_table: The table that provides the\nembeddings for which to find nearest neighbors. All columns are passed\nthrough as output columns.\nquery_statement: A query that provides the\nembeddings for which to find nearest neighbors. All columns are passed\nthrough as output columns.\nquery_column_to_search: An optional STRING positional-named argument.\nquery_column_to_search_value specifies the name of the column in the query\ntable or statement that contains the embeddings for which to find nearest\nneighbors. The column must have a type of ARRAY<FLOAT64>. All elements in\nthe array must be non-NULLand all values in the column must have the same\narray dimensions as the values in the column_to_search column. If you don't\nspecify query_column_to_search_value, the function uses the\ncolumn_to_search value.\ntop_k: An optional INT64 mandatory-named argument. top_k_value\nspecifies the number of nearest neighbors to\nreturn. The default is 10. A negative value is treated as infinity, meaning\nthat all values are counted as neighbors and returned.\ndistance_type: An optional STRING mandatory-named argument.\ndistance_type_value specifies the type of metric to use to\ncompute the distance between two vectors. Supported distance types are\nEUCLIDEAN and COSINE. The default is EUCLIDEAN.\n\nIf you don't specify distance_type_value and the column_to_search\ncolumn has a vector index that is used, VECTOR_SEARCH uses the distance\ntype specified in the distance_type option of the\nCREATE VECTOR INDEX statement.\noptions: An optional JSON-formatted STRING mandatory-named argument.\noptions_value is a literal that specifies the following vector search\noptions:\n\nfraction_lists_to_search: A JSON number that specifies the\npercentage of lists to search. For example,\noptions => '{\"fraction_lists_to_search\":0.15}'. The\nfraction_lists_to_search value must be in the range 0.0 to 1.0,\nexclusive.\n\nSpecifying a higher percentage leads to higher recall and slower\nperformance, and the converse is true when specifying a lower percentage.\n\nfraction_lists_to_search is only used when a vector index is also used.\nIf you don't specify a fraction_lists_to_search value but an index is\nmatched, the default number of lists to scan is calculated as\nmin(0.002 * number_of_lists, 10).\n\nThe number of available lists to search is determined by the\nnum_lists option in the ivf_options option of the\nCREATE VECTOR INDEX statement if that is specified. Otherwise,\nBigQuery calculates an appropriate number.\n\nYou can't specify fraction_lists_to_search when use_brute_force is\nset to true.\nuse_brute_force: A JSON boolean that determines whether to use brute\nforce search by skipping the vector index if one is available. For\nexample, options => '{\"use_brute_force\":true}'. The\ndefault is false. If you specify use_brute_force=false and there is\nno useable vector index available, brute force is used anyway.\n\noptions defaults to '{}' to denote that all underlying options use their\ncorresponding default values.",
+    "description": "The VECTOR_SEARCH function lets you search embeddings to find semantically\nsimilar entities.Embeddings are high-dimensional numerical vectors that represent a given entity,\nlike a piece of text or an audio file. Machine learning (ML) models use\nembeddings to encode semantics about such entities to make it easier to\nreason about and compare them. For example, a common operation in clustering,\nclassification, and recommendation models is to measure the distance between\nvectors in an embedding space to\nfind items that are most semantically similar."
   },
   {
     "name": "SESSION_USER",
@@ -2147,6 +2210,34 @@
     "category": "Time functions",
     "return_type": "TIME",
     "description": "Truncates a TIME value to the granularity of time_part. The TIME value\nis always rounded to the beginning of time_part, which can be one of the\nfollowing:MICROSECOND: If used, nothing is truncated from the value.\nMILLISECOND: The nearest lessor or equal millisecond.\nSECOND: The nearest lessor or equal second.\nMINUTE: The nearest lessor or equal minute.\nHOUR: The nearest lessor or equal hour."
+  },
+  {
+    "name": "DATE_BUCKET",
+    "arguments": [],
+    "category": "Time series functions",
+    "return_type": "date_in_bucket: A DATE value that you can use to look up a date bucket.\nbucket_width: An INTERVAL value that represents the width of\na date bucket. A single interval with\ndate parts is supported.\nbucket_origin_date: A DATE value that represents a point in time. All\nbuckets expand left and right from this point. If this argument is not set,\n1950-01-01 is used by default.",
+    "description": "Gets the lower bound of the date bucket that contains a date."
+  },
+  {
+    "name": "DATETIME_BUCKET",
+    "arguments": [],
+    "category": "Time series functions",
+    "return_type": "datetime_in_bucket: A DATETIME value that you can use to look up a\ndatetime bucket.\nbucket_width: An INTERVAL value that represents the width of\na datetime bucket. A single interval with\ndate and time parts is supported.\nbucket_origin_datetime: A DATETIME value that represents a point in\ntime. All buckets expand left and right from this point. If this argument\nis not set, 1950-01-01 00:00:00 is used by default.",
+    "description": "Gets the lower bound of the datetime bucket that contains a datetime."
+  },
+  {
+    "name": "GAP_FILL",
+    "arguments": [],
+    "category": "Time series functions",
+    "return_type": "time_series_table: The name of the table that contains the\ntime series data.\ntime_series_subquery: The subquery that contains the time series data.\ntime_series_column: The name of the column in time_series_table or\ntime_series_subquery that contains the time points of the\ntime series data. This column must represent a DATE, DATETIME,\nor TIMESTAMP type.\nbucket_width: The INTERVAL value that represents the selected width\nof the time buckets. The interval can represent a DATE, DATETIME, or\nTIMESTAMP type.\npartitioning_columns: An ARRAY<STRING> optional named argument.\nRepresents an array of zero or more column names used to partition data\ninto individual time series (time series identity). This has the same column\ntype requirements as the PARTITION BY clause.\nvalue_columns: An ARRAY<STRUCT<STRING, STRING>> optional named argument.\nRepresents an array of column name and gap-filling method pairs in\nthis format:\n[(column_name, gap_filling_method), ...]\ncolumn_name: A STRING value that represents a valid column from\ntime_series_table. A column name can only be used once in\nvalue_columns.\ngap_filling_method: A STRING value that can be one of the following\ngap-filling methods:\n\nnull (default): Fill in missing values with NULL values.\nlinear: Fill in missing values using\nlinear interpolation. So, when a new value is added, it's based on\na linear slope for a specific time bucket. When this method is\nused, column_name must be a numeric data type.\nlocf: Fill in missing values by carrying the last observed value\nforward. So, when a new value is added, it's based on\nthe previous value.\norigin: A DATE, DATETIME or TIMESTAMP optional named argument.\nRepresents a point in time from which all time buckets expand in\neach direction.\n\nIf origin is not provided, the data type for time_series_column is\nassumed, and the corresponding default value is used:\n\nDATE '1950-01-01'\nDATETIME '1950-01-01 00:00:00'\nTIMESTAMP '1950-01-01 00:00:00'\nignore_null_values: A BOOL optional named argument. Indicates\nwhether the function ignores NULL values in the input data when performing\ngap filling. By default, this value is TRUE.\n\nIf TRUE (default), NULL values are skipped during gap filling.\n\nnull is the gap-filling method for a column: If a value in a\ncolumn is NULL, the output is NULL for that column.\nlocf or linear is the gap-filling method for a column: The\nprevious or next non-NULL value is used. The side effect of this\nis that output value columns are never NULL, except for the edges.\nIf FALSE, NULL values are included during gap filling.\n\nnull is the gap-filling method for a column: If a value in a\ncolumn is NULL, the output is NULL for that column.\nlocf is the gap-filling method for a column: If the previous\nvalue in that column is NULL, the output is NULL for that\ncolumn.\nlinear is the gap-filling method for a column: If either of\nthe endpoints in that column is NULL, the output is NULL for\nthat column.",
+    "description": "Finds and fills gaps in a time series."
+  },
+  {
+    "name": "TIMESTAMP_BUCKET",
+    "arguments": [],
+    "category": "Time series functions",
+    "return_type": "timestamp_in_bucket: A TIMESTAMP value that you can use to look up a\ntimestamp bucket.\nbucket_width: An INTERVAL value that represents the width of\na timestamp bucket. A single interval with\ndate and time parts is supported.\nbucket_origin_timestamp: A TIMESTAMP value that represents a point in\ntime. All buckets expand left and right from this point. If this argument\nis not set, 1950-01-01 00:00:00 is used by default.",
+    "description": "Gets the lower bound of the timestamp bucket that contains a timestamp."
   },
   {
     "name": "CURRENT_TIMESTAMP",

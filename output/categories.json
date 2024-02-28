@@ -19,12 +19,14 @@
   "Navigation functions",
   "Net functions",
   "Numbering functions",
+  "Range functions",
   "Search functions",
   "Security functions",
   "Statistical aggregate functions",
   "String functions",
   "Table functions (built in)",
   "Time functions",
+  "Time series functions",
   "Timestamp functions",
   "Utility functions"
 ]
