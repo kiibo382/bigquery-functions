@@ -9,7 +9,6 @@ pub struct Function {
     pub name: String,
     pub arguments: Vec<Argument>,
     pub category: Category,
-    pub return_type: String,
     pub description: String,
 }
 
@@ -18,14 +17,12 @@ impl Function {
         name: String,
         arguments: Vec<Argument>,
         category: Category,
-        return_type: String,
         description: String,
     ) -> Self {
         Function {
             name,
             arguments,
             category,
-            return_type,
             description,
         }
     }

@@ -7,6 +7,7 @@ use similar::{ChangeTag, TextDiff};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use mdka::from_html;
 
 mod json_types;
 
@@ -66,8 +67,7 @@ fn main() {
                 //     continue;
                 // }
 
-                let mut texts = vec![];
-                let mut i = 0;
+                let mut text = String::new();
 
                 // elements after h3#function_id
                 for h3_sib in h3_frag.unwrap().next_siblings() {
@@ -77,42 +77,24 @@ fn main() {
                         if h3_elem.name() == "h3" {
                             break;
                         }
-                        // Separate by strong
-                        if h3_elem.name() == "p" {
-                            if let Some(first_child) = h3_sib.first_child() {
-                                if let Some(p_first_elm) = first_child.value().as_element() {
-                                    if p_first_elm.name() == "strong" {
-                                        i += 1;
-                                        texts.push(String::new());
-                                        continue;
-                                    }
-                                }
-                            }
-                        }
-
-                        if i > 0 {
-                            texts[i - 1] += &walk_node(&h3_sib);
-                        }
                     }
+                    text += &walk_node(&h3_sib);
                 }
 
-                if elem.attr("data-text").unwrap().contains(" ") {
-                    continue;
-                }
-
-                if texts.len() > 1 {
-                    function_names.push(elem.attr("data-text").unwrap().to_uppercase());
-                    functions.push(json_types::Function::new(
-                        elem.attr("data-text").unwrap().to_uppercase(),
-                        vec![],
-                        category.clone(),
-                        texts[1].clone(),
-                        texts[0].clone(),
-                    ));
-                }
+                function_names.push(elem.attr("data-text").unwrap().to_uppercase());
+                functions.push(json_types::Function::new(
+                    elem.attr("data-text").unwrap().to_uppercase(),
+                    vec![],
+                    category.clone(),
+                    from_html(&text),
+                ));
             }
         }
     }
+
+    function_names.sort();
+    functions.sort_by(|a, b| a.name.cmp(&b.name));
+    categories.sort();
 
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
     write_json(&path.join("output/function_names.json"), &function_names);
@@ -165,15 +147,14 @@ where
 }
 
 fn walk_node(node_ref: &NodeRef<Node>) -> String {
+    let node = node_ref.value();
     let mut text = String::new();
-    for child in node_ref.children() {
-        if child.has_children() {
-            text += &walk_node(&child);
-        }
-        let node = child.value();
-        if node.is_text() {
-            text += &node.as_text().unwrap().to_string();
-        }
+    if let Some(_) = node.as_element() {
+        let el = scraper::ElementRef::wrap(node_ref.clone()).unwrap();
+        text += &el.html();
+    } else if let Some(text_node) = node.as_text() {
+        text += &text_node.trim();
     }
-    return text.trim().to_string();
+    return text.replace("\n", "");
 }
+

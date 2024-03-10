@@ -18,4 +18,5 @@ reqwest = { version = "0.11", features = ["blocking", "json"] }
 similar = { version = "2.1.0", features = ["inline"] }
 bigquery-functions-types-macros = { version="0.1.5"}
 indexmap = "1.9.3"
+mdka = "1.2"
 
