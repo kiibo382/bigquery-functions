@@ -1,13 +1,16 @@
 use ego_tree::NodeRef;
 use indexmap::IndexMap;
+use mdka::from_html;
 use scraper::{Html, Node, Selector};
 use serde::ser::SerializeMap;
 use serde::{Serialize, Serializer};
 use similar::{ChangeTag, TextDiff};
+use std::collections::HashSet;
 use std::fs::File;
+use std::hash::Hash;
 use std::io::prelude::*;
 use std::path::Path;
-use mdka::from_html;
+use regex::Regex;
 
 mod json_types;
 
@@ -42,19 +45,26 @@ fn main() {
     let selector = Selector::parse("h2#functions").unwrap();
     let frag = fragment.select(&selector).next();
 
-    let mut function_names = vec![];
+    let mut function_names = HashSet::new();
     let mut functions = vec![];
     let mut categories = vec![];
-    let mut category = "".to_string();
 
     for sib in frag.unwrap().next_siblings() {
         let node = sib.value();
         if node.is_element() {
             let elem = node.as_element().unwrap();
+            let mut category = "".to_string();
             if elem.name() == "h2" {
                 let h2_selector = Selector::parse(&format!("h2#{}", elem.id().unwrap())).unwrap();
                 let h2_frag = fragment.select(&h2_selector).next();
-                category = h2_frag.unwrap().inner_html();
+                let re = Regex::new(r"\(.*\)").unwrap();
+                category = re.replace_all(&h2_frag.unwrap().inner_html(), "").trim().to_string();
+                category = category
+                    .replace("functions", "")
+                    .trim()
+                    .replace(" ", "_")
+                    .replace('+', "")
+                    .replace("-", "_");
                 categories.push(category.clone());
             }
 
@@ -65,7 +75,12 @@ fn main() {
                 let function_name = elem.attr("data-text").unwrap().to_uppercase();
 
                 if function_name.contains(&" ") || function_name.contains(&"(") {
-                    println!("Skipping {}", function_name);
+                    println!("Skipping invalid function name: {}", function_name);
+                    continue;
+                }
+
+                if function_names.contains(&function_name) {
+                    println!("Skipping duplicate function name: {}", function_name);
                     continue;
                 }
 
@@ -83,7 +98,7 @@ fn main() {
                     text += &walk_node(&h3_sib);
                 }
 
-                function_names.push(function_name.clone());
+                function_names.insert(function_name.clone());
                 functions.push(json_types::Function::new(
                     function_name,
                     vec![],
@@ -94,6 +109,7 @@ fn main() {
         }
     }
 
+    let mut function_names: Vec<_> = function_names.into_iter().collect();
     function_names.sort();
     functions.sort_by(|a, b| a.name.cmp(&b.name));
     categories.sort();
@@ -159,4 +175,3 @@ fn walk_node(node_ref: &NodeRef<Node>) -> String {
     }
     return text.replace("\n", "");
 }
-

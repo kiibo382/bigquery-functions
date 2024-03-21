@@ -10,9 +10,7 @@ pub fn enum_category(_item: TokenStream) -> TokenStream {
     for category in &categories {
         enum_category.push_str(&format!(
             "    {},\n",
-            category.split(' ').collect::<Vec<&str>>()[0]
-                .replace('+', "")
-                .replace("-", "_")
+            category
         ));
     }
     enum_category.push_str("    NoCategory,\n");
@@ -31,9 +29,7 @@ impl std::str::FromStr for Category {
         enum_category.push_str(&format!(
             "            \"{}\" => Ok(Category::{}),\n",
             category,
-            category.split(' ').collect::<Vec<&str>>()[0]
-                .replace('+', "")
-                .replace("-", "_")
+            category
         ));
     }
     enum_category.push_str(
@@ -56,12 +52,8 @@ impl std::fmt::Display for Category {
     for category in &categories {
         enum_category.push_str(&format!(
             "            Category::{} => write!(f, \"{}\"),\n",
-            category.split(' ').collect::<Vec<&str>>()[0]
-                .replace('+', "")
-                .replace("-", "_"),
-            category.split(' ').collect::<Vec<&str>>()[0]
-                .replace('+', "")
-                .replace("-", "_")
+            category,
+            category
         ));
     }
     enum_category.push_str(
