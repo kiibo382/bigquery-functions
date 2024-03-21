@@ -9,7 +9,7 @@ Here's how to process a list of BigQuery functions using Rust.
 Fist, add the following to Cargo.toml.
 ```toml
 [dependencies]
-bigquery-functions = "0.1.10"
+bigquery-functions = "0.1.11"
 ```
 
 Then call the function or type as follows.
