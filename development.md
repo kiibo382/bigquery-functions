@@ -22,7 +22,7 @@ make publish-types-macros
 
 ## Step4
 
-Update the version number in the bigquery-functions/Cargo.toml file.
+Update the version number and the version of bigquery-functions-types-macros in the bigquery-functions/Cargo.toml file.
 Next, publish the bigquery-functions crate.
 
 ```
