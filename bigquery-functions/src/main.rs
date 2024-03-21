@@ -48,12 +48,12 @@ fn main() {
     let mut function_names = HashSet::new();
     let mut functions = vec![];
     let mut categories = vec![];
+    let mut category = "".to_string();
 
     for sib in frag.unwrap().next_siblings() {
         let node = sib.value();
         if node.is_element() {
             let elem = node.as_element().unwrap();
-            let mut category = "".to_string();
             if elem.name() == "h2" {
                 let h2_selector = Selector::parse(&format!("h2#{}", elem.id().unwrap())).unwrap();
                 let h2_frag = fragment.select(&h2_selector).next();
