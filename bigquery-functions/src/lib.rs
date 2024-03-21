@@ -47,7 +47,7 @@ pub fn get_bigquery_functions() -> Vec<types::Function> {
 pub fn get_distinct_allowed_categories() -> [types::Category; 3] {
     [
         types::Category::Aggregate,
-        types::Category::Approximate,
+        types::Category::Approximate_aggregate,
         types::Category::HyperLogLog,
     ]
 }
@@ -80,7 +80,7 @@ mod tests {
         let categories = get_distinct_allowed_categories();
         assert_eq!(categories.len(), 3);
         assert!(categories.contains(&Category::Aggregate));
-        assert!(categories.contains(&Category::Approximate));
+        assert!(categories.contains(&Category::Approximate_aggregate));
         assert!(categories.contains(&Category::HyperLogLog));
     }
 }

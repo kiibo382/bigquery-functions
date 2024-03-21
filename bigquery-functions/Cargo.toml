@@ -1,6 +1,6 @@
 [package]
 name = "bigquery-functions"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 authors = ["Shota Kizawa <shomok0106k@gmail.com>"]
 description = "BigQuery functions"
@@ -16,7 +16,7 @@ ego-tree = "0.6.2"
 serde = { version = "1.0", features = ["derive"] }
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 similar = { version = "2.1.0", features = ["inline"] }
-bigquery-functions-types-macros = { version="0.1.11"}
+bigquery-functions-types-macros = { version="0.1.12"}
 indexmap = "1.9.3"
 mdka = "1.2"
 regex = "1.10.3"
