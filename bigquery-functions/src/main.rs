@@ -171,7 +171,7 @@ fn walk_node(node_ref: &NodeRef<Node>) -> String {
         let el = scraper::ElementRef::wrap(node_ref.clone()).unwrap();
         text += &el.html();
     } else if let Some(text_node) = node.as_text() {
-        text += &text_node.trim();
+        text += &text_node;
     }
-    return text.replace("\n", "");
+    text
 }
