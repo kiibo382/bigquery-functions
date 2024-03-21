@@ -62,10 +62,12 @@ fn main() {
                 let h3_selector = Selector::parse(&format!("h3#{}", elem.id().unwrap())).unwrap();
                 let h3_frag = fragment.select(&h3_selector).next();
 
-                // if h3_frag.unwrap().inner_html().contains(&" ") {
-                //     println!("space: {}", h3_frag.unwrap().inner_html());
-                //     continue;
-                // }
+                let function_name = elem.attr("data-text").unwrap().to_uppercase();
+
+                if function_name.contains(&" ") || function_name.contains(&"(") {
+                    println!("Skipping {}", function_name);
+                    continue;
+                }
 
                 let mut text = String::new();
 
@@ -81,9 +83,9 @@ fn main() {
                     text += &walk_node(&h3_sib);
                 }
 
-                function_names.push(elem.attr("data-text").unwrap().to_uppercase());
+                function_names.push(function_name.clone());
                 functions.push(json_types::Function::new(
-                    elem.attr("data-text").unwrap().to_uppercase(),
+                    function_name,
                     vec![],
                     category.clone(),
                     from_html(&text),

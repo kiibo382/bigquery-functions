@@ -23,7 +23,6 @@
     "EUCLIDEAN_DISTANCE",
     "EXP",
     "FLOOR",
-    "FUNCTION LIST",
     "GREATEST",
     "IEEE_DIVIDE",
     "IS_INF",
@@ -60,7 +59,6 @@
     "DETERMINISTIC_DECRYPT_BYTES",
     "DETERMINISTIC_DECRYPT_STRING",
     "DETERMINISTIC_ENCRYPT",
-    "FUNCTION LIST",
     "KEYS.ADD_KEY_FROM_RAW_BYTES",
     "KEYS.KEYSET_CHAIN",
     "KEYS.KEYSET_FROM_JSON",
@@ -82,7 +80,6 @@
     "BIT_XOR",
     "COUNT",
     "COUNTIF",
-    "FUNCTION LIST",
     "GROUPING",
     "LOGICAL_AND",
     "LOGICAL_OR",
@@ -96,15 +93,14 @@
   "Table": [
     "APPENDS",
     "EXTERNAL_OBJECT_TRANSFORM",
-    "FUNCTION LIST",
-    "GAP_FILL"
+    "GAP_FILL",
+    "RANGE_SESSIONIZE"
   ],
   "Approximate": [
     "APPROX_COUNT_DISTINCT",
     "APPROX_QUANTILES",
     "APPROX_TOP_COUNT",
-    "APPROX_TOP_SUM",
-    "FUNCTION LIST"
+    "APPROX_TOP_SUM"
   ],
   "Array": [
     "ARRAY",
@@ -112,11 +108,9 @@
     "ARRAY_LENGTH",
     "ARRAY_REVERSE",
     "ARRAY_TO_STRING",
-    "FUNCTION LIST",
     "GENERATE_ARRAY",
     "GENERATE_DATE_ARRAY",
-    "GENERATE_TIMESTAMP_ARRAY",
-    "OFFSET AND ORDINAL"
+    "GENERATE_TIMESTAMP_ARRAY"
   ],
   "String": [
     "ASCII",
@@ -135,7 +129,6 @@
     "FROM_BASE32",
     "FROM_BASE64",
     "FROM_HEX",
-    "FUNCTION LIST",
     "INITCAP",
     "INSTR",
     "LEFT",
@@ -174,27 +167,14 @@
     "UNICODE",
     "UPPER"
   ],
-  "Differentially": [
-    "AVG (DIFFERENTIAL_PRIVACY)",
-    "CLAMP VALUES IN A DIFFERENTIALLY PRIVATE AGGREGATE FUNCTION",
-    "COUNT (DIFFERENTIAL_PRIVACY)",
-    "FUNCTION LIST",
-    "PERCENTILE_CONT (DIFFERENTIAL_PRIVACY)",
-    "SUM (DIFFERENTIAL_PRIVACY)"
-  ],
   "Bit": [
-    "BIT_COUNT",
-    "FUNCTION LIST"
+    "BIT_COUNT"
   ],
   "JSON": [
     "BOOL",
     "CATEGORIES",
-    "DIFFERENCES BETWEEN THE JSON AND JSON-FORMATTED STRING TYPES",
     "FLOAT64",
-    "FUNCTION LIST",
     "INT64",
-    "JSON ENCODINGS",
-    "JSONPATH FORMAT",
     "JSON_ARRAY",
     "JSON_ARRAY_APPEND",
     "JSON_ARRAY_INSERT",
@@ -222,30 +202,12 @@
   ],
   "Conversion": [
     "CAST",
-    "CAST AS ARRAY",
-    "CAST AS BIGNUMERIC",
-    "CAST AS BOOL",
-    "CAST AS BYTES",
-    "CAST AS DATE",
-    "CAST AS DATETIME",
-    "CAST AS FLOAT64",
-    "CAST AS INT64",
-    "CAST AS INTERVAL",
-    "CAST AS NUMERIC",
-    "CAST AS RANGE",
-    "CAST AS STRING",
-    "CAST AS STRUCT",
-    "CAST AS TIME",
-    "CAST AS TIMESTAMP",
-    "FUNCTION LIST",
-    "OTHER CONVERSION FUNCTIONS",
     "PARSE_BIGNUMERIC",
     "PARSE_NUMERIC",
     "SAFE_CAST"
   ],
   "Geography": [
     "CATEGORIES",
-    "FUNCTION LIST",
     "S2_CELLIDFROMPOINT",
     "S2_COVERINGCELLIDS",
     "ST_ANGLE",
@@ -320,7 +282,6 @@
     "CORR",
     "COVAR_POP",
     "COVAR_SAMP",
-    "FUNCTION LIST",
     "STDDEV",
     "STDDEV_POP",
     "STDDEV_SAMP",
@@ -331,7 +292,6 @@
   "Numbering": [
     "CUME_DIST",
     "DENSE_RANK",
-    "FUNCTION LIST",
     "NTILE",
     "PERCENT_RANK",
     "RANK",
@@ -347,7 +307,6 @@
     "DATE_TRUNC",
     "EXTRACT",
     "FORMAT_DATE",
-    "FUNCTION LIST",
     "LAST_DAY",
     "PARSE_DATE",
     "UNIX_DATE"
@@ -361,7 +320,6 @@
     "DATETIME_TRUNC",
     "EXTRACT",
     "FORMAT_DATETIME",
-    "FUNCTION LIST",
     "LAST_DAY",
     "PARSE_DATETIME"
   ],
@@ -371,8 +329,6 @@
     "DATE_BUCKET",
     "EXTRACT",
     "FORMAT_TIME",
-    "FUNCTION LIST",
-    "FUNCTION LIST",
     "GAP_FILL",
     "PARSE_TIME",
     "TIME",
@@ -386,8 +342,6 @@
     "CURRENT_TIMESTAMP",
     "EXTRACT",
     "FORMAT_TIMESTAMP",
-    "FUNCTION LIST",
-    "HOW TIME ZONES WORK WITH TIMESTAMP FUNCTIONS",
     "PARSE_TIMESTAMP",
     "STRING",
     "TIMESTAMP",
@@ -405,16 +359,13 @@
   "DLP": [
     "DLP_DETERMINISTIC_DECRYPT",
     "DLP_DETERMINISTIC_ENCRYPT",
-    "DLP_KEY_CHAIN",
-    "FUNCTION LIST"
+    "DLP_KEY_CHAIN"
   ],
   "Debugging": [
-    "ERROR",
-    "FUNCTION LIST"
+    "ERROR"
   ],
   "Interval": [
     "EXTRACT",
-    "FUNCTION LIST",
     "JUSTIFY_DAYS",
     "JUSTIFY_HOURS",
     "JUSTIFY_INTERVAL",
@@ -422,7 +373,6 @@
   ],
   "Hash": [
     "FARM_FINGERPRINT",
-    "FUNCTION LIST",
     "MD5",
     "SHA1",
     "SHA256",
@@ -430,7 +380,6 @@
   ],
   "Navigation": [
     "FIRST_VALUE",
-    "FUNCTION LIST",
     "LAG",
     "LAST_VALUE",
     "LEAD",
@@ -438,15 +387,26 @@
     "PERCENTILE_CONT",
     "PERCENTILE_DISC"
   ],
+  "Range": [
+    "GENERATE_RANGE_ARRAY",
+    "RANGE",
+    "RANGE_CONTAINS",
+    "RANGE_END",
+    "RANGE_INTERSECT",
+    "RANGE_OVERLAPS",
+    "RANGE_SESSIONIZE",
+    "RANGE_START"
+  ],
+  "Utility": [
+    "GENERATE_UUID"
+  ],
   "HyperLogLog": [
-    "FUNCTION LIST",
     "HLL_COUNT.EXTRACT",
     "HLL_COUNT.INIT",
     "HLL_COUNT.MERGE",
     "HLL_COUNT.MERGE_PARTIAL"
   ],
   "Net": [
-    "FUNCTION LIST",
     "NET.HOST",
     "NET.IPV4_FROM_INT64",
     "NET.IPV4_TO_INT64",
@@ -458,27 +418,11 @@
     "NET.REG_DOMAIN",
     "NET.SAFE_IP_FROM_STRING"
   ],
-  "Range": [
-    "FUNCTION LIST",
-    "GENERATE_RANGE_ARRAY",
-    "RANGE",
-    "RANGE_CONTAINS",
-    "RANGE_END",
-    "RANGE_INTERSECT",
-    "RANGE_OVERLAPS",
-    "RANGE_START"
-  ],
   "Search": [
-    "FUNCTION LIST",
     "SEARCH",
     "VECTOR_SEARCH"
   ],
   "Security": [
-    "FUNCTION LIST",
     "SESSION_USER"
-  ],
-  "Utility": [
-    "FUNCTION LIST",
-    "GENERATE_UUID"
   ]
 }
