@@ -103,7 +103,6 @@ fn main() {
                     function_name,
                     vec![],
                     category.clone(),
-                    text.clone(),
                     from_html(&text),
                 ));
             }

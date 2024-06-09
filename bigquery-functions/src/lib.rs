@@ -36,7 +36,6 @@ pub fn get_bigquery_functions() -> Vec<types::Function> {
                     .collect(),
                 types::Category::from_str(&function.category)
                     .unwrap_or(types::Category::NoCategory),
-                function.description,
                 function.description_markdown,
             )
         })
