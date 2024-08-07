@@ -91,6 +91,7 @@
   ],
   "Table": [
     "APPENDS",
+    "CHANGES",
     "EXTERNAL_OBJECT_TRANSFORM",
     "GAP_FILL"
   ],
